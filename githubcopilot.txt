@@ -1,0 +1,630 @@
+owerShell 7.5.4
+PS C:\Users\simei> npm install -g @github/copilot
+
+added 2 packages in 20s
+PS C:\Users\simei> copilot
+╭──────────────────────────────────────────────────────────────────────────────────────────────────╮
+│  ╭─╮╭─╮                                                                                          │
+│  ╰─╯╰─╯  GitHub Copilot v0.0.406                                                                 │
+│  █ ▘▝ █  Describe a task to get started.                                                         │
+│   ▔▔▔▔                                                                                           │
+│  Pick a model with /model. Send this session to GitHub with /delegate, and Copilot will create   │
+│  a PR. Enter ? to see all commands. Copilot uses AI, so always check for mistakes.               │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
+
+● 💡 No copilot instructions found. Run /init to generate a copilot-instructions.md file for this project.
+
+╭──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ Confirm folder trust                                                                                                 │
+│                                                                                                                      │
+│ ╭──────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮ │
+│ │ C:\Users\simei                                                                                                   │ │
+│ ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ │
+│                                                                                                                      │
+│ Copilot may read files in this folder. Reading untrusted files may lead Copilot to behave in unexpected ways. With   │
+│ your permission, Copilot may execute code or bash commands in this folder. Executing untrusted code is unsafe.       │
+│                                                                                                                      │
+│ Do you trust the files in this folder?                                                                               │
+│                                                                                                                      │
+│ ❯ 1. Yes                                                                                                             │
+│   2. Yes, and remember this folder for future sessions                                                               │
+│   3. No (Esc)                                                                                                        │
+│                                                                                                                      │
+│ Confirm with number keys or ↑↓ keys and Enter, Cancel with Esc                                                       │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+PS C:\Users\simei> cd D:git
+PS D:\git> cd D:\git\cimoment
+PS D:\git\cimoment> copilot # COPILOT TASKS — Ci Moment Infrastructure
+╭──────────────────────────────────────────────────────────────────────────────────────────────────╮
+│  ╭─╮╭─╮                                                                                          │
+│  ╰─╯╰─╯  GitHub Copilot v0.0.406                                                                 │
+│  █ ▘▝ █  Describe a task to get started.                                                         │
+│   ▔▔▔▔                                                                                           │
+│  Pick a model with /model. Send this session to GitHub with /delegate, and Copilot will create   │
+│  a PR. Enter ? to see all commands. Copilot uses AI, so always check for mistakes.               │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
+
+● 💡 No copilot instructions found. Run /init to generate a copilot-instructions.md file for this project.
+
+❯ /init
+
+◐ The user wants me to analyze a codebase and create a .github/copilot-instructions.md file with specific guidelines.
+  Let me start by exploring the repository structure to understand what we're working with.
+
+  I should:
+  1. First explore the directory structure
+  2. Look for existing documentation (README.md, CONTRIBUTING.md, etc.)
+  3. Check for existing AI assistant configs
+  4. Look for package managers (package.json, requirements.txt, etc.)
+  5. Understand the architecture and conventions
+  6. Create the copilot-instructions.md file
+
+  Let me start by exploring the repository structure.
+
+● I'll analyze the codebase to create a comprehensive .github/copilot-instructions.md file. Let me start by exploring
+  the repository structure.
+
+● List directory .
+  └ 6 files found
+
+● Glob "*.md"
+  └ No matches found
+
+● Glob "package.json"
+  └ No matches found
+
+● Glob ".cursorrules"
+  └ No matches found
+
+● Glob "CLAUDE.md"
+  └ No matches found
+
+● Glob "AGENTS.md"
+  └ No matches found
+
+● Glob ".windsurfrules"
+  └ No matches found
+
+● Glob "CONVENTIONS.md"
+  └ No matches found
+
+● List all files and directories including hidden ones
+  $ Get-ChildItem -Path . -Force | Select-Object Name, Mode
+  └ 1 line...
+
+✗ Read shell output: Waiting up to 10 seconds for command output
+  Invalid shell ID: 0. Please supply a valid shell ID to read output from.
+
+  <no active shell sessions>
+
+● List files and directories
+  $ ls -Force
+  └ 1 line...
+
+● Let me try a different approach to explore the directory:
+
+● List items in current directory
+  $ Get-ChildItem -Force -Name
+  └ 1 line...
+
+● Check current directory and list contents
+  $ pwd; dir
+  └ 5 lines...
+
+● It appears the directory is empty or there's an issue. Let me verify if the directory exists and has any contents:
+
+● Check if directory exists and count items
+  $ Test-Path "D:\git\cimoment"; (Get-ChildItem -Force).Count
+  └ 3 lines...
+
+● The directory exists but is empty. This appears to be a new/empty repository. Let me ask the user for clarification:
+
+● Asked user: The 'cimoment' directory appears to be empty. Is this a n...
+  └ User selected: This is a new project - I'll describe it
+
+● Asked user: What type of project is this? Please describe the technol...
+  └ User responded: Next.js 14 App Router, TypeScript, React 18, Supabase, Stripe...
+
+● Perfect! Now I'll create a .github/copilot-instructions.md file tailored for your Next.js 14 SaaS project:
+
+● Create .github directory
+  $ New-Item -ItemType Directory -Path ".github" -Force | Out-Null; Write-Output "Created .github directory"
+  └ 2 lines...
+
+╭──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ Edit file                                                                                                            │
+│                                                                                                                      │
+│ copilot-instructions.md +122 -0                                                                                      │
+│ D:\git\cimoment\.github                                                                                              │
+│                                                                                                                      │
+│       1  # Copilot Instructions for cimoment                                                                         │
+│       2                                                                                                              │
+│       3  ## Project Overview                                                                                         │
+│       4                                                                                                              │
+│       5  Minimal SaaS product built with Next.js 14 App Router — a single-page decision tool with payment            │
+│          integration.                                                                                                │
+│       6                                                                                                              │
+│       7  **Stack:**                                                                                                  │
+│       8  - Next.js 14 (App Router)                                                                                   │
+│       9  - TypeScript                                                                                                │
+│      10  - React 18                                                                                                  │
+│      11  - Supabase (database & auth)                                                                                │
+│      12  - Stripe (payments)                                                                                         │
+│      13  - Deploy: Vercel                                                                                            │
+│      14                                                                                                              │
+│      15  ## Build & Development                                                                                      │
+│      16                                                                                                              │
+│      17  ```bash                                                                                                     │
+│      18  # Install dependencies                                                                                      │
+│      19  npm install                                                                                                 │
+│      20                                                                                                              │
+│      21  # Development server                                                                                        │
+│      22  npm run dev                                                                                                 │
+│      23                                                                                                              │
+│      24  # Production build                                                                                          │
+│      25  npm run build                                                                                               │
+│      26                                                                                                              │
+│      27  # Type checking                                                                                             │
+│      28  npm run type-check  # or npx tsc --noEmit                                                                   │
+│      29                                                                                                              │
+│      30  # Linting                                                                                                   │
+│      31  npm run lint                                                                                                │
+│      32                                                                                                              │
+│      33  # Run a single test file (if Jest/Vitest configured)                                                        │
+│      34  npm test -- path/to/test-file.test.ts                                                                       │
+│      35  ```                                                                                                         │
+│      36                                                                                                              │
+│      37  ## Architecture                                                                                             │
+│      38                                                                                                              │
+│      39  ### App Router Structure                                                                                    │
+│      40  - `/app` - Next.js 14 App Router pages and layouts                                                          │
+│      41    - `/app/api` - API routes for server-side logic                                                           │
+│      42    - `/app/(auth)` or `/app/(dashboard)` - Route groups for shared layouts                                   │
+│      43  - `/components` - Reusable React components                                                                 │
+│      44  - `/lib` - Utilities, database clients, and shared logic                                                    │
+│      45    - `/lib/supabase` - Supabase client initialization (client & server)                                      │
+│      46    - `/lib/stripe` - Stripe SDK configuration                                                                │
+│      47  - `/types` - TypeScript type definitions                                                                    │
+│      48                                                                                                              │
+│      49  ### Data Flow                                                                                               │
+│      50  1. **Authentication**: Supabase Auth for user management                                                    │
+│      51  2. **Database**: Supabase PostgreSQL for data persistence                                                   │
+│      52  3. **Payments**: Stripe Checkout/Payment Links for subscriptions                                            │
+│      53  4. **Server Actions**: Use Next.js Server Actions for mutations (in `app/` or `lib/actions/`)               │
+│      54  5. **API Routes**: `/app/api` for webhooks (Stripe) and third-party integrations                            │
+│      55                                                                                                              │
+│      56  ### Supabase Setup                                                                                          │
+│      57  - Use `createClient()` from `@supabase/ssr` for App Router                                                  │
+│      58  - **Server Components**: Create client with cookies from `next/headers`                                     │
+│      59  - **Client Components**: Create client in a context provider or use `useState`                              │
+│      60  - **Middleware**: Handle auth refresh in `middleware.ts`                                                    │
+│      61                                                                                                              │
+│      62  ### Stripe Integration                                                                                      │
+│      63  - **Checkout**: Redirect to Stripe Checkout for payments                                                    │
+│      64  - **Webhooks**: Handle events in `/app/api/webhooks/stripe/route.ts`                                        │
+│      65    - Verify webhook signature with `stripe.webhooks.constructEvent()`                                        │
+│      66    - Update user subscription status in Supabase                                                             │
+│      67                                                                                                              │
+│      68  ## Key Conventions                                                                                          │
+│      69                                                                                                              │
+│      70  ### File Naming                                                                                             │
+│      71  - **Server Components**: Default in `/app`, no special suffix                                               │
+│      72  - **Client Components**: Add `'use client'` directive at top                                                │
+│      73  - **Server Actions**: Add `'use server'` directive, typically in `/lib/actions/` or co-located              │
+│      74  - **API Routes**: `route.ts` files in `/app/api/[endpoint]/`                                                │
+│      75                                                                                                              │
+│      76  ### TypeScript Patterns                                                                                     │
+│      77  - Generate Supabase types: `npx supabase gen types typescript --project-id [ref] > types/supabase.ts`       │
+│      78  - Use `Database` type from generated types for type-safe queries                                            │
+│      79  - Prefer explicit return types for Server Actions and API routes                                            │
+│      80                                                                                                              │
+│      81  ### Environment Variables                                                                                   │
+│      82  Required for local development (`.env.local`):                                                              │
+│      83  ```                                                                                                         │
+│      84  # Supabase                                                                                                  │
+│      85  NEXT_PUBLIC_SUPABASE_URL=                                                                                   │
+│      86  NEXT_PUBLIC_SUPABASE_ANON_KEY=                                                                              │
+│      87  SUPABASE_SERVICE_ROLE_KEY=                                                                                  │
+│      88                                                                                                              │
+│      89  # Stripe                                                                                                    │
+│      90  NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=                                                                         │
+│      91  STRIPE_SECRET_KEY=                                                                                          │
+│      92  STRIPE_WEBHOOK_SECRET=                                                                                      │
+│      93  ```                                                                                                         │
+│      94                                                                                                              │
+│      95  ### Server vs Client Component Guidelines                                                                   │
+│      96  - **Use Server Components** (default) for:                                                                  │
+│      97    - Data fetching from Supabase                                                                             │
+│      98    - Accessing environment variables (non-public)                                                            │
+│      99    - Reducing client bundle size                                                                             │
+│     100  - **Use Client Components** (`'use client'`) for:                                                           │
+│     101    - Interactivity (onClick, onChange, etc.)                                                                 │
+│     102    - React hooks (useState, useEffect, etc.)                                                                 │
+│     103    - Browser APIs (localStorage, window, etc.)                                                               │
+│     104    - Third-party libraries requiring client-side rendering                                                   │
+│     105                                                                                                              │
+│     106  ### Error Handling                                                                                          │
+│     107  - Server Actions: Return `{ error: string }` or `{ success: true, data: T }`                                │
+│     108  - API Routes: Use proper HTTP status codes (200, 400, 401, 500)                                             │
+│     109  - Client: Use React Error Boundaries for component-level errors                                             │
+│     110                                                                                                              │
+│     111  ### Stripe Webhook Security                                                                                 │
+│     112  - Always verify webhook signatures in production                                                            │
+│     113  - Use raw body for signature verification (disable body parsing)                                            │
+│     114  - Return 200 status quickly; process events async if needed                                                 │
+│     115                                                                                                              │
+│     116  ## Vercel Deployment                                                                                        │
+│     117                                                                                                              │
+│     118  - Environment variables must be set in Vercel dashboard                                                     │
+│     119  - Stripe webhook URL: `https://yourdomain.com/api/webhooks/stripe`                                          │
+│     120  - Supabase callback URL: `https://yourdomain.com/auth/callback`                                             │
+│     121  - Enable automatic HTTPS and preview deployments work with Stripe test mode                                 │
+│     122                                                                                                              │
+│                                                                                                                      │
+│ Do you want to edit D:\git\cimoment\.github\copilot-instructions.md?                                                 │
+│                                                                                                                      │
+│ ❯ 1. Yes                                                                                                             │
+│   2. Yes, and approve all file operations for the rest of the running session                                        │
+│   3. No, and tell Copilot what to do differently (Esc to stop)                                                       │
+│                                                                                                                      │
+│ Confirm with number keys or ↑↓ keys and Enter, Cancel with Esc                                                       │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭──────────────────────────────────────────────────────────────────────────────────────────────────╮
+│  ╭─╮╭─╮                                                                                          │
+│  ╰─╯╰─╯  GitHub Copilot v0.0.406                                                                 │
+│  █ ▘▝ █  Describe a task to get started.                                                         │
+│   ▔▔▔▔                                                                                           │
+│  Pick a model with /model. Send this session to GitHub with /delegate, and Copilot will create   │
+│  a PR. Enter ? to see all commands. Copilot uses AI, so always check for mistakes.               │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
+
+● 💡 No copilot instructions found. Run /init to generate a copilot-instructions.md file for this project.
+
+❯ /init
+
+◐ The user wants me to analyze a codebase and create a .github/copilot-instructions.md file with specific guidelines.
+  Let me start by exploring the repository structure to understand what we're working with.
+
+  I should:
+  1. First explore the directory structure
+  2. Look for existing documentation (README.md, CONTRIBUTING.md, etc.)
+  3. Check for existing AI assistant configs
+  4. Look for package managers (package.json, requirements.txt, etc.)
+  5. Understand the architecture and conventions
+  6. Create the copilot-instructions.md file
+
+  Let me start by exploring the repository structure.
+
+● I'll analyze the codebase to create a comprehensive .github/copilot-instructions.md file. Let me start by exploring
+  the repository structure.
+
+● List directory .
+  └ 6 files found
+
+● Glob "*.md"
+  └ No matches found
+
+● Glob "package.json"
+  └ No matches found
+
+● Glob ".cursorrules"
+  └ No matches found
+
+● Glob "CLAUDE.md"
+  └ No matches found
+
+● Glob "AGENTS.md"
+  └ No matches found
+
+● Glob ".windsurfrules"
+  └ No matches found
+
+● Glob "CONVENTIONS.md"
+  └ No matches found
+
+● List all files and directories including hidden ones
+  $ Get-ChildItem -Path . -Force | Select-Object Name, Mode
+  └ 1 line...
+
+✗ Read shell output: Waiting up to 10 seconds for command output
+  Invalid shell ID: 0. Please supply a valid shell ID to read output from.
+
+  <no active shell sessions>
+
+● List files and directories
+  $ ls -Force
+  └ 1 line...
+
+● Let me try a different approach to explore the directory:
+
+● List items in current directory
+  $ Get-ChildItem -Force -Name
+  └ 1 line...
+
+● Check current directory and list contents
+  $ pwd; dir
+  └ 5 lines...
+
+● It appears the directory is empty or there's an issue. Let me verify if the directory exists and has any contents:
+
+● Check if directory exists and count items
+  $ Test-Path "D:\git\cimoment"; (Get-ChildItem -Force).Count
+  └ 3 lines...
+
+● The directory exists but is empty. This appears to be a new/empty repository. Let me ask the user for clarification:
+
+● Asked user: The 'cimoment' directory appears to be empty. Is this a n...
+  └ User selected: This is a new project - I'll describe it
+
+● Asked user: What type of project is this? Please describe the technol...
+  └ User responded: Next.js 14 App Router, TypeScript, React 18, Supabase, Stripe...
+
+● Perfect! Now I'll create a .github/copilot-instructions.md file tailored for your Next.js 14 SaaS project:
+
+● Create .github directory
+  $ New-Item -ItemType Directory -Path ".github" -Force | Out-Null; Write-Output "Created .github directory"
+  └ 2 lines...
+
+○ Create .github\copilot-instructions.md
+
+╭──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ Edit file                                                                                                            │
+│                                                                                                                      │
+│ copilot-instructions.md +122 -0                                                                                      │
+│ D:\git\cimoment\.github                                                                                              │
+│                                                                                                                      │
+│       1  # Copilot Instructions for cimoment                                                                         │
+│       2                                                                                                              │
+│       3  ## Project Overview                                                                                         │
+│       4                                                                                                              │
+│       5  Minimal SaaS product built with Next.js 14 App Router — a single-page decision tool with payment            │
+│          integration.                                                                                                │
+│       6                                                                                                              │
+│       7  **Stack:**                                                                                                  │
+│       8  - Next.js 14 (App Router)                                                                                   │
+│       9  - TypeScript                                                                                                │
+│      10  - React 18                                                                                                  │
+│      11  - Supabase (database & auth)                                                                                │
+│      12  - Stripe (payments)                                                                                         │
+│      13  - Deploy: Vercel                                                                                            │
+│      14                                                                                                              │
+│      15  ## Build & Development                                                                                      │
+│      16                                                                                                              │
+│      17  ```bash                                                                                                     │
+│      18  # Install dependencies                                                                                      │
+│      19  npm install                                                                                                 │
+│      20                                                                                                              │
+│      21  # Development server                                                                                        │
+│      22  npm run dev                                                                                                 │
+│      23                                                                                                              │
+│      24  # Production build                                                                                          │
+│      25  npm run build                                                                                               │
+│      26                                                                                                              │
+│      27  # Type checking                                                                                             │
+│      28  npm run type-check  # or npx tsc --noEmit                                                                   │
+│      29                                                                                                              │
+│      30  # Linting                                                                                                   │
+│      31  npm run lint                                                                                                │
+│      32                                                                                                              │
+│      33  # Run a single test file (if Jest/Vitest configured)                                                        │
+│      34  npm test -- path/to/test-file.test.ts                                                                       │
+│      35  ```                                                                                                         │
+│      36                                                                                                              │
+│      37  ## Architecture                                                                                             │
+│      38                                                                                                              │
+│      39  ### App Router Structure                                                                                    │
+│      40  - `/app` - Next.js 14 App Router pages and layouts                                                          │
+│      41    - `/app/api` - API routes for server-side logic                                                           │
+│      42    - `/app/(auth)` or `/app/(dashboard)` - Route groups for shared layouts                                   │
+│      43  - `/components` - Reusable React components                                                                 │
+│      44  - `/lib` - Utilities, database clients, and shared logic                                                    │
+│      45    - `/lib/supabase` - Supabase client initialization (client & server)                                      │
+│      46    - `/lib/stripe` - Stripe SDK configuration                                                                │
+│      47  - `/types` - TypeScript type definitions                                                                    │
+│      48                                                                                                              │
+│      49  ### Data Flow                                                                                               │
+│      50  1. **Authentication**: Supabase Auth for user management                                                    │
+│      51  2. **Database**: Supabase PostgreSQL for data persistence                                                   │
+│      52  3. **Payments**: Stripe Checkout/Payment Links for subscriptions                                            │
+│      53  4. **Server Actions**: Use Next.js Server Actions for mutations (in `app/` or `lib/actions/`)               │
+│      54  5. **API Routes**: `/app/api` for webhooks (Stripe) and third-party integrations                            │
+│      55                                                                                                              │
+│      56  ### Supabase Setup                                                                                          │
+│      57  - Use `createClient()` from `@supabase/ssr` for App Router                                                  │
+│      58  - **Server Components**: Create client with cookies from `next/headers`                                     │
+│      59  - **Client Components**: Create client in a context provider or use `useState`                              │
+│      60  - **Middleware**: Handle auth refresh in `middleware.ts`                                                    │
+│      61                                                                                                              │
+│      62  ### Stripe Integration                                                                                      │
+│      63  - **Checkout**: Redirect to Stripe Checkout for payments                                                    │
+│      64  - **Webhooks**: Handle events in `/app/api/webhooks/stripe/route.ts`                                        │
+│      65    - Verify webhook signature with `stripe.webhooks.constructEvent()`                                        │
+│      66    - Update user subscription status in Supabase                                                             │
+│      67                                                                                                              │
+│      68  ## Key Conventions                                                                                          │
+│      69                                                                                                              │
+│      70  ### File Naming                                                                                             │
+│      71  - **Server Components**: Default in `/app`, no special suffix                                               │
+│      72  - **Client Components**: Add `'use client'` directive at top                                                │
+│      73  - **Server Actions**: Add `'use server'` directive, typically in `/lib/actions/` or co-located              │
+│      74  - **API Routes**: `route.ts` files in `/app/api/[endpoint]/`                                                │
+│      75                                                                                                              │
+│      76  ### TypeScript Patterns                                                                                     │
+│      77  - Generate Supabase types: `npx supabase gen types typescript --project-id [ref] > types/supabase.ts`       │
+│      78  - Use `Database` type from generated types for type-safe queries                                            │
+│      79  - Prefer explicit return types for Server Actions and API routes                                            │
+│      80                                                                                                              │
+│      81  ### Environment Variables                                                                                   │
+│      82  Required for local development (`.env.local`):                                                              │
+│      83  ```                                                                                                         │
+│      84  # Supabase                                                                                                  │
+│      85  NEXT_PUBLIC_SUPABASE_URL=                                                                                   │
+│      86  NEXT_PUBLIC_SUPABASE_ANON_KEY=                                                                              │
+│      87  SUPABASE_SERVICE_ROLE_KEY=                                                                                  │
+│      88                                                                                                              │
+│      89  # Stripe                                                                                                    │
+│      90  NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=                                                                         │
+│      91  STRIPE_SECRET_KEY=                                                                                          │
+│      92  STRIPE_WEBHOOK_SECRET=                                                                                      │
+│      93  ```                                                                                                         │
+│      94                                                                                                              │
+│      95  ### Server vs Client Component Guidelines                                                                   │
+│      96  - **Use Server Components** (default) for:                                                                  │
+│      97    - Data fetching from Supabase                                                                             │
+│      98    - Accessing environment variables (non-public)                                                            │
+│      99    - Reducing client bundle size                                                                             │
+│     100  - **Use Client Components** (`'use client'`) for:                                                           │
+│     101    - Interactivity (onClick, onChange, etc.)                                                                 │
+│     102    - React hooks (useState, useEffect, etc.)                                                                 │
+│     103    - Browser APIs (localStorage, window, etc.)                                                               │
+│     104    - Third-party libraries requiring client-side rendering                                                   │
+│     105                                                                                                              │
+│     106  ### Error Handling                                                                                          │
+│     107  - Server Actions: Return `{ error: string }` or `{ success: true, data: T }`                                │
+│     108  - API Routes: Use proper HTTP status codes (200, 400, 401, 500)                                             │
+│     109  - Client: Use React Error Boundaries for component-level errors                                             │
+│     110                                                                                                              │
+│     111  ### Stripe Webhook Security                                                                                 │
+│     112  - Always verify webhook signatures in production                                                            │
+│     113  - Use raw body for signature verification (disable body parsing)                                            │
+│     114  - Return 200 status quickly; process events async if needed                                                 │
+│     115                                                                                                              │
+│     116  ## Vercel Deployment                                                                                        │
+│     117                                                                                                              │
+│     118  - Environment variables must be set in Vercel dashboard                                                     │
+│     119  - Stripe webhook URL: `https://yourdomain.com/api/webhooks/stripe`                                          │
+│     120  - Supabase callback URL: `https://yourdomain.com/auth/callback`                                             │
+│     121  - Enable automatic HTTPS and preview deployments work with Stripe test mode                                 │
+│     122                                                                                                              │
+│                                                                                                                      │
+│ Do you want to edit D:\git\cimoment\.github\copilot-instructions.md?                                                 │
+│                                                                                                                      │
+│ ❯ 1. Yes                                                                                                             │
+│   2. Yes, and approve all file operations for the rest of the running session                                        │
+│   3. No, and tell Copilot what to do differently (Esc to stop)                                                       │
+│                                                                                                                      │
+│ Confirm with number keys or ↑↓ keys and Enter, Cancel with Esc                                                       │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭──────────────────────────────────────────────────────────────────────────────────────────────────╮
+│  ╭─╮╭─╮                                                                                          │
+│  ╰─╯╰─╯  GitHub Copilot v0.0.406                                                                 │
+│  █ ▘▝ █  Describe a task to get started.                                                         │
+│   ▔▔▔▔                                                                                           │
+│  Pick a model with /model. Send this session to GitHub with /delegate, and Copilot will create   │
+│  a PR. Enter ? to see all commands. Copilot uses AI, so always check for mistakes.               │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
+
+● 💡 No copilot instructions found. Run /init to generate a copilot-instructions.md file for this project.
+
+❯ /init
+
+◐ The user wants me to analyze a codebase and create a .github/copilot-instructions.md file with specific guidelines.
+  Let me start by exploring the repository structure to understand what we're working with.
+
+  I should:
+  1. First explore the directory structure
+  2. Look for existing documentation (README.md, CONTRIBUTING.md, etc.)
+  3. Check for existing AI assistant configs
+  4. Look for package managers (package.json, requirements.txt, etc.)
+  5. Understand the architecture and conventions
+  6. Create the copilot-instructions.md file
+
+  Let me start by exploring the repository structure.
+
+● I'll analyze the codebase to create a comprehensive .github/copilot-instructions.md file. Let me start by exploring
+  the repository structure.
+
+● List directory .
+  └ 6 files found
+
+● Glob "*.md"
+  └ No matches found
+
+● Glob "package.json"
+  └ No matches found
+
+● Glob ".cursorrules"
+  └ No matches found
+
+● Glob "CLAUDE.md"
+  └ No matches found
+
+● Glob "AGENTS.md"
+  └ No matches found
+
+● Glob ".windsurfrules"
+  └ No matches found
+
+● Glob "CONVENTIONS.md"
+  └ No matches found
+
+● List all files and directories including hidden ones
+  $ Get-ChildItem -Path . -Force | Select-Object Name, Mode
+  └ 1 line...
+
+✗ Read shell output: Waiting up to 10 seconds for command output
+  Invalid shell ID: 0. Please supply a valid shell ID to read output from.
+
+  <no active shell sessions>
+
+● List files and directories
+  $ ls -Force
+  └ 1 line...
+
+● Let me try a different approach to explore the directory:
+
+● List items in current directory
+  $ Get-ChildItem -Force -Name
+  └ 1 line...
+
+● Check current directory and list contents
+  $ pwd; dir
+  └ 5 lines...
+
+● It appears the directory is empty or there's an issue. Let me verify if the directory exists and has any contents:
+
+● Check if directory exists and count items
+  $ Test-Path "D:\git\cimoment"; (Get-ChildItem -Force).Count
+  └ 3 lines...
+
+● The directory exists but is empty. This appears to be a new/empty repository. Let me ask the user for clarification:
+
+● Asked user: The 'cimoment' directory appears to be empty. Is this a n...
+  └ User selected: This is a new project - I'll describe it
+
+● Asked user: What type of project is this? Please describe the technol...
+  └ User responded: Next.js 14 App Router, TypeScript, React 18, Supabase, Stripe...
+
+● Perfect! Now I'll create a .github/copilot-instructions.md file tailored for your Next.js 14 SaaS project:
+
+● Create .github directory
+  $ New-Item -ItemType Directory -Path ".github" -Force | Out-Null; Write-Output "Created .github directory"
+  └ 2 lines...
+● Create .github\copilot-instructions.md (+122)
+
+● Perfect! I've created a comprehensive .github/copilot-instructions.md file for your Next.js 14 SaaS project.
+
+  What I included:
+
+   - Build, dev, lint, and test commands for Next.js/TypeScript
+   - App Router architecture with Supabase and Stripe integration patterns
+   - Server vs Client Component guidelines (critical for App Router)
+   - Supabase client setup patterns for SSR
+   - Stripe webhook security and payment flow
+   - Environment variable structure
+   - TypeScript conventions including Supabase type generation
+
+  Given this is a Next.js + Stripe + Supabase project, would you like me to help configure the GitHub MCP server for
+  repository operations?
+
+  Is there anything you'd like me to adjust or add? For example:
+
+   - Specific testing framework details (Jest/Vitest/Playwright)?
+   - Component library conventions (shadcn/ui, Radix, etc.)?
+   - Specific database schema patterns you're planning to use?
+
+ D:\git\cimoment                                                                                 claude-sonnet-4.5 (1x)
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯  Type @ to mention files or / for commands
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ shift+tab cycle mode ‌                                                                       Remaining requests: 79.8%
