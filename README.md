@@ -275,11 +275,13 @@ This ensures:
 
 ## 📝 License
 
-This project is private and proprietary.
+Copyright © 2026. All rights reserved.
+
+This project is proprietary software. The source code is available for reference and learning purposes only. Use of this code in production requires explicit permission from the repository owner.
 
 ## 🤝 Contributing
 
-This is a private project. For access or collaboration inquiries, please contact the repository owner.
+This is a personal project. For collaboration inquiries or questions, please open an issue or contact the repository owner.
 
 ## 📧 Support
 
