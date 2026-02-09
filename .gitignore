@@ -36,7 +36,8 @@ next-env.d.ts
 # development files
 *.txt
 *STATUS.md
-*SUMMARY.md
+IMPLEMENTATION-SUMMARY.md
+DEPLOY-SUMMARY.md
 
 # IDE
 .vscode/
