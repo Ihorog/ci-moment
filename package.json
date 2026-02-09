@@ -4,6 +4,11 @@
   "private": true,
   "description": "A minimalist SaaS decision tool that captures your unique moment in time",
   "author": "Ihorog",
+  "license": "SEE LICENSE IN LICENSE",
+  "homepage": "https://github.com/Ihorog/ci-moment#readme",
+  "bugs": {
+    "url": "https://github.com/Ihorog/ci-moment/issues"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/Ihorog/ci-moment.git"
@@ -13,7 +18,9 @@
     "saas",
     "next.js",
     "stripe",
-    "supabase"
+    "supabase",
+    "typescript",
+    "vercel"
   ],
   "scripts": {
     "dev": "next dev",
