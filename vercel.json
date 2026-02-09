@@ -1,5 +1,17 @@
 {
   "projectSettings": {
     "framework": "nextjs"
+  },
+  "github": {
+    "silent": true
+  },
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install",
+  "env": {
+    "NEXT_PUBLIC_URL": {
+      "description": "Public URL of the application",
+      "value": "https://ci-moment.vercel.app"
+    }
   }
 }

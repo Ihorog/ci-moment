@@ -27,8 +27,8 @@ export async function POST(request: Request) {
       throw new Error('STRIPE_WEBHOOK_SECRET is not configured');
     }
     event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
-  } catch (err: any) {
-    const message = err?.message || 'Webhook signature verification failed';
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Webhook signature verification failed';
     console.error('Stripe webhook error:', message);
     return new NextResponse(`Webhook Error: ${message}`, { status: 400 });
   }

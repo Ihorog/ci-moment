@@ -103,10 +103,11 @@ export async function POST(request: Request) {
       { checkoutUrl: session.url },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error in seal route:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Internal server error';
     return NextResponse.json(
-      { error: error?.message || 'Internal server error' },
+      { error: errorMessage },
       { status: 500 }
     );
   }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 
 interface SealButtonProps {
@@ -57,7 +57,7 @@ export default function SealButton({
       } else {
         throw new Error("No checkout URL");
       }
-    } catch (err) {
+    } catch {
       setLoading(false);
       setError(true);
     }
