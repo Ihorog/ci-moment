@@ -37,3 +37,17 @@ next-env.d.ts
 *.txt
 *STATUS.md
 *SUMMARY.md
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+Thumbs.db
+
+# Temporary files
+/tmp/
+*.log
