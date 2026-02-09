@@ -1,12 +1,48 @@
 import type { Metadata, Viewport } from "next";
 
 export const metadata: Metadata = {
-  title: "Ci Moment",
-  description: "A personal moment signal.",
+  title: "Ci Moment - Your Personal Decision Signal",
+  description: "Check your unique moment status for Career, Love, or Timing. A minimalist decision tool that captures your specific moment in time. Seal your decision forever.",
+  keywords: [
+    "decision making",
+    "personal moment",
+    "timing",
+    "career guidance",
+    "relationship timing",
+    "decision tool",
+  ],
+  authors: [{ name: "Ci Moment" }],
+  creator: "Ci Moment",
+  publisher: "Ci Moment",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  metadataBase: new URL(process.env.NEXT_PUBLIC_URL || "https://ci-moment.vercel.app"),
   openGraph: {
-    title: "Ci Moment",
-    description: "A personal moment signal.",
+    title: "Ci Moment - Your Personal Decision Signal",
+    description: "Check your unique moment status for Career, Love, or Timing. Lock your decision to this moment forever.",
+    url: process.env.NEXT_PUBLIC_URL || "https://ci-moment.vercel.app",
+    siteName: "Ci Moment",
+    locale: "en_US",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Ci Moment - Your Personal Decision Signal",
+    description: "Check your unique moment status for Career, Love, or Timing.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
 };
 

@@ -6,15 +6,10 @@ import { createClient } from '@supabase/supabase-js';
  * never be exposed to the client. Environment variables must be defined in
  * `.env` for the URL and service key.
  */
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY;
+const supabaseUrl = process.env.SUPABASE_URL || 'https://placeholder.supabase.co';
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY || 'placeholder_key';
 
-if (!supabaseUrl || !supabaseServiceKey) {
-  throw new Error(
-    'Supabase environment variables SUPABASE_URL and SUPABASE_SERVICE_KEY must be set'
-  );
-}
-
+// Create client - will validate at runtime when actually used
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 export interface Artifact {
@@ -40,6 +35,22 @@ export interface ArtifactInput {
 }
 
 /**
+ * Validates that Supabase environment variables are configured.
+ * Throws an error if not configured properly.
+ */
+function validateSupabaseConfig() {
+  const actualUrl = process.env.SUPABASE_URL;
+  const actualKey = process.env.SUPABASE_SERVICE_KEY;
+  
+  if (!actualUrl || actualUrl === 'https://placeholder.supabase.co' || 
+      !actualKey || actualKey === 'placeholder_key') {
+    throw new Error(
+      'Supabase environment variables SUPABASE_URL and SUPABASE_SERVICE_KEY must be set'
+    );
+  }
+}
+
+/**
  * Insert a new artifact into the `artifacts` table. When creating an
  * artifact it is not yet sealed, so `is_sealed` is set to false and
  * `sealed_at_utc` and `stripe_session_id` are null. Returns the inserted
@@ -48,6 +59,7 @@ export interface ArtifactInput {
 export async function createArtifact(
   data: ArtifactInput
 ): Promise<Artifact> {
+  validateSupabaseConfig();
   const { data: inserted, error } = await supabase
     .from('artifacts')
     .insert([{ ...data, is_sealed: false, sealed_at_utc: null, stripe_session_id: null }])
@@ -69,6 +81,7 @@ export async function sealArtifact(
   artifactCode: string,
   stripeSessionId: string
 ): Promise<Artifact> {
+  validateSupabaseConfig();
   const { data: updated, error } = await supabase
     .from('artifacts')
     .update({
@@ -93,6 +106,7 @@ export async function sealArtifact(
 export async function getArtifactByHash(
   hash: string
 ): Promise<Artifact | null> {
+  validateSupabaseConfig();
   const { data, error } = await supabase
     .from('artifacts')
     .select('*')
