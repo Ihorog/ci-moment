@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 // Assumed existence based on prompt instructions
 import { getStatus } from "@/lib/engine";
 
@@ -23,8 +24,20 @@ export default function Page() {
   const [screen, setScreen] = useState<ScreenState>("landing");
   const [context, setContext] = useState<ContextType>(null);
   const [result, setResult] = useState<ResultData | null>(null);
+  const [cancelled, setCancelled] = useState(false);
+
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    if (searchParams.get("cancelled") === "true") {
+      setCancelled(true);
+      const timer = setTimeout(() => setCancelled(false), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [searchParams]);
 
   const handleContextSelect = useCallback((selectedContext: ContextType) => {
+    setCancelled(false);
     setContext(selectedContext);
     setScreen("threshold");
   }, []);
@@ -85,6 +98,21 @@ export default function Page() {
           context={context}
           lockedMinute={result.minute}
         />
+      )}
+
+      {cancelled && (
+        <div
+          style={{
+            position: "absolute",
+            bottom: "2rem",
+            fontSize: "0.65rem",
+            color: "#555",
+            letterSpacing: "0.05em",
+            transition: "opacity 0.5s ease",
+          }}
+        >
+          Payment cancelled. Your moment is still here.
+        </div>
       )}
     </main>
   );
