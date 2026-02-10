@@ -74,11 +74,13 @@ export default async function VerifyPage({ params, searchParams }: VerifyPagePro
           gap: '1rem',
         }}
       >
+        {/* Auto-refresh while waiting for webhook to process */}
+        <meta httpEquiv="refresh" content="3" />
         <div style={{ color: '#888', fontSize: '0.85rem' }}>
           Sealing your moment…
         </div>
         <div style={{ color: '#555', fontSize: '0.7rem' }}>
-          Payment received. Refresh in a few seconds.
+          Payment received. This page will refresh automatically.
         </div>
       </div>
     );

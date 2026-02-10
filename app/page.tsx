@@ -28,10 +28,12 @@ export default function Page() {
 
   const searchParams = useSearchParams();
 
+  const CANCELLED_MESSAGE_DURATION_MS = 5000;
+
   useEffect(() => {
     if (searchParams.get("cancelled") === "true") {
       setCancelled(true);
-      const timer = setTimeout(() => setCancelled(false), 5000);
+      const timer = setTimeout(() => setCancelled(false), CANCELLED_MESSAGE_DURATION_MS);
       return () => clearTimeout(timer);
     }
   }, [searchParams]);
