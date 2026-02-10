@@ -203,6 +203,29 @@ The project includes:
 6. Artifact marked as sealed in database
 7. User redirected to verification page
 
+## 💳 Payments (Stripe Payment Link)
+
+The MVP payment flow uses a Stripe Payment Link — no backend checkout sessions, webhooks, or database writes required.
+
+### Setup
+
+1. **Create a Stripe product** in the [Stripe Dashboard](https://dashboard.stripe.com/products) for **$5** (one-time payment).
+2. **Create a Payment Link** for that product.
+3. Set the **Success URL** on the Payment Link to: `https://ci-moment.vercel.app/success`
+4. Copy the Payment Link URL and set it as the `NEXT_PUBLIC_STRIPE_PAYMENT_LINK` environment variable in Vercel (Production).
+
+### Manual Test Checklist
+
+- [ ] Open the site
+- [ ] Choose a context (Career / Love / Timing)
+- [ ] See the status result (PROCEED / HOLD / NOT NOW)
+- [ ] Click "Seal this moment — $5" → Stripe checkout opens
+- [ ] Complete payment
+- [ ] Stripe redirects to `/success`
+- [ ] Click "Back to Ci Moment" → returns to home
+
+> If `NEXT_PUBLIC_STRIPE_PAYMENT_LINK` is not set, the CTA button is disabled and shows "Payment not configured".
+
 ## 🔧 Environment Variables
 
 | Variable | Description | Required |
@@ -212,6 +235,7 @@ The project includes:
 | `SUPABASE_SERVICE_KEY` | Supabase service role key | Yes |
 | `STRIPE_SECRET_KEY` | Stripe secret key (test or live) | Yes |
 | `STRIPE_WEBHOOK_SECRET` | Stripe webhook signing secret | Yes |
+| `NEXT_PUBLIC_STRIPE_PAYMENT_LINK` | Stripe Payment Link URL for MVP flow | Yes (production) |
 
 ## 📖 API Documentation
 
