@@ -3,10 +3,8 @@
 import { useState } from "react";
 
 interface SealButtonProps {
-  artifactCode: string;
   context: string | null;
   status: string;
-  lockedMinute: number;
 }
 
 export default function SealButton({
@@ -21,7 +19,7 @@ export default function SealButton({
   const handleSeal = () => {
     if (!paymentLink) return;
     const url = new URL(paymentLink);
-    if (context) url.searchParams.set("client_reference_id", `${context}_${status}`);
+    if (context && status) url.searchParams.set("client_reference_id", `${context}_${status}`);
     window.location.href = url.toString();
   };
 
