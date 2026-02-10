@@ -1,4 +1,5 @@
-import { CONTEXT_IDS, STATUSES, getStatus, generateArtifactCode, generateVerifyHash } from '@/lib/engine';
+import { CONTEXT_IDS, STATUSES, getStatus, generateArtifactCode } from '@/lib/engine';
+import { generateVerifyHash } from '@/lib/engine.server';
 import type { Context, Status } from '@/lib/engine';
 
 describe('engine', () => {

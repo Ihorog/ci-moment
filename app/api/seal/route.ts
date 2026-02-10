@@ -3,8 +3,8 @@ import crypto from 'node:crypto';
 import {
   CONTEXT_IDS,
   STATUSES,
-  generateVerifyHash,
 } from '@/lib/engine';
+import { generateVerifyHash } from '@/lib/engine.server';
 import { createArtifact } from '@/lib/supabase';
 
 /**
