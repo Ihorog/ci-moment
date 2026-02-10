@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import Stripe from 'stripe';
+import crypto from 'node:crypto';
 import {
   CONTEXT_IDS,
   STATUSES,
@@ -7,15 +7,33 @@ import {
 } from '@/lib/engine';
 import { createArtifact } from '@/lib/supabase';
 
-// Initialize Stripe client once per Lambda/container. The secret key must be
-// provided on the server via environment variables.
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+/**
+ * Generate a Fondy-compatible SHA-1 signature.
+ *
+ * The algorithm is:
+ *   1. Sort the parameter keys alphabetically.
+ *   2. Filter out keys whose value is empty and the 'signature' key.
+ *   3. Join values with '|', prepending the merchant password.
+ *   4. Return the SHA-1 hex digest.
+ */
+function generateFondySignature(
+  password: string,
+  params: Record<string, string | number>
+): string {
+  const sorted = Object.keys(params)
+    .sort()
+    .filter((key) => key !== 'signature' && params[key] !== '')
+    .map((key) => params[key]);
+
+  const raw = [password, ...sorted].join('|');
+  return crypto.createHash('sha1').update(raw).digest('hex');
+}
 
 /**
  * Handle POST requests to the seal API. This endpoint validates the
  * incoming payload, ensures the provided status is correct for the given
  * context and minute, persists the artifact in Supabase and creates a
- * Stripe checkout session for the user to seal their Ci Moment.
+ * Fondy checkout session for the user to seal their Ci Moment.
  */
 export async function POST(request: Request) {
   try {
@@ -56,7 +74,7 @@ export async function POST(request: Request) {
     // Generate verification hash and persist artifact
     const verifyHash = generateVerifyHash(artifactCode, lockedMinute, status);
     const lockedAtIso = new Date(lockedMinute * 60000).toISOString();
-    await createArtifact({
+    const artifact = await createArtifact({
       artifact_code: artifactCode,
       context,
       status,
@@ -74,33 +92,54 @@ export async function POST(request: Request) {
       );
     }
 
-    // Create a Stripe Checkout Session for sealing the artifact
-    const session = await stripe.checkout.sessions.create({
-      mode: 'payment',
-      payment_method_types: ['card'],
-      line_items: [
-        {
-          price_data: {
-            currency: 'usd',
-            product_data: {
-              name: 'Ci Moment Seal',
-              description: `Artifact: ${artifactCode} · Status: ${status}`,
-            },
-            unit_amount: 500,
-          },
-          quantity: 1,
-        },
-      ],
-      metadata: {
-        artifact_code: artifactCode,
-        verify_hash: verifyHash,
-      },
-      success_url: `${baseUrl}/verify/${verifyHash}?sealed=true`,
-      cancel_url: `${baseUrl}?cancelled=true`,
-    });
+    // Build stateless success URL
+    const successUrl = `${baseUrl}/verify/${verifyHash}?sealed=true&status=${encodeURIComponent(status)}&context=${encodeURIComponent(context)}`;
+
+    // Validate Fondy environment variables
+    const merchantId = process.env.FONDY_MERCHANT_ID;
+    const secretKey = process.env.FONDY_SECRET_KEY;
+    if (!merchantId || !secretKey) {
+      return NextResponse.json(
+        { error: 'Server configuration error: Fondy credentials not set' },
+        { status: 500 }
+      );
+    }
+
+    // Build and sign the Fondy checkout request
+    const fondyParams: Record<string, string | number> = {
+      order_id: `ci_${artifact.id}_${Date.now()}`,
+      merchant_id: merchantId,
+      order_desc: `Ci Moment Seal: ${artifactCode}`,
+      amount: 500, // cents — $5.00 USD
+      currency: 'USD',
+      response_url: successUrl,
+    };
+    fondyParams.signature = generateFondySignature(secretKey, fondyParams);
+
+    // Send request to Fondy checkout API
+    const fondyResponse = await fetch(
+      'https://pay.fondy.eu/api/checkout/url/',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ request: fondyParams }),
+      }
+    );
+
+    const fondyData = await fondyResponse.json();
+
+    if (
+      !fondyData.response ||
+      fondyData.response.response_status === 'failure'
+    ) {
+      const msg =
+        fondyData.response?.error_message || 'Fondy checkout creation failed';
+      console.error('Fondy error:', msg);
+      return NextResponse.json({ error: msg }, { status: 502 });
+    }
 
     return NextResponse.json(
-      { checkoutUrl: session.url },
+      { checkoutUrl: fondyData.response.checkout_url },
       { status: 200 }
     );
   } catch (error) {

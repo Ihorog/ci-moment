@@ -9,7 +9,6 @@ interface ResultProps {
   artifactCode: string;
   timestamp: string;
   context: ContextType;
-  lockedMinute: number;
 }
 
 export default function Result({
@@ -17,7 +16,6 @@ export default function Result({
   artifactCode,
   timestamp,
   context,
-  lockedMinute,
 }: ResultProps) {
   const [opacity, setOpacity] = useState(0);
   const [showSeal, setShowSeal] = useState(false);
@@ -113,20 +111,10 @@ export default function Result({
         }}
       >
         {showSeal && (
-          <>
-            <div style={{ fontSize: "0.6rem", color: "#444", letterSpacing: "0.05em" }}>
-              Lock this signal as a permanent checkpoint.
-            </div>
-            <SealButton
-              artifactCode={artifactCode}
-              context={context}
-              status={status}
-              lockedMinute={lockedMinute}
-            />
-            <div style={{ fontSize: "0.5rem", color: "#333", letterSpacing: "0.03em" }}>
-              Secure online payment.
-            </div>
-          </>
+          <SealButton
+            context={context}
+            status={status}
+          />
         )}
       </div>
     </div>

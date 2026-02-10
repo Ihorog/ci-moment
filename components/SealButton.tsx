@@ -3,10 +3,8 @@
 import { useState } from "react";
 
 interface SealButtonProps {
-  artifactCode: string;
   context: string | null;
   status: string;
-  lockedMinute: number;
 }
 
 export default function SealButton({
@@ -15,14 +13,13 @@ export default function SealButton({
 }: SealButtonProps) {
   const [hover, setHover] = useState(false);
 
-  const paymentUrl = process.env.NEXT_PUBLIC_PAYMENT_URL;
-  const isConfigured = Boolean(paymentUrl);
+  const paymentLink = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK;
+  const isConfigured = Boolean(paymentLink);
 
   const handleSeal = () => {
-    if (!paymentUrl) return;
-    const url = new URL(paymentUrl);
-    if (context) url.searchParams.set("context", context);
-    if (status) url.searchParams.set("status", status);
+    if (!paymentLink) return;
+    const url = new URL(paymentLink);
+    if (context && status) url.searchParams.set("client_reference_id", `${context}_${status}`);
     window.location.href = url.toString();
   };
 
@@ -49,8 +46,19 @@ export default function SealButton({
         Seal this moment — $5
       </button>
 
+      {isConfigured && (
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.2rem" }}>
+          <div style={{ fontSize: "0.55rem", color: "#1a1a1a" }}>
+            Lock this signal as a permanent checkpoint.
+          </div>
+          <div style={{ fontSize: "0.55rem", color: "#1a1a1a" }}>
+            Secure payment via Stripe.
+          </div>
+        </div>
+      )}
+
       {!isConfigured && (
-        <div style={{ fontSize: "0.5rem", color: "#333" }}>
+        <div style={{ fontSize: "0.5rem", color: "#333", opacity: 0.5 }}>
           Payment not configured
         </div>
       )}
