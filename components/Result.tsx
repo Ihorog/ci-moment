@@ -99,13 +99,13 @@ export default function Result({
         </div>
       </div>
 
-      {/* Seal Button Container */}
+      {/* Seal CTA Container */}
       <div
         style={{
-          height: "60px", // Reserve space
           display: "flex",
-          justifyContent: "center",
+          flexDirection: "column",
           alignItems: "center",
+          gap: "0.8rem",
           opacity: showSeal ? 1 : 0,
           transition: "opacity 0.8s ease",
         }}
