@@ -203,11 +203,37 @@ The project includes:
 6. Artifact marked as sealed in database
 7. User redirected to verification page
 
+## 💳 Payments
+
+Ci Moment supports redirect-based payment via external Payment Links (Fondy, WayForPay, or any provider).
+
+### Steps to enable payments
+
+1. Create a Payment Page in your provider (Fondy / WayForPay / etc.)
+2. Set Success URL to:
+   `https://ci-moment.vercel.app/success`
+3. Copy the payment link
+4. Add it to the environment variable:
+   `NEXT_PUBLIC_PAYMENT_URL=https://your-payment-link`
+5. Redeploy
+
+### Manual test checklist
+
+- [ ] Open site
+- [ ] Select context
+- [ ] See status
+- [ ] Click "Seal this moment"
+- [ ] Payment page opens
+- [ ] Complete payment
+- [ ] Redirect to /success
+- [ ] Click back → homepage
+
 ## 🔧 Environment Variables
 
 | Variable | Description | Required |
 |----------|-------------|----------|
 | `NEXT_PUBLIC_URL` | Public URL of the application | Yes |
+| `NEXT_PUBLIC_PAYMENT_URL` | External payment page URL (Fondy / WayForPay) | No |
 | `SUPABASE_URL` | Supabase project URL | Yes |
 | `SUPABASE_SERVICE_KEY` | Supabase service role key | Yes |
 | `STRIPE_SECRET_KEY` | Stripe secret key (test or live) | Yes |
