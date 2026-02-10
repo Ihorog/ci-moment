@@ -101,24 +101,32 @@ export default function Result({
         </div>
       </div>
 
-      {/* Seal Button Container */}
+      {/* Seal CTA Container */}
       <div
         style={{
-          height: "60px", // Reserve space
           display: "flex",
-          justifyContent: "center",
+          flexDirection: "column",
           alignItems: "center",
+          gap: "0.8rem",
           opacity: showSeal ? 1 : 0,
           transition: "opacity 0.8s ease",
         }}
       >
         {showSeal && (
-          <SealButton
-            artifactCode={artifactCode}
-            context={context}
-            status={status}
-            lockedMinute={lockedMinute}
-          />
+          <>
+            <div style={{ fontSize: "0.6rem", color: "#444", letterSpacing: "0.05em" }}>
+              Lock this signal as a permanent checkpoint.
+            </div>
+            <SealButton
+              artifactCode={artifactCode}
+              context={context}
+              status={status}
+              lockedMinute={lockedMinute}
+            />
+            <div style={{ fontSize: "0.5rem", color: "#333", letterSpacing: "0.03em" }}>
+              Secure online payment.
+            </div>
+          </>
         )}
       </div>
     </div>
