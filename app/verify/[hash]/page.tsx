@@ -2,6 +2,7 @@ import { getArtifactByHash } from '@/lib/supabase';
 
 interface VerifyPageProps {
   params: { hash: string };
+  searchParams: { sealed?: string };
 }
 
 /**
@@ -9,10 +10,16 @@ interface VerifyPageProps {
  * verification hash from Supabase and displays its details if the artifact
  * exists and has been sealed. Otherwise a not found message is shown.
  *
+ * When a user arrives with ?sealed=true (post-payment redirect) but the
+ * webhook has not yet processed, a pending message is displayed instead of
+ * "not found" to account for the race condition.
+ *
  * The page is a server component — it does not include client side logic.
  */
-export default async function VerifyPage({ params }: VerifyPageProps) {
+export default async function VerifyPage({ params, searchParams }: VerifyPageProps) {
   const { hash } = params;
+  const justPaid = searchParams.sealed === 'true';
+
   let artifact = null;
   try {
     artifact = await getArtifactByHash(hash);
@@ -21,10 +28,13 @@ export default async function VerifyPage({ params }: VerifyPageProps) {
     console.error('Error fetching artifact:', error);
   }
 
-  const notFound =
-    !artifact || typeof artifact.is_sealed === 'undefined' || !artifact.is_sealed;
+  // Artifact exists and is sealed — show full verification
+  if (artifact && artifact.is_sealed) {
+    const lockedAt = new Date(artifact.locked_at_utc)
+      .toISOString()
+      .replace('T', ' ')
+      .replace('Z', ' UTC');
 
-  if (notFound) {
     return (
       <div
         style={{
@@ -37,23 +47,46 @@ export default async function VerifyPage({ params }: VerifyPageProps) {
           justifyContent: 'center',
         }}
       >
-        Artifact not found
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          <div>Issued: YES</div>
+          <div>Artifact: {artifact.artifact_code}</div>
+          <div>Status: {artifact.status}</div>
+          <div>Locked at: {lockedAt}</div>
+        </div>
       </div>
     );
   }
 
-  if (!artifact) {
-    return <div>Artifact not found</div>;
+  // Artifact exists but is not yet sealed and user just came from payment —
+  // the Stripe webhook may still be processing.
+  if (artifact && !artifact.is_sealed && justPaid) {
+    return (
+      <div
+        style={{
+          backgroundColor: '#0a0a0a',
+          color: '#ffffff',
+          fontFamily: 'monospace',
+          minHeight: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '1rem',
+        }}
+      >
+        {/* Auto-refresh while waiting for webhook to process */}
+        <meta httpEquiv="refresh" content="3" />
+        <div style={{ color: '#888', fontSize: '0.85rem' }}>
+          Sealing your moment…
+        </div>
+        <div style={{ color: '#555', fontSize: '0.7rem' }}>
+          Payment received. This page will refresh automatically.
+        </div>
+      </div>
+    );
   }
 
-  // Format the locked_at timestamp into a human readable UTC string without
-  // milliseconds. If the string already ends with 'Z' the replacement below
-  // appends ' UTC' for clarity.
-  const lockedAt = new Date(artifact.locked_at_utc)
-    .toISOString()
-    .replace('T', ' ')
-    .replace('Z', ' UTC');
-
+  // Artifact not found or not sealed
   return (
     <div
       style={{
@@ -66,12 +99,7 @@ export default async function VerifyPage({ params }: VerifyPageProps) {
         justifyContent: 'center',
       }}
     >
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-        <div>Issued: YES</div>
-        <div>Artifact: {artifact.artifact_code}</div>
-        <div>Status: {artifact.status}</div>
-        <div>Locked at: {lockedAt}</div>
-      </div>
+      Artifact not found
     </div>
   );
 }
