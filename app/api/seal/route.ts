@@ -107,10 +107,10 @@ export async function POST(request: Request) {
 
     // Build and sign the Fondy checkout request
     const fondyParams: Record<string, string | number> = {
-      order_id: artifact.id,
+      order_id: `ci_${artifact.id}_${Date.now()}`,
       merchant_id: merchantId,
       order_desc: `Ci Moment Seal: ${artifactCode}`,
-      amount: 500,
+      amount: 500, // cents — $5.00 USD
       currency: 'USD',
       response_url: successUrl,
     };
