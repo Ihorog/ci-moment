@@ -1,0 +1,85 @@
+name: Preview Deployment
+
+on:
+  pull_request:
+    branches:
+      - main
+    types: [opened, synchronize, reopened]
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    environment: preview
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type check
+        run: npm run type-check
+
+      - name: Test
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      - name: Comment on PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prNumber = context.issue.number;
+            const repoName = context.repo.repo;
+            const repoOwner = context.repo.owner;
+            
+            // Vercel automatically creates preview deployments
+            // This comment provides context and checklist
+            const comment = `
+            ## 🚀 Preview Deployment
+            
+            ### CI Status: ✅ Passed
+            
+            - ✅ Lint check passed
+            - ✅ Type check passed
+            - ✅ Tests passed
+            - ✅ Build succeeded
+            
+            ### Preview URL
+            Vercel will automatically deploy this PR to a preview environment.
+            Check the Vercel bot comment for the preview URL.
+            
+            ### Manual Testing Checklist
+            - [ ] Landing page loads correctly
+            - [ ] Can select context (Career/Love/Timing)
+            - [ ] Result displays with artifact code
+            - [ ] Seal button appears after 2 seconds
+            - [ ] Payment flow works (if configured)
+            
+            ### Environment
+            - **Mode**: Preview
+            - **Payment**: Test mode (if NEXT_PUBLIC_PAYMENT_URL is set)
+            - **Database**: Preview database (if configured)
+            `;
+            
+            github.rest.issues.createComment({
+              issue_number: prNumber,
+              owner: repoOwner,
+              repo: repoName,
+              body: comment
+            });
