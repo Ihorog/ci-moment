@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+- **Payment Provider Migration**: Migrated from Stripe to Fondy payment gateway
+  - Removed Stripe npm dependency
+  - Removed Stripe webhook handler (`/app/api/webhook/route.ts`)
+  - Updated payment flow to use Fondy API integration
+  - Replaced `stripe_session_id` with generic `payment_id` in database schema
+  - Updated all documentation to reflect Fondy integration
+  - Updated SealButton component to call `/api/seal` endpoint
+
 ## [1.0.0] - 2026-02-09
 
 ### Initial Release
@@ -13,12 +24,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Core Decision Engine**: Deterministic status calculation based on UTC time and context
 - **Three Decision Contexts**: Career, Love, and Timing with unique status outcomes
 - **Artifact System**: Cryptographically secure artifact code generation (format: ci-XX-XXXXX)
-- **Payment Integration**: Stripe Checkout for sealing decisions permanently
+- **Payment Integration**: Payment gateway integration for sealing decisions permanently
 - **Verification System**: SHA-256 based verification for sealed artifacts
 - **Database Layer**: PostgreSQL via Supabase with full TypeScript types
 - **API Endpoints**:
   - `/api/seal` - Payment initiation and artifact creation
-  - `/api/webhook` - Stripe webhook handler for payment confirmation
 - **User Interface**:
   - Landing screen with context selection
   - Confirmation threshold screen
@@ -27,7 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Seal button with payment flow
   - Verification page for sealed artifacts
 - **Security Features**:
-  - Stripe webhook signature verification
+  - Payment signature verification
   - Server-side environment variable validation
   - SQL injection protection via Supabase client
   - HTTPS-only in production
@@ -46,7 +56,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Documentation**:
   - Comprehensive README with quick start guide
   - Detailed deployment guide (DEPLOYMENT.md)
-  - Stripe setup instructions (STRIPE-SETUP.md)
   - Supabase setup guide (SUPABASE-SETUP.md)
   - Marketing guide (MARKETING.md)
   - Launch checklist (LAUNCH-CHECKLIST.md)
@@ -56,7 +65,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Language**: TypeScript with strict type checking
 - **Styling**: Inline CSS for minimal approach
 - **Database**: Supabase (PostgreSQL)
-- **Payments**: Stripe with webhook integration
+- **Payments**: Fondy payment gateway
 - **Node.js**: Version 20.x or higher required
 - **Type Safety**: Full TypeScript coverage with no errors
 - **Code Quality**: ESLint configured with Next.js rules

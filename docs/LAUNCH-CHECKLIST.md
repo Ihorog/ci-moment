@@ -8,10 +8,8 @@ Complete pre-launch checklist for Ci Moment deployment.
 - [ ] Supabase project created
 - [ ] Database schema deployed (`db/schema.sql`)
 - [ ] Supabase credentials configured in Vercel
-- [ ] Stripe account created (test mode)
-- [ ] Stripe API keys configured in Vercel
-- [ ] Stripe webhook endpoint created
-- [ ] Stripe webhook secret configured in Vercel
+- [ ] Fondy merchant account created
+- [ ] Fondy credentials configured in Vercel
 - [ ] `NEXT_PUBLIC_URL` set correctly in all environments
 
 ### Deployment
@@ -33,9 +31,9 @@ Complete pre-launch checklist for Ci Moment deployment.
 - [ ] Manifest animation plays
 - [ ] Result screen shows correctly
 - [ ] Seal button appears
-- [ ] Stripe Checkout loads
-- [ ] Test payment completes (4242 4242 4242 4242)
-- [ ] Webhook receives event
+- [ ] Fondy Checkout loads
+- [ ] Test payment completes
+- [ ] Fondy redirects to verification page
 - [ ] Artifact marked as sealed in database
 - [ ] Verification page displays sealed artifact
 
@@ -80,7 +78,7 @@ Complete pre-launch checklist for Ci Moment deployment.
 ### Security
 - [ ] HTTPS enforced
 - [ ] Security headers configured (X-Frame-Options, etc.)
-- [ ] Stripe webhook signature verification working
+- [ ] Payment signature verification working
 - [ ] Environment variables not exposed to client
 - [ ] SQL injection protection verified (using Supabase client)
 - [ ] No secrets in Git history
@@ -94,19 +92,18 @@ Complete pre-launch checklist for Ci Moment deployment.
 
 ## 💰 Payment Setup
 
-### Stripe Configuration
+### Fondy Configuration
 - [ ] Test mode working end-to-end
 - [ ] Product pricing confirmed ($5.00)
-- [ ] Webhook endpoint tested
-- [ ] Email receipts configured (Stripe settings)
+- [ ] Payment redirect tested
+- [ ] Transaction receipts configured (Fondy settings)
 - [ ] Bank account for payouts connected (when ready for production)
 - [ ] Business verification completed (for live mode)
 
 ### Payment Testing
-- [ ] Successful payment (4242 4242 4242 4242)
-- [ ] Declined payment (4000 0000 0000 9995)
-- [ ] 3D Secure (4000 0025 0000 3155)
-- [ ] Webhook delivery confirmed
+- [ ] Successful payment (test card)
+- [ ] Declined payment (test card)
+- [ ] Payment redirect confirmed
 - [ ] Database updated correctly
 - [ ] User redirected to verification page
 
@@ -160,7 +157,6 @@ Complete pre-launch checklist for Ci Moment deployment.
 ### Internal Documentation
 - [ ] README.md complete
 - [ ] DEPLOYMENT.md available
-- [ ] STRIPE-SETUP.md available
 - [ ] SUPABASE-SETUP.md available
 - [ ] MARKETING.md available
 - [ ] Code comments adequate
@@ -184,16 +180,16 @@ Complete pre-launch checklist for Ci Moment deployment.
 
 ### Edge Cases
 - [ ] Payment abandoned (cancel checkout)
-- [ ] Webhook retry (payment succeeded, webhook failed first time)
+- [ ] Payment redirect failure handling
 - [ ] Duplicate artifact code (extremely rare, but handled)
 - [ ] Invalid verification hash
-- [ ] Expired Stripe session
+- [ ] Network timeout during payment
 
 ## 📈 Post-Launch Plan
 
 ### Week 1 - Monitoring
 - [ ] Check Vercel logs daily
-- [ ] Monitor Stripe dashboard
+- [ ] Monitor Fondy dashboard
 - [ ] Review Supabase queries
 - [ ] Fix critical bugs immediately
 - [ ] Respond to user feedback
@@ -242,7 +238,7 @@ Before making the app public:
 - Context selection rate
 - Seal conversion rate
 - Payment success rate
-- Webhook delivery rate
+- Fondy redirect success rate
 - Error rate
 - Page load time
 - Server response time
@@ -250,7 +246,7 @@ Before making the app public:
 ### Action Items
 - Fix critical bugs within 1 hour
 - Respond to user feedback within 4 hours
-- Monitor Stripe dashboard for payment issues
+- Monitor Fondy dashboard for payment issues
 - Check database for any anomalies
 - Review logs for errors
 
