@@ -6,7 +6,7 @@
 
 ## 🌟 Overview
 
-Ci Moment is a single-page decision tool that helps users check their personal moment status for different life contexts (Career, Love, Timing). Each decision is locked to a specific UTC minute and can be permanently sealed via Stripe payment.
+Ci Moment is a single-page decision tool that helps users check their personal moment status for different life contexts (Career, Love, Timing). Each decision is locked to a specific UTC minute and can be permanently sealed via payment.
 
 **Live Demo**: [https://ci-moment.vercel.app](https://ci-moment.vercel.app)
 
@@ -14,7 +14,7 @@ Ci Moment is a single-page decision tool that helps users check their personal m
 
 - **Deterministic Decision Engine**: Status changes based on UTC time and context
 - **Artifact Generation**: Unique cryptographic artifact codes for each decision
-- **Payment Integration**: Stripe Checkout for sealing decisions
+- **Payment Integration**: Fondy payment gateway for sealing decisions
 - **Verification System**: SHA-256 based verification for sealed artifacts
 - **Serverless Architecture**: Built for Vercel with Next.js 14 App Router
 - **Type-Safe Database**: PostgreSQL via Supabase with full TypeScript types
@@ -24,7 +24,7 @@ Ci Moment is a single-page decision tool that helps users check their personal m
 - **Framework**: Next.js 14 (App Router)
 - **Language**: TypeScript
 - **Database**: Supabase (PostgreSQL)
-- **Payments**: Stripe
+- **Payments**: Fondy
 - **Deployment**: Vercel
 - **Styling**: Inline CSS (minimal approach)
 
@@ -33,7 +33,7 @@ Ci Moment is a single-page decision tool that helps users check their personal m
 - Node.js 20.x or higher
 - npm or yarn
 - Supabase account (for database)
-- Stripe account (for payments)
+- Fondy account (for payments)
 - Vercel account (for deployment)
 
 ## 🛠️ Quick Start
@@ -69,9 +69,9 @@ NEXT_PUBLIC_URL=http://localhost:3000
 SUPABASE_URL=your_supabase_url
 SUPABASE_SERVICE_KEY=your_supabase_service_key
 
-# Stripe
-STRIPE_SECRET_KEY=your_stripe_secret_key
-STRIPE_WEBHOOK_SECRET=your_stripe_webhook_secret
+# Fondy
+FONDY_MERCHANT_ID=your_fondy_merchant_id
+FONDY_SECRET_KEY=your_fondy_secret_key
 ```
 
 ### 4. Set up the database
@@ -84,11 +84,9 @@ Run the schema in your Supabase project:
 
 See [SUPABASE-SETUP.md](./docs/SUPABASE-SETUP.md) for detailed instructions.
 
-### 5. Configure Stripe
+### 5. Configure Fondy
 
-Set up your Stripe webhook endpoint and configure test mode.
-
-See [STRIPE-SETUP.md](./docs/STRIPE-SETUP.md) for detailed instructions.
+Set up your Fondy merchant account and obtain your credentials from the Fondy portal.
 
 ### 6. Run the development server
 
@@ -104,8 +102,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 ci-moment/
 ├── app/                    # Next.js 14 App Router
 │   ├── api/               # API routes
-│   │   ├── seal/         # Payment initiation
-│   │   └── webhook/      # Stripe webhook handler
+│   │   └── seal/         # Payment initiation
 │   ├── verify/           # Verification pages
 │   ├── layout.tsx        # Root layout
 │   └── page.tsx          # Main application page
@@ -122,7 +119,6 @@ ci-moment/
 │   └── schema.sql        # PostgreSQL schema
 └── docs/                  # Documentation
     ├── DEPLOYMENT.md     # Deployment guide
-    ├── STRIPE-SETUP.md   # Stripe configuration
     └── SUPABASE-SETUP.md # Database setup
 ```
 
@@ -174,7 +170,7 @@ The project includes:
 
 ## 🔐 Security
 
-- Stripe webhook signature verification
+- Payment signature verification
 - Server-side environment variable validation
 - SQL injection protection via Supabase client
 - HTTPS-only in production
@@ -189,84 +185,58 @@ The project includes:
 3. **Manifest animation** plays during processing
 4. **Engine calculates status** based on current UTC minute
 5. **Result displayed** with unique artifact code
-6. **User can seal decision** via Stripe payment
-7. **Webhook confirms payment** and updates database
+6. **User can seal decision** via Fondy payment
+7. **Payment redirect** confirms payment and updates database
 8. **Verification link** provided for sealed artifacts
 
 ### Payment Flow
 
 1. User clicks "Seal This Moment"
 2. API creates artifact record in database
-3. Stripe Checkout session created with metadata
-4. User completes payment on Stripe
-5. Stripe webhook confirms payment
+3. Fondy checkout request created with signature
+4. User completes payment on Fondy
+5. Fondy redirects to verification page
 6. Artifact marked as sealed in database
-7. User redirected to verification page
+7. User sees verification page
 
-## 💳 Payments (Stripe Payment Link)
+## 💳 Payments
 
-The MVP payment flow uses a Stripe Payment Link — no backend checkout sessions, webhooks, or database writes required.
+Ci Moment uses Fondy payment gateway for secure payment processing.
 
 ### Setup
 
-1. **Create a Stripe product** in the [Stripe Dashboard](https://dashboard.stripe.com/products) for **$5** (one-time payment).
-2. **Create a Payment Link** for that product.
-3. Set the **Success URL** on the Payment Link to: `https://ci-moment.vercel.app/success`
-4. Copy the Payment Link URL and set it as the `NEXT_PUBLIC_STRIPE_PAYMENT_LINK` environment variable in Vercel (Production).
+1. **Create a Fondy account** at [portal.fondy.eu](https://portal.fondy.eu/)
+2. Obtain your **Merchant ID** and **Secret Key**
+3. Set environment variables in Vercel:
+   - `FONDY_MERCHANT_ID`
+   - `FONDY_SECRET_KEY`
+4. Redeploy
 
 ### Manual Test Checklist
 
 - [ ] Open the site
 - [ ] Choose a context (Career / Love / Timing)
 - [ ] See the status result (PROCEED / HOLD / NOT NOW)
-- [ ] Click "Seal this moment — $5" → Stripe checkout opens
+- [ ] Click "Seal this moment — $5" → Fondy checkout opens
 - [ ] Complete payment
-- [ ] Stripe redirects to `/success`
-- [ ] Click "Back to Ci Moment" → returns to home
-
-> If `NEXT_PUBLIC_STRIPE_PAYMENT_LINK` is not set, the CTA button is disabled and shows "Payment not configured".
-## 💳 Payments
-
-Ci Moment supports redirect-based payment via external Payment Links (Fondy, WayForPay, or any provider).
-
-### Steps to enable payments
-
-1. Create a Payment Page in your provider (Fondy / WayForPay / etc.)
-2. Set Success URL to:
-   `https://ci-moment.vercel.app/success`
-3. Copy the payment link
-4. Add it to the environment variable:
-   `NEXT_PUBLIC_PAYMENT_URL=https://your-payment-link`
-5. Redeploy
-
-### Manual test checklist
-
-- [ ] Open site
-- [ ] Select context
-- [ ] See status
-- [ ] Click "Seal this moment"
-- [ ] Payment page opens
-- [ ] Complete payment
-- [ ] Redirect to /success
-- [ ] Click back → homepage
+- [ ] Fondy redirects to `/verify/[hash]?sealed=true`
+- [ ] Artifact is sealed in database
 
 ## 🔧 Environment Variables
 
 | Variable | Description | Required |
 |----------|-------------|----------|
 | `NEXT_PUBLIC_URL` | Public URL of the application | Yes |
-| `NEXT_PUBLIC_PAYMENT_URL` | External payment page URL (Fondy / WayForPay) | No |
 | `SUPABASE_URL` | Supabase project URL | Yes |
 | `SUPABASE_SERVICE_KEY` | Supabase service role key | Yes |
-| `STRIPE_SECRET_KEY` | Stripe secret key (test or live) | Yes |
-| `STRIPE_WEBHOOK_SECRET` | Stripe webhook signing secret | Yes |
-| `NEXT_PUBLIC_STRIPE_PAYMENT_LINK` | Stripe Payment Link URL for MVP flow | Yes (production) |
+| `FONDY_MERCHANT_ID` | Fondy merchant account ID | Yes |
+| `FONDY_SECRET_KEY` | Fondy API secret key | Yes |
 
 ## 📖 API Documentation
 
 ### POST /api/seal
 
-Creates an artifact and initiates Stripe checkout.
+Creates an artifact and initiates Fondy checkout.
 
 **Request Body:**
 ```json
@@ -281,13 +251,9 @@ Creates an artifact and initiates Stripe checkout.
 **Response:**
 ```json
 {
-  "checkoutUrl": "https://checkout.stripe.com/..."
+  "checkoutUrl": "https://pay.fondy.eu/..."
 }
 ```
-
-### POST /api/webhook
-
-Handles Stripe webhook events (internal use only).
 
 ## 🧩 Key Concepts
 
@@ -337,7 +303,6 @@ This is a personal project. For collaboration inquiries or questions, please ope
 For issues or questions:
 - Open an issue on GitHub
 - Check the documentation in the `/docs` folder
-- Review the TESTING.md guide for debugging tips
 
 ## 🎯 Roadmap
 
@@ -349,4 +314,4 @@ For issues or questions:
 
 ---
 
-**Built with ❤️ using Next.js and Stripe**
+**Built with ❤️ using Next.js and Fondy**

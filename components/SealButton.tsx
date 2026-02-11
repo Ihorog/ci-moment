@@ -6,63 +6,82 @@ import { colors, typography, spacing, transitions, layout } from "@/lib/design-s
 interface SealButtonProps {
   context: string | null;
   status: string;
+  artifactCode: string;
+  lockedMinute: number;
 }
 
 const SealButton = memo(function SealButton({
   context,
   status,
+  artifactCode,
+  lockedMinute,
 }: SealButtonProps) {
   const [hover, setHover] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const paymentLink = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK;
-  const isConfigured = Boolean(paymentLink);
+  const handleSeal = async () => {
+    if (!context || !status || !artifactCode) return;
+    
+    setLoading(true);
+    try {
+      const response = await fetch('/api/seal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          artifactCode,
+          context,
+          status,
+          lockedMinute,
+        }),
+      });
 
-  const handleSeal = () => {
-    if (!paymentLink) return;
-    const url = new URL(paymentLink);
-    if (context && status) url.searchParams.set("client_reference_id", `${context}_${status}`);
-    window.location.href = url.toString();
+      const data = await response.json();
+      
+      if (response.ok && data.checkoutUrl) {
+        window.location.href = data.checkoutUrl;
+      } else {
+        console.error('Payment initiation failed:', data.error);
+        alert('Payment initiation failed. Please try again.');
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error('Error initiating payment:', error);
+      alert('An error occurred. Please try again.');
+      setLoading(false);
+    }
   };
 
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: spacing.gapXSmall }}>
       <button
         onClick={handleSeal}
-        disabled={!isConfigured}
+        disabled={loading}
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
         style={{
           background: "transparent",
-          border: `1px solid ${hover && isConfigured ? colors.hoverBorderTertiary : colors.borderTertiary}`,
-          color: hover && isConfigured ? colors.textQuaternary : colors.textMuted,
-          opacity: !isConfigured ? 0.3 : hover ? 1 : 0.6,
+          border: `1px solid ${hover && !loading ? colors.hoverBorderTertiary : colors.borderTertiary}`,
+          color: hover && !loading ? colors.textQuaternary : colors.textMuted,
+          opacity: loading ? 0.3 : hover ? 1 : 0.6,
           padding: spacing.paddingSmall,
-          cursor: isConfigured ? "pointer" : "not-allowed",
+          cursor: loading ? "wait" : "pointer",
           fontSize: typography.fontXXXSmall,
           fontFamily: "inherit",
           transition: `all ${transitions.fast}`,
           minHeight: layout.minTouchTarget,
         }}
       >
-        Seal this moment — $5
+        {loading ? "Processing..." : "Seal this moment — $5"}
       </button>
 
-      {isConfigured && (
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: spacing.gapXXXSmall }}>
-          <div style={{ fontSize: typography.fontTiny, color: colors.borderTertiary }}>
-            Lock this signal as a permanent checkpoint.
-          </div>
-          <div style={{ fontSize: typography.fontTiny, color: colors.borderTertiary }}>
-            Secure payment via Stripe.
-          </div>
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: spacing.gapXXXSmall }}>
+        <div style={{ fontSize: typography.fontTiny, color: colors.borderTertiary }}>
+          Lock this signal as a permanent checkpoint.
         </div>
-      )}
-
-      {!isConfigured && (
-        <div style={{ fontSize: typography.fontMicro, color: colors.textMuted, opacity: 0.5 }}>
-          Payment not configured
+        <div style={{ fontSize: typography.fontTiny, color: colors.borderTertiary }}>
+          Secure payment via Fondy.
         </div>
-      )}
+      </div>
     </div>
   );
 });
