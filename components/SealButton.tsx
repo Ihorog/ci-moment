@@ -38,7 +38,7 @@ const SealButton = memo(function SealButton({
           opacity: !isConfigured ? 0.3 : hover ? 1 : 0.6,
           padding: spacing.paddingSmall,
           cursor: isConfigured ? "pointer" : "not-allowed",
-          fontSize: typography.fontXXSmall,
+          fontSize: typography.fontXXXSmall,
           fontFamily: "inherit",
           transition: `all ${transitions.fast}`,
           minHeight: layout.minTouchTarget,
@@ -49,17 +49,17 @@ const SealButton = memo(function SealButton({
 
       {isConfigured && (
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: spacing.gapXXXSmall }}>
-          <div style={{ fontSize: typography.fontXXXSmall, color: colors.borderTertiary }}>
+          <div style={{ fontSize: typography.fontTiny, color: colors.borderTertiary }}>
             Lock this signal as a permanent checkpoint.
           </div>
-          <div style={{ fontSize: typography.fontXXXSmall, color: colors.borderTertiary }}>
+          <div style={{ fontSize: typography.fontTiny, color: colors.borderTertiary }}>
             Secure payment via Stripe.
           </div>
         </div>
       )}
 
       {!isConfigured && (
-        <div style={{ fontSize: typography.fontTiny, color: colors.textMuted, opacity: 0.5 }}>
+        <div style={{ fontSize: typography.fontMicro, color: colors.textMuted, opacity: 0.5 }}>
           Payment not configured
         </div>
       )}

@@ -80,7 +80,7 @@ export default async function VerifyPage({ params, searchParams }: VerifyPagePro
         <div style={{ color: colors.textSecondary, fontSize: typography.fontBase }}>
           Sealing your moment…
         </div>
-        <div style={{ color: colors.textTertiary, fontSize: typography.fontSmall }}>
+        <div style={{ color: colors.textTertiary, fontSize: typography.fontXSmall }}>
           Payment received. This page will refresh automatically.
         </div>
       </div>

@@ -49,16 +49,18 @@ export const typography = {
   fontMedium: "clamp(1.2rem, 3vw, 1.8rem)",
   fontBase: "0.85rem",
   fontSmall: "0.75rem",
-  fontXSmall: "0.65rem",
-  fontXXSmall: "0.6rem",
-  fontXXXSmall: "0.55rem",
-  fontTiny: "0.5rem",
+  fontXSmall: "0.7rem",
+  fontXXSmall: "0.65rem",
+  fontXXXSmall: "0.6rem",
+  fontTiny: "0.55rem",
+  fontMicro: "0.5rem",
   
   // Font weights
   fontWeightLight: 200,
   fontWeightNormal: 300,
   
   // Letter spacing
+  letterSpacingExtraWide: "0.4em",
   letterSpacingWide: "0.3em",
   letterSpacingMedium: "0.2em",
   letterSpacingBase: "0.15em",

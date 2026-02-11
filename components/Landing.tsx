@@ -26,8 +26,8 @@ export default function Landing({ onSelect }: LandingProps) {
         style={{
           position: "absolute",
           top: "3rem",
-          fontSize: typography.fontXSmall,
-          letterSpacing: typography.letterSpacingWide,
+          fontSize: typography.fontXXSmall,
+          letterSpacing: typography.letterSpacingExtraWide,
           color: colors.textTertiary,
           textTransform: "uppercase",
         }}
@@ -68,7 +68,7 @@ export default function Landing({ onSelect }: LandingProps) {
         style={{
           position: "absolute",
           bottom: spacing.gapLarge,
-          fontSize: typography.fontXXSmall,
+          fontSize: typography.fontXXXSmall,
           color: colors.textMuted,
           textAlign: "center",
           width: "100%",

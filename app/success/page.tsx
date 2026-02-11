@@ -42,7 +42,7 @@ function SuccessContent() {
 
         <p
           style={{
-            fontSize: typography.fontSmall,
+            fontSize: typography.fontXSmall,
             color: colors.textTertiary,
             letterSpacing: typography.letterSpacingXSmall,
             margin: 0,
@@ -57,7 +57,7 @@ function SuccessContent() {
               display: "flex",
               flexDirection: "column",
               gap: spacing.gapXXSmall,
-              fontSize: typography.fontXXSmall,
+              fontSize: typography.fontXXXSmall,
               color: colors.textQuaternary,
               marginTop: spacing.gapXSmall,
             }}
@@ -78,7 +78,7 @@ function SuccessContent() {
             color: colors.textMuted,
             padding: spacing.paddingSmall,
             cursor: "pointer",
-            fontSize: typography.fontXXSmall,
+            fontSize: typography.fontXXXSmall,
             fontFamily: "inherit",
             textDecoration: "none",
             transition: `all ${transitions.fast}`,

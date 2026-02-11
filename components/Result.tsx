@@ -57,7 +57,7 @@ export default function Result({
       {/* Label */}
       <div
         style={{
-          fontSize: typography.fontXXSmall,
+          fontSize: typography.fontXXXSmall,
           color: colors.textMuted,
           letterSpacing: typography.letterSpacingWide,
           marginBottom: spacing.gapMedium,
@@ -87,7 +87,7 @@ export default function Result({
           display: "flex",
           flexDirection: "column",
           gap: spacing.gapXSmall,
-          fontSize: typography.fontXSmall,
+          fontSize: typography.fontXXSmall,
           color: colors.textQuaternary,
           marginBottom: "4rem",
         }}
