@@ -111,12 +111,9 @@ export async function getArtifactByHash(
     .from('artifacts')
     .select('*')
     .eq('verify_hash', hash)
-    .limit(1);
+    .maybeSingle();
   if (error) {
     throw new Error(error.message);
   }
-  if (Array.isArray(data) && data.length > 0) {
-    return data[0] as unknown as Artifact;
-  }
-  return null;
+  return data ? (data as unknown as Artifact) : null;
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import SealButton from "./SealButton";
 import { ContextType } from "@/app/page";
 
@@ -31,14 +31,14 @@ export default function Result({
     };
   }, []);
 
-  // Determine status color
-  const getStatusColor = (s: string) => {
-    const up = s.toUpperCase();
+  // Memoize status color calculation to avoid recalculation on every render
+  const statusColor = useMemo(() => {
+    const up = status.toUpperCase();
     if (up === "PROCEED") return "#c8d8c0";
     if (up === "HOLD") return "#d8d0b8";
     if (up === "NOT NOW") return "#b8b8b8";
     return "#d4d4d4"; // Fallback
-  };
+  }, [status]);
 
   return (
     <div
@@ -72,7 +72,7 @@ export default function Result({
           fontSize: "clamp(1.6rem, 5vw, 2.8rem)",
           fontWeight: 200,
           letterSpacing: "0.2em",
-          color: getStatusColor(status),
+          color: statusColor,
           marginBottom: "3rem",
           textTransform: "uppercase",
         }}

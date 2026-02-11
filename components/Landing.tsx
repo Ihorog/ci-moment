@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, memo } from "react";
 import { ContextType } from "@/app/page";
 
 interface LandingProps {
@@ -80,7 +80,7 @@ export default function Landing({ onSelect }: LandingProps) {
 }
 
 // Sub-component for Hover State management
-function LandingButton({
+const LandingButton = memo(function LandingButton({
   label,
   onClick,
 }: {
@@ -112,4 +112,4 @@ function LandingButton({
       {label}
     </button>
   );
-}
+});

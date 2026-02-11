@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, memo } from "react";
 
 interface ThresholdProps {
   onConfirm: () => void;
@@ -55,7 +55,7 @@ export default function Threshold({ onConfirm, onBack }: ThresholdProps) {
   );
 }
 
-function ThresholdButton({
+const ThresholdButton = memo(function ThresholdButton({
   label,
   primary,
   onClick,
@@ -69,7 +69,7 @@ function ThresholdButton({
   const baseBorder = primary ? "#444" : "#1a1a1a";
   const hoverBorder = primary ? "#888" : "#333"; // Slight visibility for secondary on hover logic (implied)
   const baseColor = primary ? "#d4d4d4" : "#444";
-  
+
   return (
     <button
       onClick={onClick}
@@ -92,4 +92,4 @@ function ThresholdButton({
       {label}
     </button>
   );
-}
+});
