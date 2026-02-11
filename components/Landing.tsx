@@ -27,7 +27,7 @@ export default function Landing({ onSelect }: LandingProps) {
           position: "absolute",
           top: "3rem",
           fontSize: typography.fontXXSmall,
-          letterSpacing: typography.letterSpacingExtraWide,
+          letterSpacing: typography.letterSpacingXXWide,
           color: colors.textQuaternary,
           textTransform: "uppercase",
         }}

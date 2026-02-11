@@ -27,7 +27,7 @@ export default function ErrorPage({ reset }: ErrorPageProps) {
         style={{
           fontSize: typography.fontXXXSmall,
           color: colors.textMuted,
-          letterSpacing: typography.letterSpacingWide,
+          letterSpacing: typography.letterSpacingXWide,
           textTransform: "uppercase",
         }}
       >

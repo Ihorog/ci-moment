@@ -59,7 +59,7 @@ export default function Result({
         style={{
           fontSize: typography.fontXXXSmall,
           color: colors.textMuted,
-          letterSpacing: typography.letterSpacingWide,
+          letterSpacing: typography.letterSpacingXWide,
           marginBottom: spacing.gapMedium,
           textTransform: "uppercase",
         }}

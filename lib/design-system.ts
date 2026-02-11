@@ -61,8 +61,8 @@ export const typography = {
   fontWeightNormal: 300,
   
   // Letter spacing
-  letterSpacingExtraWide: "0.4em",
-  letterSpacingWide: "0.3em",
+  letterSpacingXXWide: "0.4em",
+  letterSpacingXWide: "0.3em",
   letterSpacingMedium: "0.2em",
   letterSpacingBase: "0.15em",
   letterSpacingSmall: "0.1em",
