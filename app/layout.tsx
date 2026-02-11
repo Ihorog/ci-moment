@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { colors, typography } from "@/lib/design-system";
 
 export const metadata: Metadata = {
   title: "Ci Moment - Your Personal Decision Signal",
@@ -62,10 +63,9 @@ export default function RootLayout({
     <html lang="en">
       <body
         style={{
-          backgroundColor: "#0a0a0a",
-          color: "#d4d4d4",
-          fontFamily:
-            "'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace",
+          backgroundColor: colors.background,
+          color: colors.textPrimary,
+          fontFamily: typography.fontMonospace,
           margin: 0,
           padding: 0,
           height: "100vh",

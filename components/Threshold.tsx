@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, memo } from "react";
+import { colors, typography, spacing, transitions, layout, animations } from "@/lib/design-system";
 
 interface ThresholdProps {
   onConfirm: () => void;
@@ -12,7 +13,7 @@ export default function Threshold({ onConfirm, onBack }: ThresholdProps) {
 
   useEffect(() => {
     // Trigger fade in on mount
-    const timer = setTimeout(() => setOpacity(1), 50);
+    const timer = setTimeout(() => setOpacity(1), animations.fadeInDelay);
     return () => clearTimeout(timer);
   }, []);
 
@@ -20,26 +21,26 @@ export default function Threshold({ onConfirm, onBack }: ThresholdProps) {
     <div
       style={{
         opacity: opacity,
-        transition: "opacity 0.8s ease",
+        transition: `opacity ${transitions.slow}`,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        gap: "2rem",
+        gap: spacing.gapLarge,
       }}
     >
       <div
         style={{
-          fontSize: "0.9rem",
-          color: "#888",
+          fontSize: typography.fontBase,
+          color: colors.textSecondary,
           textAlign: "center",
-          letterSpacing: "0.05em",
+          letterSpacing: typography.letterSpacingXSmall,
         }}
       >
         This moment will be locked.
       </div>
 
-      <div style={{ display: "flex", gap: "1rem" }}>
+      <div style={{ display: "flex", gap: spacing.gapBase }}>
         <ThresholdButton
           label="Confirm"
           primary={true}
@@ -66,9 +67,9 @@ const ThresholdButton = memo(function ThresholdButton({
 }) {
   const [hover, setHover] = useState(false);
 
-  const baseBorder = primary ? "#444" : "#1a1a1a";
-  const hoverBorder = primary ? "#888" : "#333"; // Slight visibility for secondary on hover logic (implied)
-  const baseColor = primary ? "#d4d4d4" : "#444";
+  const baseBorder = primary ? colors.borderPrimary : colors.borderTertiary;
+  const hoverBorder = primary ? colors.hoverBorderPrimary : colors.hoverBorderTertiary;
+  const baseColor = primary ? colors.textPrimary : colors.textQuaternary;
 
   return (
     <button
@@ -78,14 +79,14 @@ const ThresholdButton = memo(function ThresholdButton({
       style={{
         background: "transparent",
         border: `1px solid ${hover ? hoverBorder : baseBorder}`,
-        color: baseColor, // Keep color stable unless explicit hover color needed
-        padding: "0.8rem 1.5rem",
+        color: baseColor,
+        padding: spacing.paddingMedium,
         cursor: "pointer",
-        fontSize: "0.85rem",
-        letterSpacing: "0.1em",
+        fontSize: typography.fontBase,
+        letterSpacing: typography.letterSpacingSmall,
         fontFamily: "inherit",
-        transition: "border-color 0.3s ease",
-        minHeight: "44px",
+        transition: `border-color ${transitions.fast}`,
+        minHeight: layout.minTouchTarget,
         minWidth: "100px",
       }}
     >

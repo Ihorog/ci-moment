@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { colors, transitions } from "@/lib/design-system";
 
 interface ManifestProps {
   onComplete: () => void;
@@ -8,7 +9,7 @@ interface ManifestProps {
 
 export default function Manifest({ onComplete }: ManifestProps) {
   const [styles, setStyles] = useState({
-    backgroundColor: "#222",
+    backgroundColor: colors.manifestDark,
     boxShadow: "none",
     transform: "scale(1)",
   });
@@ -16,17 +17,17 @@ export default function Manifest({ onComplete }: ManifestProps) {
   useEffect(() => {
     // 800ms
     const t1 = setTimeout(() => {
-      setStyles({ backgroundColor: "#444", boxShadow: "none", transform: "scale(1)" });
+      setStyles({ backgroundColor: colors.manifestMid, boxShadow: "none", transform: "scale(1)" });
     }, 800);
 
     // 1800ms
     const t2 = setTimeout(() => {
-      setStyles({ backgroundColor: "#888", boxShadow: "0 0 20px rgba(255,255,255,0.1)", transform: "scale(1)" });
+      setStyles({ backgroundColor: colors.manifestLight, boxShadow: "0 0 20px rgba(255,255,255,0.1)", transform: "scale(1)" });
     }, 1800);
 
     // 2800ms
     const t3 = setTimeout(() => {
-      setStyles({ backgroundColor: "#d4d4d4", boxShadow: "0 0 20px rgba(255,255,255,0.1)", transform: "scale(2)" });
+      setStyles({ backgroundColor: colors.manifestBright, boxShadow: "0 0 20px rgba(255,255,255,0.1)", transform: "scale(2)" });
     }, 2800);
 
     // 3200ms
@@ -48,7 +49,7 @@ export default function Manifest({ onComplete }: ManifestProps) {
         width: "4px",
         height: "4px",
         borderRadius: "50%",
-        transition: "background-color 1s ease, box-shadow 1s ease, transform 0.4s ease",
+        transition: `background-color ${transitions.verySlow}, box-shadow ${transitions.verySlow}, transform 0.4s ease`,
         ...styles,
       }}
     />

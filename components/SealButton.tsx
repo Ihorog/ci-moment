@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, memo } from "react";
+import { colors, typography, spacing, transitions, layout } from "@/lib/design-system";
 
 interface SealButtonProps {
   context: string | null;
@@ -24,7 +25,7 @@ const SealButton = memo(function SealButton({
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.5rem" }}>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: spacing.gapXSmall }}>
       <button
         onClick={handleSeal}
         disabled={!isConfigured}
@@ -32,33 +33,33 @@ const SealButton = memo(function SealButton({
         onMouseLeave={() => setHover(false)}
         style={{
           background: "transparent",
-          border: `1px solid ${hover && isConfigured ? "#333" : "#1a1a1a"}`,
-          color: hover && isConfigured ? "#555" : "#333",
+          border: `1px solid ${hover && isConfigured ? colors.hoverBorderTertiary : colors.borderTertiary}`,
+          color: hover && isConfigured ? colors.textTertiary : colors.textMuted,
           opacity: !isConfigured ? 0.3 : hover ? 1 : 0.6,
-          padding: "0.6rem 1.2rem",
+          padding: spacing.paddingSmall,
           cursor: isConfigured ? "pointer" : "not-allowed",
-          fontSize: "0.6rem",
+          fontSize: typography.fontXXSmall,
           fontFamily: "inherit",
-          transition: "all 0.3s ease",
-          minHeight: "44px",
+          transition: `all ${transitions.fast}`,
+          minHeight: layout.minTouchTarget,
         }}
       >
         Seal this moment — $5
       </button>
 
       {isConfigured && (
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.2rem" }}>
-          <div style={{ fontSize: "0.55rem", color: "#1a1a1a" }}>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: spacing.gapXXXSmall }}>
+          <div style={{ fontSize: typography.fontXXXSmall, color: colors.borderTertiary }}>
             Lock this signal as a permanent checkpoint.
           </div>
-          <div style={{ fontSize: "0.55rem", color: "#1a1a1a" }}>
+          <div style={{ fontSize: typography.fontXXXSmall, color: colors.borderTertiary }}>
             Secure payment via Stripe.
           </div>
         </div>
       )}
 
       {!isConfigured && (
-        <div style={{ fontSize: "0.5rem", color: "#333", opacity: 0.5 }}>
+        <div style={{ fontSize: typography.fontTiny, color: colors.textMuted, opacity: 0.5 }}>
           Payment not configured
         </div>
       )}

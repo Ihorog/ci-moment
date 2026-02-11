@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { colors, typography, spacing, transitions, layout } from "@/lib/design-system";
 
 export default function NotFound() {
   const [hover, setHover] = useState(false);
@@ -14,14 +15,14 @@ export default function NotFound() {
         justifyContent: "center",
         width: "100%",
         height: "100%",
-        gap: "2rem",
+        gap: spacing.gapLarge,
       }}
     >
       <div
         style={{
-          fontSize: "0.6rem",
-          color: "#333",
-          letterSpacing: "0.3em",
+          fontSize: typography.fontXXSmall,
+          color: colors.textMuted,
+          letterSpacing: typography.letterSpacingWide,
           textTransform: "uppercase",
         }}
       >
@@ -30,10 +31,10 @@ export default function NotFound() {
 
       <div
         style={{
-          fontSize: "clamp(1.2rem, 3vw, 1.8rem)",
-          fontWeight: 200,
-          color: "#888",
-          letterSpacing: "0.1em",
+          fontSize: typography.fontMedium,
+          fontWeight: typography.fontWeightLight,
+          color: colors.textSecondary,
+          letterSpacing: typography.letterSpacingSmall,
         }}
       >
         This moment doesn&apos;t exist.
@@ -45,16 +46,16 @@ export default function NotFound() {
         onMouseLeave={() => setHover(false)}
         style={{
           background: "transparent",
-          border: `1px solid ${hover ? "#555" : "#2a2a2a"}`,
-          color: hover ? "#e8e8e8" : "#b0b0b0",
-          padding: "0.8rem 1.5rem",
+          border: `1px solid ${hover ? colors.hoverBorderSecondary : colors.borderSecondary}`,
+          color: hover ? colors.hoverTextPrimary : colors.textSecondary,
+          padding: spacing.paddingMedium,
           cursor: "pointer",
-          fontSize: "0.75rem",
-          letterSpacing: "0.1em",
+          fontSize: typography.fontSmall,
+          letterSpacing: typography.letterSpacingSmall,
           fontFamily: "inherit",
-          transition: "border-color 0.3s ease, color 0.3s ease",
+          transition: `border-color ${transitions.fast}, color ${transitions.fast}`,
           textDecoration: "none",
-          minHeight: "44px",
+          minHeight: layout.minTouchTarget,
           display: "flex",
           alignItems: "center",
         }}

@@ -1,4 +1,5 @@
 import { getArtifactByHash } from '@/lib/supabase';
+import { colors, typography, spacing } from '@/lib/design-system';
 
 interface VerifyPageProps {
   params: { hash: string };
@@ -38,16 +39,16 @@ export default async function VerifyPage({ params, searchParams }: VerifyPagePro
     return (
       <div
         style={{
-          backgroundColor: '#0a0a0a',
+          backgroundColor: colors.background,
           color: '#ffffff',
-          fontFamily: 'monospace',
+          fontFamily: typography.fontMonospace,
           minHeight: '100vh',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
         }}
       >
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: spacing.gapXSmall }}>
           <div>Issued: YES</div>
           <div>Artifact: {artifact.artifact_code}</div>
           <div>Status: {artifact.status}</div>
@@ -63,23 +64,23 @@ export default async function VerifyPage({ params, searchParams }: VerifyPagePro
     return (
       <div
         style={{
-          backgroundColor: '#0a0a0a',
+          backgroundColor: colors.background,
           color: '#ffffff',
-          fontFamily: 'monospace',
+          fontFamily: typography.fontMonospace,
           minHeight: '100vh',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: '1rem',
+          gap: spacing.gapBase,
         }}
       >
         {/* Auto-refresh while waiting for webhook to process */}
         <meta httpEquiv="refresh" content="3" />
-        <div style={{ color: '#888', fontSize: '0.85rem' }}>
+        <div style={{ color: colors.textSecondary, fontSize: typography.fontBase }}>
           Sealing your moment…
         </div>
-        <div style={{ color: '#555', fontSize: '0.7rem' }}>
+        <div style={{ color: colors.textTertiary, fontSize: typography.fontSmall }}>
           Payment received. This page will refresh automatically.
         </div>
       </div>
@@ -90,9 +91,9 @@ export default async function VerifyPage({ params, searchParams }: VerifyPagePro
   return (
     <div
       style={{
-        backgroundColor: '#0a0a0a',
+        backgroundColor: colors.background,
         color: '#ffffff',
-        fontFamily: 'monospace',
+        fontFamily: typography.fontMonospace,
         minHeight: '100vh',
         display: 'flex',
         alignItems: 'center',
