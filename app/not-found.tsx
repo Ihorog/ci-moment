@@ -33,7 +33,7 @@ export default function NotFound() {
         style={{
           fontSize: typography.fontMedium,
           fontWeight: typography.fontWeightLight,
-          color: colors.textSecondary,
+          color: colors.textTertiary,
           letterSpacing: typography.letterSpacingSmall,
         }}
       >

@@ -34,7 +34,7 @@ const SealButton = memo(function SealButton({
         style={{
           background: "transparent",
           border: `1px solid ${hover && isConfigured ? colors.hoverBorderTertiary : colors.borderTertiary}`,
-          color: hover && isConfigured ? colors.textTertiary : colors.textMuted,
+          color: hover && isConfigured ? colors.textQuaternary : colors.textMuted,
           opacity: !isConfigured ? 0.3 : hover ? 1 : 0.6,
           padding: spacing.paddingSmall,
           cursor: isConfigured ? "pointer" : "not-allowed",

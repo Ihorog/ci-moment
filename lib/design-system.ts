@@ -9,9 +9,10 @@ export const colors = {
   
   // Text colors
   textPrimary: "#d4d4d4",
-  textSecondary: "#888",
-  textTertiary: "#555",
-  textQuaternary: "#444",
+  textSecondary: "#b0b0b0",
+  textTertiary: "#888",
+  textQuaternary: "#555",
+  textQuinary: "#444",
   textMuted: "#333",
   
   // Border colors
@@ -97,7 +98,7 @@ export const transitions = {
 // Layout
 export const layout = {
   minTouchTarget: "44px",
-  maxContentWidth: "280px",
+  buttonContainerMaxWidth: "280px",
 };
 
 // Animation timings

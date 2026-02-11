@@ -106,7 +106,7 @@ export default function Page() {
             position: "absolute",
             bottom: spacing.gapLarge,
             fontSize: typography.fontXXSmall,
-            color: colors.textTertiary,
+            color: colors.textQuaternary,
             letterSpacing: typography.letterSpacingXSmall,
             transition: `opacity ${transitions.medium}`,
           }}

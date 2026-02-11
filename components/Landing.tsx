@@ -28,7 +28,7 @@ export default function Landing({ onSelect }: LandingProps) {
           top: "3rem",
           fontSize: typography.fontXXSmall,
           letterSpacing: typography.letterSpacingExtraWide,
-          color: colors.textTertiary,
+          color: colors.textQuaternary,
           textTransform: "uppercase",
         }}
       >
@@ -55,7 +55,7 @@ export default function Landing({ onSelect }: LandingProps) {
           flexDirection: "column",
           gap: spacing.gapBase,
           width: "100%",
-          maxWidth: layout.maxContentWidth,
+          maxWidth: layout.buttonContainerMaxWidth,
         }}
       >
         <LandingButton label="Career" onClick={() => onSelect("career")} />

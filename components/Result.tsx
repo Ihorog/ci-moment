@@ -88,7 +88,7 @@ export default function Result({
           flexDirection: "column",
           gap: spacing.gapXSmall,
           fontSize: typography.fontXXSmall,
-          color: colors.textQuaternary,
+          color: colors.textQuinary,
           marginBottom: "4rem",
         }}
       >

@@ -38,7 +38,7 @@ export default function ErrorPage({ reset }: ErrorPageProps) {
         style={{
           fontSize: typography.fontMedium,
           fontWeight: typography.fontWeightLight,
-          color: colors.textSecondary,
+          color: colors.textTertiary,
           letterSpacing: typography.letterSpacingSmall,
         }}
       >

@@ -32,7 +32,7 @@ export default function Threshold({ onConfirm, onBack }: ThresholdProps) {
       <div
         style={{
           fontSize: typography.fontBase,
-          color: colors.textSecondary,
+          color: colors.textTertiary,
           textAlign: "center",
           letterSpacing: typography.letterSpacingXSmall,
         }}
@@ -69,7 +69,7 @@ const ThresholdButton = memo(function ThresholdButton({
 
   const baseBorder = primary ? colors.borderPrimary : colors.borderTertiary;
   const hoverBorder = primary ? colors.hoverBorderPrimary : colors.hoverBorderTertiary;
-  const baseColor = primary ? colors.textPrimary : colors.textQuaternary;
+  const baseColor = primary ? colors.textPrimary : colors.textQuinary;
 
   return (
     <button

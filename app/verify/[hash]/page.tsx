@@ -77,10 +77,10 @@ export default async function VerifyPage({ params, searchParams }: VerifyPagePro
       >
         {/* Auto-refresh while waiting for webhook to process */}
         <meta httpEquiv="refresh" content="3" />
-        <div style={{ color: colors.textSecondary, fontSize: typography.fontBase }}>
+        <div style={{ color: colors.textTertiary, fontSize: typography.fontBase }}>
           Sealing your moment…
         </div>
-        <div style={{ color: colors.textTertiary, fontSize: typography.fontXSmall }}>
+        <div style={{ color: colors.textQuaternary, fontSize: typography.fontXSmall }}>
           Payment received. This page will refresh automatically.
         </div>
       </div>

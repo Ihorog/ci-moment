@@ -43,7 +43,7 @@ function SuccessContent() {
         <p
           style={{
             fontSize: typography.fontXSmall,
-            color: colors.textTertiary,
+            color: colors.textQuaternary,
             letterSpacing: typography.letterSpacingXSmall,
             margin: 0,
           }}
@@ -58,7 +58,7 @@ function SuccessContent() {
               flexDirection: "column",
               gap: spacing.gapXXSmall,
               fontSize: typography.fontXXXSmall,
-              color: colors.textQuaternary,
+              color: colors.textQuinary,
               marginTop: spacing.gapXSmall,
             }}
           >
