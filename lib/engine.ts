@@ -32,9 +32,11 @@ export function generateArtifactCode(): string {
   // characters form the first group and the next five form the second group.
   const bytes = new Uint8Array(4);
   globalThis.crypto.getRandomValues(bytes);
-  const hex = Array.from(bytes)
-    .map((b) => b.toString(16).padStart(2, '0'))
-    .join('');
+  // More efficient: use direct iteration instead of Array.from().map()
+  let hex = '';
+  for (let i = 0; i < bytes.length; i++) {
+    hex += bytes[i].toString(16).padStart(2, '0');
+  }
   const firstGroup = hex.slice(0, 2);
   const secondGroup = hex.slice(2, 7);
   return `ci-${firstGroup}-${secondGroup}`;

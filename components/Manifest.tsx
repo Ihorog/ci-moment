@@ -16,25 +16,17 @@ export default function Manifest({ onComplete }: ManifestProps) {
   useEffect(() => {
     // 800ms
     const t1 = setTimeout(() => {
-      setStyles((s) => ({ ...s, backgroundColor: "#444" }));
+      setStyles({ backgroundColor: "#444", boxShadow: "none", transform: "scale(1)" });
     }, 800);
 
     // 1800ms
     const t2 = setTimeout(() => {
-      setStyles((s) => ({
-        ...s,
-        backgroundColor: "#888",
-        boxShadow: "0 0 20px rgba(255,255,255,0.1)",
-      }));
+      setStyles({ backgroundColor: "#888", boxShadow: "0 0 20px rgba(255,255,255,0.1)", transform: "scale(1)" });
     }, 1800);
 
     // 2800ms
     const t3 = setTimeout(() => {
-      setStyles((s) => ({
-        ...s,
-        backgroundColor: "#d4d4d4",
-        transform: "scale(2)",
-      }));
+      setStyles({ backgroundColor: "#d4d4d4", boxShadow: "0 0 20px rgba(255,255,255,0.1)", transform: "scale(2)" });
     }, 2800);
 
     // 3200ms

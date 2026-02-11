@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, memo } from "react";
 
 interface SealButtonProps {
   context: string | null;
   status: string;
 }
 
-export default function SealButton({
+const SealButton = memo(function SealButton({
   context,
   status,
 }: SealButtonProps) {
@@ -64,4 +64,6 @@ export default function SealButton({
       )}
     </div>
   );
-}
+});
+
+export default SealButton;
