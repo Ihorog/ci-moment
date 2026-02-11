@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { colors, typography, spacing, transitions, layout } from "@/lib/design-system";
 
 interface ErrorPageProps {
   error: Error & { digest?: string };
@@ -19,14 +20,14 @@ export default function ErrorPage({ reset }: ErrorPageProps) {
         justifyContent: "center",
         width: "100%",
         height: "100%",
-        gap: "2rem",
+        gap: spacing.gapLarge,
       }}
     >
       <div
         style={{
-          fontSize: "0.6rem",
-          color: "#333",
-          letterSpacing: "0.3em",
+          fontSize: typography.fontXXXSmall,
+          color: colors.textMuted,
+          letterSpacing: typography.letterSpacingXWide,
           textTransform: "uppercase",
         }}
       >
@@ -35,10 +36,10 @@ export default function ErrorPage({ reset }: ErrorPageProps) {
 
       <div
         style={{
-          fontSize: "clamp(1.2rem, 3vw, 1.8rem)",
-          fontWeight: 200,
-          color: "#888",
-          letterSpacing: "0.1em",
+          fontSize: typography.fontMedium,
+          fontWeight: typography.fontWeightLight,
+          color: colors.textTertiary,
+          letterSpacing: typography.letterSpacingSmall,
         }}
       >
         Something went wrong.
@@ -50,15 +51,15 @@ export default function ErrorPage({ reset }: ErrorPageProps) {
         onMouseLeave={() => setHover(false)}
         style={{
           background: "transparent",
-          border: `1px solid ${hover ? "#555" : "#2a2a2a"}`,
-          color: hover ? "#e8e8e8" : "#b0b0b0",
-          padding: "0.8rem 1.5rem",
+          border: `1px solid ${hover ? colors.hoverBorderSecondary : colors.borderSecondary}`,
+          color: hover ? colors.hoverTextPrimary : colors.textSecondary,
+          padding: spacing.paddingMedium,
           cursor: "pointer",
-          fontSize: "0.75rem",
-          letterSpacing: "0.1em",
+          fontSize: typography.fontSmall,
+          letterSpacing: typography.letterSpacingSmall,
           fontFamily: "inherit",
-          transition: "border-color 0.3s ease, color 0.3s ease",
-          minHeight: "44px",
+          transition: `border-color ${transitions.fast}, color ${transitions.fast}`,
+          minHeight: layout.minTouchTarget,
         }}
       >
         Try again

@@ -2,6 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
+import { colors, typography, spacing, transitions } from "@/lib/design-system";
 
 function SuccessContent() {
   const searchParams = useSearchParams();
@@ -24,15 +25,15 @@ function SuccessContent() {
           flexDirection: "column",
           alignItems: "center",
           textAlign: "center",
-          gap: "1.5rem",
+          gap: spacing.gapMedium,
         }}
       >
         <h1
           style={{
-            fontSize: "clamp(1.4rem, 4vw, 2.2rem)",
-            fontWeight: 200,
-            letterSpacing: "0.15em",
-            color: "#c8d8c0",
+            fontSize: typography.fontLarge,
+            fontWeight: typography.fontWeightLight,
+            letterSpacing: typography.letterSpacingBase,
+            color: colors.statusProceed,
             margin: 0,
           }}
         >
@@ -41,9 +42,9 @@ function SuccessContent() {
 
         <p
           style={{
-            fontSize: "0.7rem",
-            color: "#555",
-            letterSpacing: "0.05em",
+            fontSize: typography.fontXSmall,
+            color: colors.textQuaternary,
+            letterSpacing: typography.letterSpacingXSmall,
             margin: 0,
           }}
         >
@@ -55,14 +56,14 @@ function SuccessContent() {
             style={{
               display: "flex",
               flexDirection: "column",
-              gap: "0.4rem",
-              fontSize: "0.6rem",
-              color: "#444",
-              marginTop: "0.5rem",
+              gap: spacing.gapXXSmall,
+              fontSize: typography.fontXXXSmall,
+              color: colors.textQuinary,
+              marginTop: spacing.gapXSmall,
             }}
           >
             <div style={{ textTransform: "capitalize" }}>{context}</div>
-            <div style={{ textTransform: "uppercase", letterSpacing: "0.2em" }}>
+            <div style={{ textTransform: "uppercase", letterSpacing: typography.letterSpacingMedium }}>
               {status}
             </div>
           </div>
@@ -71,17 +72,17 @@ function SuccessContent() {
         <a
           href="/"
           style={{
-            marginTop: "2rem",
+            marginTop: spacing.gapLarge,
             background: "transparent",
-            border: "1px solid #1a1a1a",
-            color: "#333",
-            padding: "0.6rem 1.2rem",
+            border: `1px solid ${colors.borderTertiary}`,
+            color: colors.textMuted,
+            padding: spacing.paddingSmall,
             cursor: "pointer",
-            fontSize: "0.6rem",
+            fontSize: typography.fontXXXSmall,
             fontFamily: "inherit",
             textDecoration: "none",
-            transition: "all 0.3s ease",
-            letterSpacing: "0.05em",
+            transition: `all ${transitions.fast}`,
+            letterSpacing: typography.letterSpacingXSmall,
           }}
         >
           Back to Ci Moment

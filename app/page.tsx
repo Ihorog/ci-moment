@@ -9,6 +9,7 @@ import Landing from "@/components/Landing";
 import Threshold from "@/components/Threshold";
 import Manifest from "@/components/Manifest";
 import Result from "@/components/Result";
+import { colors, typography, spacing, transitions, animations } from "@/lib/design-system";
 
 export type ScreenState = "landing" | "threshold" | "manifest" | "result";
 export type ContextType = "career" | "love" | "timing" | null;
@@ -28,12 +29,10 @@ export default function Page() {
 
   const searchParams = useSearchParams();
 
-  const CANCELLED_MESSAGE_DURATION_MS = 5000;
-
   useEffect(() => {
     if (searchParams.get("cancelled") === "true") {
       setCancelled(true);
-      const timer = setTimeout(() => setCancelled(false), CANCELLED_MESSAGE_DURATION_MS);
+      const timer = setTimeout(() => setCancelled(false), animations.cancelledMessageDuration);
       return () => clearTimeout(timer);
     }
   }, [searchParams]);
@@ -105,11 +104,11 @@ export default function Page() {
         <div
           style={{
             position: "absolute",
-            bottom: "2rem",
-            fontSize: "0.65rem",
-            color: "#555",
-            letterSpacing: "0.05em",
-            transition: "opacity 0.5s ease",
+            bottom: spacing.gapLarge,
+            fontSize: typography.fontXXSmall,
+            color: colors.textQuaternary,
+            letterSpacing: typography.letterSpacingXSmall,
+            transition: `opacity ${transitions.medium}`,
           }}
         >
           Payment cancelled. Your moment is still here.

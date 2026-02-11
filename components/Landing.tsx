@@ -2,6 +2,7 @@
 
 import { useState, memo } from "react";
 import { ContextType } from "@/app/page";
+import { colors, typography, spacing, transitions, layout } from "@/lib/design-system";
 
 interface LandingProps {
   onSelect: (ctx: ContextType) => void;
@@ -25,9 +26,9 @@ export default function Landing({ onSelect }: LandingProps) {
         style={{
           position: "absolute",
           top: "3rem",
-          fontSize: "0.65rem",
-          letterSpacing: "0.4em",
-          color: "#555",
+          fontSize: typography.fontXXSmall,
+          letterSpacing: typography.letterSpacingXXWide,
+          color: colors.textQuaternary,
           textTransform: "uppercase",
         }}
       >
@@ -37,10 +38,10 @@ export default function Landing({ onSelect }: LandingProps) {
       {/* Main Headline */}
       <h1
         style={{
-          fontSize: "clamp(1.4rem, 4vw, 2.2rem)",
-          fontWeight: 300,
-          color: "#d4d4d4",
-          margin: "0 0 3rem 0",
+          fontSize: typography.fontLarge,
+          fontWeight: typography.fontWeightNormal,
+          color: colors.textPrimary,
+          margin: `0 0 ${spacing.gapXLarge} 0`,
           textAlign: "center",
         }}
       >
@@ -52,9 +53,9 @@ export default function Landing({ onSelect }: LandingProps) {
         style={{
           display: "flex",
           flexDirection: "column",
-          gap: "1rem",
+          gap: spacing.gapBase,
           width: "100%",
-          maxWidth: "280px",
+          maxWidth: layout.buttonContainerMaxWidth,
         }}
       >
         <LandingButton label="Career" onClick={() => onSelect("career")} />
@@ -66,9 +67,9 @@ export default function Landing({ onSelect }: LandingProps) {
       <div
         style={{
           position: "absolute",
-          bottom: "2rem",
-          fontSize: "0.6rem",
-          color: "#333",
+          bottom: spacing.gapLarge,
+          fontSize: typography.fontXXXSmall,
+          color: colors.textMuted,
           textAlign: "center",
           width: "100%",
         }}
@@ -96,17 +97,17 @@ const LandingButton = memo(function LandingButton({
       onMouseLeave={() => setHover(false)}
       style={{
         background: "transparent",
-        border: `1px solid ${hover ? "#555" : "#2a2a2a"}`,
-        color: hover ? "#e8e8e8" : "#b0b0b0",
-        padding: "1rem 1.5rem",
+        border: `1px solid ${hover ? colors.hoverBorderSecondary : colors.borderSecondary}`,
+        color: hover ? colors.hoverTextPrimary : colors.textSecondary,
+        padding: spacing.paddingLarge,
         cursor: "pointer",
         textTransform: "capitalize",
-        fontSize: "0.85rem",
-        letterSpacing: "0.15em",
+        fontSize: typography.fontBase,
+        letterSpacing: typography.letterSpacingBase,
         fontFamily: "inherit",
-        transition: "border-color 0.3s ease, color 0.3s ease",
+        transition: `border-color ${transitions.fast}, color ${transitions.fast}`,
         width: "100%",
-        minHeight: "44px",
+        minHeight: layout.minTouchTarget,
       }}
     >
       {label}

@@ -3,6 +3,7 @@
 import { useEffect, useState, useMemo } from "react";
 import SealButton from "./SealButton";
 import { ContextType } from "@/app/page";
+import { colors, typography, spacing, transitions, animations } from "@/lib/design-system";
 
 interface ResultProps {
   status: string;
@@ -22,9 +23,9 @@ export default function Result({
 
   useEffect(() => {
     // Fade in main result
-    const t1 = setTimeout(() => setOpacity(1), 50);
+    const t1 = setTimeout(() => setOpacity(1), animations.fadeInDelay);
     // Show seal button after 2s
-    const t2 = setTimeout(() => setShowSeal(true), 2000);
+    const t2 = setTimeout(() => setShowSeal(true), animations.sealButtonDelay);
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
@@ -34,17 +35,17 @@ export default function Result({
   // Memoize status color calculation to avoid recalculation on every render
   const statusColor = useMemo(() => {
     const up = status.toUpperCase();
-    if (up === "PROCEED") return "#c8d8c0";
-    if (up === "HOLD") return "#d8d0b8";
-    if (up === "NOT NOW") return "#b8b8b8";
-    return "#d4d4d4"; // Fallback
+    if (up === "PROCEED") return colors.statusProceed;
+    if (up === "HOLD") return colors.statusHold;
+    if (up === "NOT NOW") return colors.statusNotNow;
+    return colors.textPrimary; // Fallback
   }, [status]);
 
   return (
     <div
       style={{
         opacity: opacity,
-        transition: "opacity 1s ease",
+        transition: `opacity ${transitions.verySlow}`,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -56,10 +57,10 @@ export default function Result({
       {/* Label */}
       <div
         style={{
-          fontSize: "0.6rem",
-          color: "#333",
-          letterSpacing: "0.3em",
-          marginBottom: "1.5rem",
+          fontSize: typography.fontXXXSmall,
+          color: colors.textMuted,
+          letterSpacing: typography.letterSpacingXWide,
+          marginBottom: spacing.gapMedium,
           textTransform: "uppercase",
         }}
       >
@@ -69,11 +70,11 @@ export default function Result({
       {/* Status */}
       <div
         style={{
-          fontSize: "clamp(1.6rem, 5vw, 2.8rem)",
-          fontWeight: 200,
-          letterSpacing: "0.2em",
+          fontSize: typography.fontXLarge,
+          fontWeight: typography.fontWeightLight,
+          letterSpacing: typography.letterSpacingMedium,
           color: statusColor,
-          marginBottom: "3rem",
+          marginBottom: spacing.gapXLarge,
           textTransform: "uppercase",
         }}
       >
@@ -85,16 +86,16 @@ export default function Result({
         style={{
           display: "flex",
           flexDirection: "column",
-          gap: "0.5rem",
-          fontSize: "0.65rem",
-          color: "#444",
+          gap: spacing.gapXSmall,
+          fontSize: typography.fontXXSmall,
+          color: colors.textQuinary,
           marginBottom: "4rem",
         }}
       >
         <div>Artifact: {artifactCode}</div>
         <div>{timestamp}</div>
         <div style={{ textTransform: "capitalize" }}>{context}</div>
-        <div style={{ color: "#333", marginTop: "0.5rem" }}>
+        <div style={{ color: colors.textMuted, marginTop: spacing.gapXSmall }}>
           Locked to your moment.
         </div>
       </div>
@@ -105,9 +106,9 @@ export default function Result({
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          gap: "0.8rem",
+          gap: spacing.gapSmall,
           opacity: showSeal ? 1 : 0,
-          transition: "opacity 0.8s ease",
+          transition: `opacity ${transitions.slow}`,
         }}
       >
         {showSeal && (
