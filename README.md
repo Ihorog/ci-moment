@@ -117,14 +117,38 @@ ci-moment/
 │   └── SealButton.tsx    # Payment button
 ├── lib/                   # Shared utilities
 │   ├── engine.ts         # Decision engine logic
+│   ├── engine.server.ts  # Server-only crypto operations
+│   ├── design-system.ts  # Centralized design tokens
 │   └── supabase.ts       # Database client
 ├── db/                    # Database schema
 │   └── schema.sql        # PostgreSQL schema
-└── docs/                  # Documentation
-    ├── DEPLOYMENT.md     # Deployment guide
-    ├── STRIPE-SETUP.md   # Stripe configuration
-    └── SUPABASE-SETUP.md # Database setup
+├── docs/                  # Documentation
+│   ├── DEPLOYMENT.md     # Deployment guide
+│   ├── ENVIRONMENT-CONFIG.md # Environment configuration examples
+│   ├── STRIPE-SETUP.md   # Stripe configuration
+│   └── SUPABASE-SETUP.md # Database setup
+├── AGENTS.md              # Copilot agent instructions
+├── ARCHITECTURE.md        # System architecture documentation
+└── DEPLOYMENT-STRATEGY.md # GitHub-native deployment strategy
 ```
+
+## 📚 Documentation
+
+### Core Documentation
+- **[AGENTS.md](./AGENTS.md)** - Instructions for GitHub Copilot agents to assist with development
+- **[ARCHITECTURE.md](./ARCHITECTURE.md)** - Detailed system architecture and design decisions
+- **[DEPLOYMENT-STRATEGY.md](./DEPLOYMENT-STRATEGY.md)** - GitHub-native deployment strategy with scaling patterns
+
+### Setup Guides
+- **[DEPLOYMENT.md](./docs/DEPLOYMENT.md)** - Step-by-step deployment to Vercel
+- **[ENVIRONMENT-CONFIG.md](./docs/ENVIRONMENT-CONFIG.md)** - Environment configuration examples for all stages
+- **[SUPABASE-SETUP.md](./docs/SUPABASE-SETUP.md)** - Database setup instructions
+- **[STRIPE-SETUP.md](./docs/STRIPE-SETUP.md)** - Payment integration setup
+
+### Development Resources
+- **[CONTRIBUTING.md](./CONTRIBUTING.md)** - How to contribute to the project
+- **[SECURITY.md](./SECURITY.md)** - Security policy and vulnerability reporting
+- **[CHANGELOG.md](./CHANGELOG.md)** - Version history and release notes
 
 ## 🧪 Development
 
