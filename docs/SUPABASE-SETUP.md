@@ -17,7 +17,7 @@ This guide covers setting up Supabase (PostgreSQL database) for Ci Moment.
 Ci Moment uses Supabase as its PostgreSQL database to store:
 
 - **Artifacts**: Decision records with context, status, and seal information
-- **Metadata**: Verification hashes, timestamps, and Stripe session IDs
+- **Metadata**: Verification hashes, timestamps, and payment transaction IDs
 
 Key features:
 - **Serverless**: No database server management required
@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS artifacts (
   is_sealed BOOLEAN DEFAULT FALSE NOT NULL,
   sealed_at_utc TIMESTAMPTZ,
   verify_hash TEXT UNIQUE NOT NULL,
-  stripe_session_id TEXT,
+  payment_id TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
   updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
 );
@@ -123,7 +123,7 @@ COMMENT ON COLUMN artifacts.status IS 'Engine determined status: PROCEED, HOLD, 
 COMMENT ON COLUMN artifacts.locked_minute_utc IS 'Unix timestamp in minutes when decision was locked';
 COMMENT ON COLUMN artifacts.verify_hash IS 'SHA256 hash for verification URL';
 COMMENT ON COLUMN artifacts.is_sealed IS 'Whether payment was completed';
-COMMENT ON COLUMN artifacts.stripe_session_id IS 'Stripe checkout session ID if sealed';
+COMMENT ON COLUMN artifacts.payment_id IS 'Payment transaction ID if sealed';
 ```
 
 ### Step 3: Execute the Query
@@ -148,7 +148,7 @@ Expected columns:
 - `is_sealed` (bool)
 - `sealed_at_utc` (timestamptz)
 - `verify_hash` (text)
-- `stripe_session_id` (text)
+- `payment_id` (text)
 - `created_at` (timestamptz)
 - `updated_at` (timestamptz)
 
@@ -225,7 +225,7 @@ Complete a full flow:
 1. Select a context
 2. Complete the decision flow
 3. Click "Seal This Moment"
-4. Complete Stripe payment (test mode)
+4. Complete payment (test mode)
 
 Then check the database:
 

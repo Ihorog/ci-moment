@@ -17,7 +17,6 @@
     "decision-tool",
     "saas",
     "next.js",
-    "stripe",
     "supabase",
     "typescript",
     "vercel"
@@ -34,8 +33,7 @@
     "@supabase/supabase-js": "^2.39.0",
     "next": "^14.2.0",
     "react": "^18.3.0",
-    "react-dom": "^18.3.0",
-    "stripe": "^14.0.0"
+    "react-dom": "^18.3.0"
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",

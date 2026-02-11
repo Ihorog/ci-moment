@@ -14,9 +14,9 @@ Ci Moment takes security seriously. This document outlines our security practice
 
 ### Current Security Measures
 
-1. **Stripe Integration**
-   - Webhook signature verification for all payment events
-   - Secure handling of payment data (PCI DSS compliant through Stripe)
+1. **Payment Integration**
+   - Signature verification for all payment requests
+   - Secure handling of payment data (PCI DSS compliant through Fondy)
    - No credit card data stored locally
 
 2. **Environment Variables**
@@ -35,10 +35,9 @@ Ci Moment takes security seriously. This document outlines our security practice
      - X-Frame-Options: DENY
      - X-Content-Type-Options: nosniff
      - Referrer-Policy: origin-when-cross-origin
-     - Content-Security-Policy configured
 
 5. **Authentication & Authorization**
-   - Webhook signature verification
+   - Payment signature verification
    - Server-side API route validation
    - No client-side secret exposure
 
@@ -96,11 +95,11 @@ If you discover a security vulnerability, please follow these steps:
    # Rotate keys regularly
    ```
 
-2. **Stripe Configuration**
-   - Use test keys in development
-   - Verify webhook endpoints
-   - Enable webhook signature verification
-   - Monitor Stripe dashboard for suspicious activity
+2. **Fondy Configuration**
+   - Use test credentials in development
+   - Verify payment signature generation
+   - Enable transaction monitoring
+   - Monitor Fondy portal for suspicious activity
 
 3. **Supabase Configuration**
    - Use service role key (not anon key)
@@ -169,7 +168,7 @@ Users can implement additional security:
 
 2. **Monitoring**
    - Set up Sentry or similar for error tracking
-   - Monitor Stripe webhook deliveries
+   - Monitor Fondy transaction reports
    - Track failed payment attempts
 
 3. **Logging**
@@ -196,11 +195,11 @@ Users can implement additional security:
 Before going live:
 
 - [ ] All environment variables set correctly
-- [ ] Stripe webhook signature verification enabled
+- [ ] Payment signature verification enabled
 - [ ] HTTPS enforced
 - [ ] Security headers configured
 - [ ] Dependencies up to date (`npm audit` clean)
-- [ ] Test keys replaced with production keys
+- [ ] Test credentials replaced with production credentials
 - [ ] Backup strategy implemented
 - [ ] Monitoring and alerting set up
 - [ ] Error tracking configured
@@ -209,7 +208,7 @@ Before going live:
 ## 🔗 Additional Resources
 
 - [OWASP Top 10](https://owasp.org/www-project-top-ten/)
-- [Stripe Security Best Practices](https://stripe.com/docs/security/guide)
+- [Fondy Documentation](https://docs.fondy.eu/)
 - [Supabase Security](https://supabase.com/docs/guides/platform/security)
 - [Next.js Security Headers](https://nextjs.org/docs/advanced-features/security-headers)
 - [Vercel Security](https://vercel.com/docs/concepts/deployments/security)

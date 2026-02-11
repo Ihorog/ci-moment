@@ -22,7 +22,7 @@ export interface Artifact {
   is_sealed: boolean;
   sealed_at_utc: string | null;
   verify_hash: string;
-  stripe_session_id: string | null;
+  payment_id: string | null;
 }
 
 export interface ArtifactInput {
@@ -53,7 +53,7 @@ function validateSupabaseConfig() {
 /**
  * Insert a new artifact into the `artifacts` table. When creating an
  * artifact it is not yet sealed, so `is_sealed` is set to false and
- * `sealed_at_utc` and `stripe_session_id` are null. Returns the inserted
+ * `sealed_at_utc` and `payment_id` are null. Returns the inserted
  * artifact on success or throws on failure.
  */
 export async function createArtifact(
@@ -62,7 +62,7 @@ export async function createArtifact(
   validateSupabaseConfig();
   const { data: inserted, error } = await supabase
     .from('artifacts')
-    .insert([{ ...data, is_sealed: false, sealed_at_utc: null, stripe_session_id: null }])
+    .insert([{ ...data, is_sealed: false, sealed_at_utc: null, payment_id: null }])
     .select()
     .single();
   if (error) {
@@ -74,12 +74,12 @@ export async function createArtifact(
 /**
  * Mark an artifact as sealed after a successful payment. Updates the row
  * identified by its artifact code, setting the `is_sealed` flag to true,
- * recording the current UTC time and the Stripe session ID. Returns the
+ * recording the current UTC time and the payment transaction ID. Returns the
  * updated artifact or throws on failure.
  */
 export async function sealArtifact(
   artifactCode: string,
-  stripeSessionId: string
+  paymentId: string
 ): Promise<Artifact> {
   validateSupabaseConfig();
   const { data: updated, error } = await supabase
@@ -87,7 +87,7 @@ export async function sealArtifact(
     .update({
       is_sealed: true,
       sealed_at_utc: new Date().toISOString(),
-      stripe_session_id: stripeSessionId,
+      payment_id: paymentId,
     })
     .eq('artifact_code', artifactCode)
     .select()

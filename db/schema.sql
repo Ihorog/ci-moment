@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS artifacts (
   is_sealed BOOLEAN DEFAULT FALSE NOT NULL,
   sealed_at_utc TIMESTAMPTZ,
   verify_hash TEXT UNIQUE NOT NULL,
-  stripe_session_id TEXT,
+  payment_id TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
   updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
 );
@@ -46,4 +46,4 @@ COMMENT ON COLUMN artifacts.status IS 'Engine determined status: PROCEED, HOLD, 
 COMMENT ON COLUMN artifacts.locked_minute_utc IS 'Unix timestamp in minutes when decision was locked';
 COMMENT ON COLUMN artifacts.verify_hash IS 'SHA256 hash for verification URL';
 COMMENT ON COLUMN artifacts.is_sealed IS 'Whether payment was completed';
-COMMENT ON COLUMN artifacts.stripe_session_id IS 'Stripe checkout session ID if sealed';
+COMMENT ON COLUMN artifacts.payment_id IS 'Payment provider transaction ID if sealed';
