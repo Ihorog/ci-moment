@@ -99,6 +99,33 @@ export async function sealArtifact(
 }
 
 /**
+ * Mark an artifact as sealed using its primary key UUID. This variant is used
+ * by the payment webhook handler which receives the artifact ID embedded in
+ * the Fondy order ID. Behaviour is identical to `sealArtifact` but matches on
+ * the `id` column rather than `artifact_code`.
+ */
+export async function sealArtifactById(
+  artifactId: string,
+  paymentId: string
+): Promise<Artifact> {
+  validateSupabaseConfig();
+  const { data: updated, error } = await supabase
+    .from('artifacts')
+    .update({
+      is_sealed: true,
+      sealed_at_utc: new Date().toISOString(),
+      payment_id: paymentId,
+    })
+    .eq('id', artifactId)
+    .select()
+    .single();
+  if (error) {
+    throw new Error(error.message);
+  }
+  return updated as unknown as Artifact;
+}
+
+/**
  * Retrieve an artifact by its verification hash. Returns null when not found.
  * This function does not require the artifact to be sealed, leaving the
  * responsibility for UI handling to the caller.
