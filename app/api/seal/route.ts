@@ -94,6 +94,7 @@ export async function POST(request: Request) {
 
     // Build stateless success URL
     const successUrl = `${baseUrl}/verify/${verifyHash}?sealed=true&status=${encodeURIComponent(status)}&context=${encodeURIComponent(context)}`;
+    const cancelUrl = `${baseUrl}/?cancelled=true`;
 
     // Validate Fondy environment variables
     const merchantId = process.env.FONDY_MERCHANT_ID;
@@ -113,6 +114,8 @@ export async function POST(request: Request) {
       amount: 500, // cents — $5.00 USD
       currency: 'USD',
       response_url: successUrl,
+      cancel_url: cancelUrl,
+      server_callback_url: `${baseUrl}/api/webhook`,
     };
     fondyParams.signature = generateFondySignature(secretKey, fondyParams);
 

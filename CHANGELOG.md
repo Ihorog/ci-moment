@@ -7,7 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Fondy Payment Webhook Handler** (`/api/webhook`): New server-side callback
+  endpoint that Fondy calls after a payment is completed. Verifies the Fondy
+  signature, parses the artifact ID from the order, and seals the artifact in
+  Supabase when the payment status is `approved`.
+- **`lib/fondy.ts`**: Shared utilities for Fondy signature verification
+  (`verifyFondySignature`) and order-ID parsing (`parseArtifactId`), extracted
+  to their own module for testability.
+- **`sealArtifactById` in `lib/supabase.ts`**: New database helper to seal an
+  artifact by its primary key UUID, used by the webhook handler.
+- **`__tests__/webhook.test.ts`**: 12 unit tests covering Fondy signature
+  verification (valid, missing, tampered, wrong password, response_status
+  exclusion, empty values) and order-ID parsing edge cases.
+
 ### Changed
+- **`/api/seal`**: Added `server_callback_url` (`/api/webhook`) and
+  `cancel_url` (`/?cancelled=true`) to the Fondy checkout parameters so that
+  Fondy notifies the server after payment and users return correctly on cancel.
 - **Payment Provider Migration**: Migrated from Stripe to Fondy payment gateway
   - Removed Stripe npm dependency
   - Removed Stripe webhook handler (`/app/api/webhook/route.ts`)
