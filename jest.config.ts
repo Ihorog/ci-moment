@@ -1,13 +1,3 @@
-import type { Config } from 'jest';
-
-const config: Config = {
-  preset: 'ts-jest',
-  testEnvironment: 'node',
-  roots: ['<rootDir>'],
-  testMatch: ['**/__tests__/**/*.test.ts'],
-  moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/$1',
-  },
-};
-
-export default config;
+// Jest configuration has been migrated to jest.config.js to avoid
+// requiring ts-node as a devDependency. See jest.config.js for the
+// active configuration.

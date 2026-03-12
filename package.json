@@ -27,7 +27,7 @@
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
-    "test": "jest"
+    "test": "jest --config jest.config.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.0",
