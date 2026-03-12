@@ -37,6 +37,13 @@ export const colors = {
   manifestMid: "#444",
   manifestLight: "#888",
   manifestBright: "#d4d4d4",
+
+  // Holographic gradient colors
+  holographicPink: "#ff6ec7",
+  holographicBlue: "#7ec8ff",
+  holographicYellow: "#ffe47e",
+  holographicPurple: "#c77eff",
+  holographicCyan: "#7efff5",
 };
 
 // Typography
@@ -106,4 +113,25 @@ export const animations = {
   fadeInDelay: 50,
   sealButtonDelay: 2000,
   cancelledMessageDuration: 5000,
+  holographicShiftDuration: "3s",
+  windowExpiryWarning: 10000, // 10s before minute ends
+  windowExpiryVibrateDuration: 500,
+};
+
+// Visual effects
+export const effects = {
+  // Paper texture using CSS mask (subtle dot pattern for micro-perforation)
+  paperTextureMask: "radial-gradient(circle at 1px 1px, transparent 0.5px, black 1px)",
+  paperTextureMaskSize: "4px 4px",
+
+  // Holographic gradient animation (iridescent shift)
+  holographicGradient: (colors: typeof import('./design-system').colors) =>
+    `linear-gradient(135deg, ${colors.holographicPink}, ${colors.holographicBlue}, ${colors.holographicYellow}, ${colors.holographicPurple}, ${colors.holographicCyan}, ${colors.holographicPink})`,
+
+  // Paper box shadow (subtle depth)
+  paperShadow: "0 4px 12px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.5)",
+
+  // Wallet card dimensions (Apple Wallet proportions: 85.6mm x 53.98mm ≈ 1.586:1)
+  walletCardAspectRatio: "1.586",
+  walletCardMaxWidth: "400px",
 };

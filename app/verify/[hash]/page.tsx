@@ -1,10 +1,58 @@
 import { getArtifactByHash, Artifact } from '@/lib/supabase';
 import { resolveVerifyState } from '@/lib/verify';
 import { colors, typography, spacing } from '@/lib/design-system';
+import type { Metadata } from 'next';
 
 interface VerifyPageProps {
   params: { hash: string };
   searchParams: { sealed?: string };
+}
+
+/**
+ * Generate dynamic metadata for artifact verification pages.
+ * This enables custom OG images for each artifact when shared on social media.
+ */
+export async function generateMetadata({ params }: VerifyPageProps): Promise<Metadata> {
+  const { hash } = params;
+
+  let artifact: Artifact | null = null;
+  try {
+    artifact = await getArtifactByHash(hash);
+  } catch (error) {
+    console.error('Error fetching artifact for metadata:', error);
+  }
+
+  if (artifact) {
+    const ogImageUrl = `/api/og?status=${encodeURIComponent(artifact.status)}&code=${encodeURIComponent(artifact.artifact_code)}&context=${encodeURIComponent(artifact.context)}`;
+
+    return {
+      title: `${artifact.status} — Ci Moment Artifact ${artifact.artifact_code}`,
+      description: `Decision artifact: ${artifact.status}. Locked to a unique moment. Context: ${artifact.context}.`,
+      openGraph: {
+        title: `${artifact.status} — Ci Moment`,
+        description: `Decision artifact locked to your unique moment.`,
+        images: [
+          {
+            url: ogImageUrl,
+            width: 1200,
+            height: 630,
+            alt: `Ci Moment Artifact: ${artifact.status}`,
+          },
+        ],
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: `${artifact.status} — Ci Moment`,
+        description: 'Decision artifact locked to your unique moment.',
+        images: [ogImageUrl],
+      },
+    };
+  }
+
+  return {
+    title: 'Artifact Verification — Ci Moment',
+    description: 'Verify your Ci Moment decision artifact.',
+  };
 }
 
 /**

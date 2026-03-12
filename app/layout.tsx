@@ -4,13 +4,16 @@ import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
 
 export const metadata: Metadata = {
   title: "Ci Moment — Instant Decision Clarity",
-  description: "Get instant clarity for a personal decision. Choose a context and receive a signal in seconds. Seal your Ci Moment and lock the checkpoint.",
+  description: "Overthinking relief. Instant clarity. Your decision artifact locked to a unique moment in time.",
   keywords: [
     "decision clarity",
     "decision tool",
     "should I do it",
     "instant decision help",
     "decision moment",
+    "overthinking relief",
+    "decision artifact",
+    "instant clarity",
   ],
   authors: [{ name: "Ci Moment" }],
   creator: "Ci Moment",
@@ -25,17 +28,26 @@ export const metadata: Metadata = {
     canonical: "https://ci-moment.vercel.app",
   },
   openGraph: {
-    title: "Ci Moment — Instant Decision Clarity",
-    description: "Get instant clarity for a personal decision in seconds.",
+    title: "Ci Moment — Your Digital Decision Artifact",
+    description: "Overthinking relief. Instant clarity. Decision artifact locked to your unique moment.",
     url: "https://ci-moment.vercel.app",
     siteName: "Ci Moment",
     locale: "en_US",
     type: "website",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Ci Moment - Digital Decision Artifact",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ci Moment — Instant Decision Clarity",
-    description: "Get instant clarity for a personal decision in seconds.",
+    title: "Ci Moment — Your Digital Decision Artifact",
+    description: "Overthinking relief. Instant clarity. Decision artifact.",
+    images: ["/og-image.png"],
   },
   robots: {
     index: true,
