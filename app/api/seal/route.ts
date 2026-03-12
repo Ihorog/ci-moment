@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateVerifyHash } from '@/lib/engine.server';
-import { createArtifact } from '@/lib/supabase';
+import { createArtifact, isSupabaseConfigured } from '@/lib/supabase';
 import { getCheckoutUrl } from '@/lib/payments';
 import type { Context, Status } from '@/lib/engine';
 
@@ -57,27 +57,28 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const verifyHash = generateVerifyHash(artifactCode, minute, status);
 
   let hashSaved = false;
-  try {
-    await createArtifact({
-      artifact_code: artifactCode,
-      context: context as Context,
-      status: status as Status,
-      locked_minute_utc: minute,
-      locked_at_utc: new Date().toISOString(),
-      verify_hash: verifyHash,
-    });
-    hashSaved = true;
-  } catch (error) {
-    // In production, a DB failure means the artifact won't be recoverable after
-    // payment, so we surface a 500 rather than silently proceeding.
-    // In non-production environments (preview/development) we allow the payment
-    // flow to continue without DB persistence so the UI can be tested without
-    // a Supabase instance.
-    if (process.env.NODE_ENV === 'production') {
-      console.error('Failed to persist artifact in production:', error);
+  if (!isSupabaseConfigured()) {
+    // Supabase env vars are not set — skip DB persistence and proceed straight
+    // to checkout. This is expected in preview deployments and during local
+    // development before Supabase is wired up.
+    console.warn('/api/seal: Supabase not configured, skipping artifact persistence');
+  } else {
+    try {
+      await createArtifact({
+        artifact_code: artifactCode,
+        context: context as Context,
+        status: status as Status,
+        locked_minute_utc: minute,
+        locked_at_utc: new Date().toISOString(),
+        verify_hash: verifyHash,
+      });
+      hashSaved = true;
+    } catch (error) {
+      // Supabase IS configured but the query failed. Fail hard so the user
+      // doesn't pay for an artifact that can't be retrieved later.
+      console.error('Failed to persist artifact:', error);
       return NextResponse.json({ error: 'Failed to save artifact' }, { status: 500 });
     }
-    console.error('Failed to persist artifact (non-production):', error);
   }
 
   const checkoutUrl = getCheckoutUrl(verifyHash);

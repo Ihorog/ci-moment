@@ -76,14 +76,15 @@ const SealButton = memo(function SealButton({
           alignItems: "center",
           justifyContent: "center",
           background: "transparent",
-          border: `1px solid ${hover && !loading ? colors.hoverBorderTertiary : colors.borderTertiary}`,
-          color: hover && !loading ? colors.textQuaternary : colors.textMuted,
-          opacity: loading ? 0.4 : hover ? 1 : 0.6,
+          border: `1px solid ${hover && !loading ? colors.hoverBorderPrimary : colors.borderPrimary}`,
+          color: hover && !loading ? colors.textSecondary : colors.textTertiary,
+          opacity: loading ? 0.5 : 1,
           padding: spacing.paddingSmall,
           cursor: loading ? "wait" : "pointer",
-          fontSize: typography.fontXXXSmall,
+          fontSize: typography.fontXSmall,
           fontFamily: "inherit",
           textDecoration: "none",
+          letterSpacing: typography.letterSpacingSmall,
           transition: `all ${transitions.fast}`,
           minHeight: layout.minTouchTarget,
         }}
@@ -97,10 +98,10 @@ const SealButton = memo(function SealButton({
         </div>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: spacing.gapXXXSmall }}>
-          <div style={{ fontSize: typography.fontTiny, color: colors.borderTertiary }}>
+          <div style={{ fontSize: typography.fontTiny, color: colors.textQuinary }}>
             Lock this signal as a personal checkpoint.
           </div>
-          <div style={{ fontSize: typography.fontTiny, color: colors.borderTertiary }}>
+          <div style={{ fontSize: typography.fontTiny, color: colors.textQuinary }}>
             Secure checkout powered by Gumroad.
           </div>
         </div>

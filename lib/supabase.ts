@@ -35,6 +35,20 @@ export interface ArtifactInput {
 }
 
 /**
+ * Returns true when both Supabase environment variables are set to real
+ * (non-placeholder) values. Use this before calling any Supabase function
+ * to decide whether DB persistence should be attempted.
+ */
+export function isSupabaseConfigured(): boolean {
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_KEY;
+  return (
+    !!url && url !== 'https://placeholder.supabase.co' &&
+    !!key && key !== 'placeholder_key'
+  );
+}
+
+/**
  * Validates that Supabase environment variables are configured.
  * Throws an error if not configured properly.
  */
