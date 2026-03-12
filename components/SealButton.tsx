@@ -3,83 +3,57 @@
 import { useState, memo } from "react";
 import { colors, typography, spacing, transitions, layout } from "@/lib/design-system";
 
+const GUMROAD_URL = "https://cimoment.gumroad.com/l/rwffi";
+
 interface SealButtonProps {
   context: string | null;
   status: string;
   artifactCode: string;
-  lockedMinute: number;
 }
 
 const SealButton = memo(function SealButton({
   context,
   status,
   artifactCode,
-  lockedMinute,
 }: SealButtonProps) {
   const [hover, setHover] = useState(false);
-  const [loading, setLoading] = useState(false);
 
-  const handleSeal = async () => {
-    if (!context || !status || !artifactCode) return;
-    
-    setLoading(true);
-    try {
-      const response = await fetch('/api/seal', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          artifactCode,
-          context,
-          status,
-          lockedMinute,
-        }),
-      });
-
-      const data = await response.json();
-      
-      if (response.ok && data.checkoutUrl) {
-        window.location.href = data.checkoutUrl;
-      } else {
-        console.error('Payment initiation failed:', data.error);
-        alert('Payment initiation failed. Please try again.');
-        setLoading(false);
-      }
-    } catch (error) {
-      console.error('Error initiating payment:', error);
-      alert('An error occurred. Please try again.');
-      setLoading(false);
-    }
-  };
+  if (!context || !status || !artifactCode) return null;
 
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: spacing.gapXSmall }}>
-      <button
-        onClick={handleSeal}
-        disabled={loading}
+      <a
+        href={GUMROAD_URL}
+        target="_blank"
+        rel="noopener noreferrer"
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
         style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
           background: "transparent",
-          border: `1px solid ${hover && !loading ? colors.hoverBorderTertiary : colors.borderTertiary}`,
-          color: hover && !loading ? colors.textQuaternary : colors.textMuted,
-          opacity: loading ? 0.3 : hover ? 1 : 0.6,
+          border: `1px solid ${hover ? colors.hoverBorderTertiary : colors.borderTertiary}`,
+          color: hover ? colors.textQuaternary : colors.textMuted,
+          opacity: hover ? 1 : 0.6,
           padding: spacing.paddingSmall,
-          cursor: loading ? "wait" : "pointer",
+          cursor: "pointer",
           fontSize: typography.fontXXXSmall,
           fontFamily: "inherit",
+          textDecoration: "none",
           transition: `all ${transitions.fast}`,
           minHeight: layout.minTouchTarget,
         }}
       >
-        {loading ? "Processing..." : "Seal this moment — $5"}
-      </button>
+        Seal this moment — $5
+      </a>
 
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: spacing.gapXXXSmall }}>
         <div style={{ fontSize: typography.fontTiny, color: colors.borderTertiary }}>
-          Lock this signal as a permanent checkpoint.
+          Lock this signal as a personal checkpoint.
         </div>
         <div style={{ fontSize: typography.fontTiny, color: colors.borderTertiary }}>
-          Secure payment via Fondy.
+          Secure checkout powered by Gumroad.
         </div>
       </div>
     </div>

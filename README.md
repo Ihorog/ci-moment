@@ -4,9 +4,22 @@
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Ihorog/ci-moment)
 
+## 💳 Live Checkout
+
+Ci Moment can be sealed via Gumroad checkout:
+https://cimoment.gumroad.com/l/rwffi
+
+## 🗺 User Flow
+
+1. Open app
+2. Select context
+3. Receive decision signal
+4. Click "Seal this moment — $5"
+5. Complete checkout on Gumroad
+
 ## 🌟 Overview
 
-Ci Moment is a single-page decision tool that helps users check their personal moment status for different life contexts (Career, Love, Timing). Each decision is locked to a specific UTC minute and can be permanently sealed via payment.
+Ci Moment is a single-page decision tool that helps users check their personal moment status for different life contexts (Career, Love, Timing). Each decision is locked to a specific UTC minute and can be sealed via Gumroad checkout.
 
 **Live Demo**: [https://ci-moment.vercel.app](https://ci-moment.vercel.app)
 
