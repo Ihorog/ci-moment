@@ -97,7 +97,6 @@ export default function Page() {
           artifactCode={result.artifactCode}
           timestamp={result.timestamp}
           context={context}
-          lockedMinute={result.minute}
         />
       )}
 

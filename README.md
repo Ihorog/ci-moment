@@ -19,7 +19,7 @@ https://cimoment.gumroad.com/l/rwffi
 
 ## 🌟 Overview
 
-Ci Moment is a single-page decision tool that helps users check their personal moment status for different life contexts (Career, Love, Timing). Each decision is locked to a specific UTC minute and can be permanently sealed via Gumroad.
+Ci Moment is a single-page decision tool that helps users check their personal moment status for different life contexts (Career, Love, Timing). Each decision is locked to a specific UTC minute and can be sealed via Gumroad checkout.
 
 **Live Demo**: [https://ci-moment.vercel.app](https://ci-moment.vercel.app)
 
