@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { colors, typography } from "@/lib/design-system";
+import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
 
 export const metadata: Metadata = {
   title: "Ci Moment — Instant Decision Clarity",
@@ -47,6 +48,7 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
+  manifest: "/manifest.webmanifest",
 };
 
 export const viewport: Viewport = {
@@ -54,6 +56,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false, // Prevents zooming to maintain app-like feel
+  themeColor: "#0a0a0a",
 };
 
 export default function RootLayout({
@@ -81,6 +84,7 @@ export default function RootLayout({
           MozOsxFontSmoothing: "grayscale",
         }}
       >
+        <ServiceWorkerRegistration />
         {children}
       </body>
     </html>
