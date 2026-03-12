@@ -273,12 +273,14 @@ returns 410 Gone; no webhook secret is configured or required.
 
 Because there is no active server-side webhook, artifacts remain unsealed
 (`is_sealed = false`) until a future webhook integration is added. The
-`/verify/[hash]` page handles four distinct states:
+`/verify/[hash]` page conceptually supports four distinct states for future
+webhook-based providers; in Gumroad canonical mode only **Unsealed** and
+**Not found** occur in practice:
 
 | State | Condition | Displayed message |
 |---|---|---|
 | **Sealed** | `is_sealed = true` | Full artifact details (Issued, Artifact code, Status, Locked at) |
-| **Pending-payment** | `is_sealed = false` + `?sealed=true` query param | "Sealing your moment…" with auto-refresh (webhook race condition) |
+| **Pending-payment** | `is_sealed = false` + `?sealed=true` query param | "Sealing your moment…" — used only for webhook-based providers that may seal artifacts shortly after redirect; not used and does not auto-resolve in Gumroad canonical mode. |
 | **Unsealed** | `is_sealed = false`, no `?sealed=true` | Artifact code + "Status: PENDING — payment not yet confirmed." |
 | **Not found** | No artifact row for the hash | "Artifact not found" |
 
