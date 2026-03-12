@@ -17,12 +17,14 @@ const SealButton = memo(function SealButton({
 }: SealButtonProps) {
   const [hover, setHover] = useState(false);
 
-  if (!context || !status || !artifactCode) return null;
+  const ctaHref = getSealCtaHref();
+
+  if (!context || !status || !artifactCode || !ctaHref) return null;
 
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: spacing.gapXSmall }}>
       <a
-        href={GUMROAD_URL}
+        href={ctaHref}
         target="_blank"
         rel="noopener noreferrer"
         onMouseEnter={() => setHover(true)}

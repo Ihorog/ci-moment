@@ -11,7 +11,7 @@ This document outlines the GitHub-native deployment strategy for Ci Moment, desi
 **Rationale**:
 - Lowest latency with global Edge Network
 - Optimal for Next.js 14 App Router
-- Built-in Stripe/payment provider integration
+- Optimal for Next.js 14 App Router with Gumroad-direct payment links
 - Zero infrastructure management
 - Automatic HTTPS and domain management
 
@@ -203,21 +203,20 @@ jobs:
 
 Stored in GitHub Secrets (Settings → Secrets and variables → Actions):
 
-**Preview Environment**:
+**Gumroad canonical mode — no payment secrets required.**
+
+**Preview Environment** (optional, for verification feature):
 ```
 SUPABASE_URL=<test-project-url>
 SUPABASE_SERVICE_KEY=<test-service-key>
-STRIPE_SECRET_KEY=sk_test_...
-NEXT_PUBLIC_PAYMENT_URL=<test-payment-link>
+NEXT_PUBLIC_PAYMENT_PROVIDER=gumroad
 ```
 
-**Production Environment**:
+**Production Environment** (optional, for verification feature):
 ```
 SUPABASE_URL=<prod-project-url>
 SUPABASE_SERVICE_KEY=<prod-service-key>
-STRIPE_SECRET_KEY=sk_live_...
-STRIPE_WEBHOOK_SECRET=whsec_...
-NEXT_PUBLIC_PAYMENT_URL=<prod-payment-link>
+NEXT_PUBLIC_PAYMENT_PROVIDER=gumroad
 ```
 
 **Access Control**:
@@ -265,37 +264,10 @@ export const config = {
 
 ### 2. Webhook Verification
 
-**Stripe Webhooks** (Future):
-```typescript
-import Stripe from 'stripe';
+**Not applicable in Gumroad canonical mode.**
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-
-export async function POST(request: Request) {
-  const signature = request.headers.get('stripe-signature')!;
-  const body = await request.text();
-  
-  try {
-    const event = stripe.webhooks.constructEvent(
-      body,
-      signature,
-      process.env.STRIPE_WEBHOOK_SECRET!
-    );
-    
-    // Process event
-  } catch (err) {
-    return new Response('Webhook signature verification failed', {
-      status: 400,
-    });
-  }
-}
-```
-
-**Security Measures**:
-- Verify signature on all webhook requests
-- Validate timestamp (prevent replay attacks)
-- Check IP allowlist (optional)
-- Log all webhook attempts
+Gumroad handles its own payment confirmation externally. `/api/webhook`
+returns 410 Gone; no webhook secret is configured or required.
 
 ### 3. Hash Collision Analysis
 
@@ -354,20 +326,9 @@ export async function generateStaticParams() {
 
 ### 2. Edge Runtime for API Routes
 
-**Configuration**:
-```typescript
-// app/api/seal/route.ts
-export const runtime = 'edge';
-
-export async function POST(request: Request) {
-  // Fast cold start, global distribution
-}
-```
-
-**Benefits**:
-- Cold start <100ms (vs ~1s for serverless)
-- Global distribution (lower latency)
-- Higher burst capacity
+**Note**: In Gumroad canonical mode, `/api/seal` and `/api/webhook` return 410
+Gone and require no edge runtime configuration. Future payment integrations
+can re-enable edge runtime when needed.
 
 ### 3. Graceful Degradation
 
@@ -382,9 +343,10 @@ return new Response('Too many requests. Please try again later.', {
 });
 ```
 
-**Client-side Retry**:
+**Client-side Graceful Degradation** (future API integrations):
 ```typescript
-async function sealArtifact(data: ArtifactData) {
+// Example pattern for future payment API integration
+async function callPaymentApi(data: unknown) {
   try {
     const response = await fetch('/api/seal', {
       method: 'POST',
@@ -393,13 +355,11 @@ async function sealArtifact(data: ArtifactData) {
     
     if (response.status === 429) {
       const retryAfter = response.headers.get('Retry-After');
-      // Show user-friendly message with retry time
       return { error: `Rate limited. Retry in ${retryAfter}s` };
     }
     
     return response.json();
   } catch (error) {
-    // Fallback behavior
     return { error: 'Service temporarily unavailable' };
   }
 }
