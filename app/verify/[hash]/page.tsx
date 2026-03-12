@@ -65,8 +65,11 @@ export default async function VerifyPage({ params, searchParams }: VerifyPagePro
     );
   }
 
-  // Artifact exists but not yet sealed — user just came from payment.
-  // The payment provider webhook may still be processing.
+  // Artifact exists but not yet sealed — user was redirected back after payment
+  // (?sealed=true). For webhook-based providers the webhook may still be
+  // processing and the page will auto-refresh until the artifact is sealed. In
+  // Gumroad canonical mode no webhook runs, so this state will not
+  // auto-resolve; the page refreshes but the artifact stays unsealed.
   if (state === 'pending-payment') {
     return (
       <div
@@ -82,13 +85,13 @@ export default async function VerifyPage({ params, searchParams }: VerifyPagePro
           gap: spacing.gapBase,
         }}
       >
-        {/* Auto-refresh while waiting for webhook to process */}
+        {/* Auto-refresh for webhook-based providers that seal artifacts after redirect */}
         <meta httpEquiv="refresh" content="3" />
         <div style={{ color: colors.textTertiary, fontSize: typography.fontBase }}>
           Sealing your moment…
         </div>
         <div style={{ color: colors.textQuaternary, fontSize: typography.fontXSmall }}>
-          Payment received. This page will refresh automatically.
+          Payment received. Checking for confirmation…
         </div>
       </div>
     );
