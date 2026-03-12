@@ -36,3 +36,15 @@ export function getSealCtaHref(): string | null {
   if (!isPaymentsEnabled()) return null;
   return GUMROAD_URL;
 }
+
+/**
+ * Build the full Gumroad checkout URL for a specific artifact. The verify
+ * hash is embedded as the `passthrough` parameter so it can be tied back to
+ * the sealed artifact after payment. `wanted=true` forces the Gumroad
+ * overlay directly to the checkout step.
+ *
+ * @param verifyHash The 16-character verification hash for the artifact.
+ */
+export function getCheckoutUrl(verifyHash: string): string {
+  return `${GUMROAD_URL}?passthrough=${encodeURIComponent(verifyHash)}&wanted=true`;
+}

@@ -1,4 +1,4 @@
-import { GUMROAD_URL, getPaymentProvider, isPaymentsEnabled, getSealCtaHref } from '@/lib/payments';
+import { GUMROAD_URL, getPaymentProvider, isPaymentsEnabled, getSealCtaHref, getCheckoutUrl } from '@/lib/payments';
 
 describe('payments', () => {
   const originalEnv = process.env;
@@ -58,6 +58,29 @@ describe('payments', () => {
     it('should return null when payments are disabled', () => {
       process.env.NEXT_PUBLIC_PAYMENT_PROVIDER = 'disabled';
       expect(getSealCtaHref()).toBeNull();
+    });
+  });
+
+  describe('getCheckoutUrl', () => {
+    it('should return a URL starting with GUMROAD_URL', () => {
+      const url = getCheckoutUrl('abc123');
+      expect(url.startsWith(GUMROAD_URL)).toBe(true);
+    });
+
+    it('should include the verify hash as the passthrough parameter', () => {
+      const hash = 'abc1234567890def';
+      const url = getCheckoutUrl(hash);
+      expect(url).toContain(`passthrough=${encodeURIComponent(hash)}`);
+    });
+
+    it('should include wanted=true', () => {
+      const url = getCheckoutUrl('abc123');
+      expect(url).toContain('wanted=true');
+    });
+
+    it('should URL-encode special characters in the hash', () => {
+      const url = getCheckoutUrl('hash with spaces');
+      expect(url).toContain('hash%20with%20spaces');
     });
   });
 });

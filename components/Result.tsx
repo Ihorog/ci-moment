@@ -10,6 +10,7 @@ interface ResultProps {
   artifactCode: string;
   timestamp: string;
   context: ContextType;
+  minute: number;
 }
 
 export default function Result({
@@ -17,6 +18,7 @@ export default function Result({
   artifactCode,
   timestamp,
   context,
+  minute,
 }: ResultProps) {
   const [opacity, setOpacity] = useState(0);
   const [showSeal, setShowSeal] = useState(false);
@@ -116,6 +118,7 @@ export default function Result({
             context={context}
             status={status}
             artifactCode={artifactCode}
+            minute={minute}
           />
         )}
       </div>

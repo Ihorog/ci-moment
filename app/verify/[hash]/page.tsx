@@ -59,7 +59,7 @@ export default async function VerifyPage({ params, searchParams }: VerifyPagePro
   }
 
   // Artifact exists but is not yet sealed and user just came from payment —
-  // the Stripe webhook may still be processing.
+  // the payment provider webhook may still be processing.
   if (artifact && !artifact.is_sealed && justPaid) {
     return (
       <div

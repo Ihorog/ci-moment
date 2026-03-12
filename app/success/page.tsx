@@ -1,13 +1,27 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { colors, typography, spacing, transitions } from "@/lib/design-system";
 
 function SuccessContent() {
   const searchParams = useSearchParams();
   const context = searchParams.get("context");
   const status = searchParams.get("status");
+  const [verifyHash, setVerifyHash] = useState<string | null>(null);
+
+  useEffect(() => {
+    try {
+      const hash = sessionStorage.getItem('ci_verify_hash');
+      if (hash) {
+        setVerifyHash(hash);
+        // Consume once so a page refresh no longer shows the verify link
+        sessionStorage.removeItem('ci_verify_hash');
+      }
+    } catch {
+      // sessionStorage unavailable (e.g. private browsing)
+    }
+  }, []);
 
   return (
     <main
@@ -67,6 +81,27 @@ function SuccessContent() {
               {status}
             </div>
           </div>
+        )}
+
+        {verifyHash && (
+          <a
+            href={`/verify/${verifyHash}`}
+            style={{
+              marginTop: spacing.gapSmall,
+              background: "transparent",
+              border: `1px solid ${colors.borderSecondary}`,
+              color: colors.textTertiary,
+              padding: spacing.paddingSmall,
+              cursor: "pointer",
+              fontSize: typography.fontXXXSmall,
+              fontFamily: "inherit",
+              textDecoration: "none",
+              transition: `all ${transitions.fast}`,
+              letterSpacing: typography.letterSpacingXSmall,
+            }}
+          >
+            View sealed artifact
+          </a>
         )}
 
         <a
