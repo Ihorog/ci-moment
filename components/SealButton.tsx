@@ -2,8 +2,7 @@
 
 import { useState, memo } from "react";
 import { colors, typography, spacing, transitions, layout } from "@/lib/design-system";
-
-const GUMROAD_URL = "https://cimoment.gumroad.com/l/rwffi";
+import { getSealCtaHref } from "@/lib/payments";
 
 interface SealButtonProps {
   context: string | null;
