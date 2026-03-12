@@ -118,7 +118,6 @@ export default function Result({
             context={context}
             status={status}
             artifactCode={artifactCode}
-            lockedMinute={lockedMinute}
           />
         )}
       </div>
