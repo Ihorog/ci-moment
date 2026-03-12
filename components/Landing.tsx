@@ -41,12 +41,26 @@ export default function Landing({ onSelect }: LandingProps) {
           fontSize: typography.fontLarge,
           fontWeight: typography.fontWeightNormal,
           color: colors.textPrimary,
-          margin: `0 0 ${spacing.gapXLarge} 0`,
+          margin: `0 0 ${spacing.gapBase} 0`,
           textAlign: "center",
         }}
       >
-        Is now your Ci Moment?
+        Instant Decision Clarity
       </h1>
+
+      {/* Sub-headline */}
+      <h2
+        style={{
+          fontSize: typography.fontBase,
+          fontWeight: typography.fontWeightNormal,
+          color: colors.textTertiary,
+          margin: `0 0 ${spacing.gapXLarge} 0`,
+          textAlign: "center",
+          letterSpacing: typography.letterSpacingSmall,
+        }}
+      >
+        Choose a context and receive a signal in seconds.
+      </h2>
 
       {/* Buttons Container */}
       <div

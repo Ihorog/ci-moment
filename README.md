@@ -4,6 +4,15 @@
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Ihorog/ci-moment)
 
+## Ci Moment
+
+Ci Moment is a lightweight decision clarity tool.
+
+Users select a context and receive an instant signal.
+
+Seal your moment:
+https://cimoment.gumroad.com/l/rwffi
+
 ## 💳 Live Checkout
 
 Ci Moment can be sealed via Gumroad checkout:

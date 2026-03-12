@@ -2,15 +2,14 @@ import type { Metadata, Viewport } from "next";
 import { colors, typography } from "@/lib/design-system";
 
 export const metadata: Metadata = {
-  title: "Ci Moment - Your Personal Decision Signal",
-  description: "Check your unique moment status for Career, Love, or Timing. A minimalist decision tool that captures your specific moment in time. Seal your decision forever.",
+  title: "Ci Moment — Instant Decision Clarity",
+  description: "Get instant clarity for a personal decision. Choose a context and receive a signal in seconds. Seal your Ci Moment and lock the checkpoint.",
   keywords: [
-    "decision making",
-    "personal moment",
-    "timing",
-    "career guidance",
-    "relationship timing",
+    "decision clarity",
     "decision tool",
+    "should I do it",
+    "instant decision help",
+    "decision moment",
   ],
   authors: [{ name: "Ci Moment" }],
   creator: "Ci Moment",
@@ -20,19 +19,22 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL(process.env.NEXT_PUBLIC_URL || "https://ci-moment.vercel.app"),
+  metadataBase: new URL("https://ci-moment.vercel.app"),
+  alternates: {
+    canonical: "https://ci-moment.vercel.app",
+  },
   openGraph: {
-    title: "Ci Moment - Your Personal Decision Signal",
-    description: "Check your unique moment status for Career, Love, or Timing. Lock your decision to this moment forever.",
-    url: process.env.NEXT_PUBLIC_URL || "https://ci-moment.vercel.app",
+    title: "Ci Moment — Instant Decision Clarity",
+    description: "Get instant clarity for a personal decision in seconds.",
+    url: "https://ci-moment.vercel.app",
     siteName: "Ci Moment",
     locale: "en_US",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ci Moment - Your Personal Decision Signal",
-    description: "Check your unique moment status for Career, Love, or Timing.",
+    title: "Ci Moment — Instant Decision Clarity",
+    description: "Get instant clarity for a personal decision in seconds.",
   },
   robots: {
     index: true,
