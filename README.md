@@ -140,6 +140,14 @@ npm run lint
 npm test
 ```
 
+### Check database configuration
+
+```bash
+npm run check-db
+```
+
+This verifies your Supabase database connection and schema. See [scripts/README.md](./scripts/README.md) for details.
+
 ### Building for production
 
 ```bash

@@ -184,6 +184,46 @@ Environments: Production, Preview, Development
 
 ## Testing the Connection
 
+### Test 0: Automated Verification (Recommended)
+
+The fastest way to verify your database setup is to use the built-in verification script:
+
+```bash
+npm run check-db
+```
+
+This script will automatically:
+- ✅ Verify environment variables are configured
+- ✅ Test database connection
+- ✅ Check if schema is initialized
+- ✅ Validate schema structure
+- ✅ Display database statistics
+
+**Expected output**:
+```
+🔍 Ci Moment Database Verification Tool
+
+=== Environment Configuration ===
+✓ Environment variables are configured
+
+=== Database Connection ===
+✓ Database connection successful
+
+=== Schema Verification ===
+✓ Artifacts table exists
+✓ Schema structure is valid
+
+=== Database Statistics ===
+✓ Total artifacts: 0 (0 sealed)
+
+=== Summary ===
+✓ Database is properly configured and ready to use
+```
+
+If the schema is not set up, the script will provide instructions on how to initialize it.
+
+For more details, see [scripts/README.md](../scripts/README.md).
+
 ### Test 1: Manual Query
 
 In Supabase SQL Editor:
