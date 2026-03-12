@@ -28,37 +28,10 @@ Ci Moment is a minimalist SaaS decision tool built with Next.js 14 (App Router),
 │  └──────────────────────────────────────────────────┘       │
 └─────────────────────────────────────────────────────────────┘
                          │
-                         ↓ (Payment Link)
+                         ↓ (Direct browser link — no backend)
 ┌─────────────────────────────────────────────────────────────┐
-│                  Payment Provider                            │
-│              (Fondy / WayForPay / etc.)                     │
-└─────────────────────────────────────────────────────────────┘
-                         │
-                         ↓ (Redirect)
-┌─────────────────────────────────────────────────────────────┐
-│                    Vercel Edge Runtime                       │
-│  ┌────────────────────┐    ┌────────────────────┐          │
-│  │  /api/seal         │    │  /api/webhook      │          │
-│  │  (Payment Init)    │    │  (Payment Confirm) │          │
-│  └────────────────────┘    └────────────────────┘          │
-│           │                         │                        │
-│           └─────────┬───────────────┘                       │
-│                     ↓                                        │
-│           ┌──────────────────┐                              │
-│           │  /verify/[hash]  │                              │
-│           │  (Verification)  │                              │
-│           └──────────────────┘                              │
-└─────────────────────────────────────────────────────────────┘
-                         │
-                         ↓
-┌─────────────────────────────────────────────────────────────┐
-│                  Supabase PostgreSQL                         │
-│  ┌─────────────────────────────────────────────┐            │
-│  │           artifacts table                   │            │
-│  │  - id, artifact_code, context, status      │            │
-│  │  - locked_minute, is_sealed, payment_id    │            │
-│  │  - created_at, sealed_at                   │            │
-│  └─────────────────────────────────────────────┘            │
+│                  Gumroad Checkout                            │
+│              (External — no server secrets needed)          │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -81,7 +54,7 @@ Ci Moment is a minimalist SaaS decision tool built with Next.js 14 (App Router),
 - **Type Generation**: TypeScript types from schema
 
 ### Payments
-- **Payment Links**: Redirect-based payment (Fondy, WayForPay)
+- **Payment Links**: Gumroad redirect-based checkout (no server-side secrets)
 - **No Server-Side Sessions**: Simplified MVP flow
 - **Success Redirects**: POST-payment return URLs
 
@@ -207,24 +180,20 @@ If found: Display artifact details
 If not found: Show not found page
 ```
 
-### 3. Payment Flow (MVP - Simplified)
+### 3. Payment Flow (Gumroad canonical)
 
 ```
 User clicks "Seal This Moment"
     ↓
-Client generates artifact data
+Browser opens Gumroad checkout in new tab
     ↓
-Redirect to payment link (NEXT_PUBLIC_PAYMENT_URL)
+User completes payment on Gumroad
     ↓
-Payment provider handles payment
-    ↓
-Success → redirect to /success page
-Cancel → redirect to home page
-    ↓
-User manually verifies artifact (future: auto-seal)
+User returns to app
 ```
 
-**Note**: Current MVP uses payment links without server-side checkout or webhooks. Future versions can add webhook-based sealing.
+**Note**: No server-side payment secrets are required. `/api/seal` and `/api/webhook`
+return 410 Gone in this mode and are kept only as extensibility stubs.
 
 ## Component Architecture
 
@@ -271,40 +240,17 @@ Located in `components/` directory, marked with `'use client'` directive.
 
 ### POST /api/seal
 
-**Purpose**: Initiate payment flow and optionally create artifact.
+**Status**: Dormant — returns **410 Gone** in Gumroad canonical mode.
 
-**Request**:
-```typescript
-{
-  artifactCode: string;   // e.g., "ci-7a-3f2e1"
-  context: string;        // "career" | "love" | "timing"
-  status: string;         // "PROCEED" | "HOLD" | "NOT NOW"
-  lockedMinute: number;   // UTC minute since epoch
-}
-```
-
-**Response**:
-```typescript
-{
-  checkoutUrl: string;    // Payment link URL
-}
-```
-
-**Current Implementation**: Returns static payment link from env var.
-
-**Future Enhancement**: Create artifact in database, generate custom payment URL with metadata.
+The UI links directly to Gumroad; this endpoint is not needed and kept only
+as an extensibility stub. No payment secrets are accessed.
 
 ### POST /api/webhook
 
-**Purpose**: Handle payment provider webhooks (reserved for future).
+**Status**: Dormant — returns **410 Gone** in Gumroad canonical mode.
 
-**Current Status**: Placeholder for webhook-based payment confirmation.
-
-**Future Implementation**:
-- Verify webhook signature
-- Update artifact as sealed
-- Record payment metadata
-- Send confirmation email
+Gumroad handles its own payment confirmation externally; there is no
+server-side webhook in the current configuration.
 
 ### GET /verify/[hash]
 
@@ -362,15 +308,14 @@ CREATE INDEX idx_artifacts_created_at ON artifacts(created_at);
 
 ### 1. Environment Variables
 
-**Server-side only**:
+**No payment secrets required** in Gumroad canonical mode.
+
+**Server-side only** (verification feature only):
 - `SUPABASE_URL`: Database connection URL
 - `SUPABASE_SERVICE_KEY`: Service role key (bypasses RLS)
-- `STRIPE_SECRET_KEY`: Payment provider secret key
-- `STRIPE_WEBHOOK_SECRET`: Webhook signature verification
 
-**Client-safe**:
-- `NEXT_PUBLIC_URL`: Application public URL
-- `NEXT_PUBLIC_PAYMENT_URL`: Payment link URL
+**Client-safe** (optional):
+- `NEXT_PUBLIC_PAYMENT_PROVIDER`: `gumroad` (default) or `disabled`
 
 ### 2. Database Security
 
@@ -397,16 +342,10 @@ CREATE INDEX idx_artifacts_created_at ON artifacts(created_at);
 
 ### 4. Payment Security
 
-**Current MVP**:
-- Redirect-based payment links
-- No server-side payment data
-- Provider handles PCI compliance
-
-**Future (Webhook-based)**:
-- Verify webhook signatures
-- Validate payment status
-- Record transaction IDs
-- Idempotent webhook handling
+**Gumroad canonical**:
+- Direct browser link — no server-side payment data
+- Gumroad handles PCI compliance
+- No secrets needed on server
 
 ## Performance Optimization
 
