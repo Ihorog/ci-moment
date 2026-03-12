@@ -269,7 +269,27 @@ export const config = {
 Gumroad handles its own payment confirmation externally. `/api/webhook`
 returns 410 Gone; no webhook secret is configured or required.
 
-### 3. Hash Collision Analysis
+### 3. Verification Page States (Gumroad Mode)
+
+Because there is no active server-side webhook, artifacts remain unsealed
+(`is_sealed = false`) until a future webhook integration is added. The
+`/verify/[hash]` page conceptually supports four distinct states for future
+webhook-based providers; in Gumroad canonical mode only **Unsealed** and
+**Not found** occur in practice:
+
+| State | Condition | Displayed message |
+|---|---|---|
+| **Sealed** | `is_sealed = true` | Full artifact details (Issued, Artifact code, Status, Locked at) |
+| **Pending-payment** | `is_sealed = false` + `?sealed=true` query param | "Sealing your moment…" — used only for webhook-based providers that may seal artifacts shortly after redirect; not used and does not auto-resolve in Gumroad canonical mode. |
+| **Unsealed** | `is_sealed = false`, no `?sealed=true` | Artifact code + "Status: PENDING — payment not yet confirmed." |
+| **Not found** | No artifact row for the hash | "Artifact not found" |
+
+The **Unsealed** state makes it possible to confirm that an artifact was
+successfully persisted by `/api/seal` (Supabase) without completing payment.
+This is the normal state in Gumroad mode for all artifacts that have been
+created but not yet purchased.
+
+### 4. Hash Collision Analysis
 
 **Current Implementation**:
 - SHA-256 hash of `artifactCode-minute-status`
@@ -281,7 +301,7 @@ returns 410 Gone; no webhook secret is configured or required.
 - Add salt from environment variable (optional)
 - Monitor for duplicate hashes (database constraint)
 
-### 4. Artifact Enumeration Protection
+### 5. Artifact Enumeration Protection
 
 **Measures**:
 - Unpredictable artifact codes (cryptographic random)
@@ -289,7 +309,7 @@ returns 410 Gone; no webhook secret is configured or required.
 - No listing endpoint (no `/api/artifacts`)
 - Rate limiting on verification endpoint
 
-### 5. Anti-Bot Protection
+### 6. Anti-Bot Protection
 
 **Current** (None):
 - No CAPTCHA or proof-of-work
