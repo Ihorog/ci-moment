@@ -44,12 +44,15 @@ export const colors = {
   holographicYellow: "#ffe47e",
   holographicPurple: "#c77eff",
   holographicCyan: "#7efff5",
+
+  // Accent — used for FOMO timer urgency at <10 s
+  accent: "#e85d3d",
 };
 
 // Typography
 export const typography = {
   // Font families
-  fontMonospace: "'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace",
+  fontMonospace: "'JetBrains Mono', 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace",
   
   // Font sizes
   fontXLarge: "clamp(1.6rem, 5vw, 2.8rem)",

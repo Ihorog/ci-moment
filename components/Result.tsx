@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useMemo } from "react";
 import SealButton from "./SealButton";
+import ArtifactBarcode from "./ArtifactBarcode";
 import { ContextType } from "@/app/page";
 import { colors, typography, spacing, transitions, animations, effects } from "@/lib/design-system";
 
@@ -196,6 +197,9 @@ export default function Result({
             <div>{timestamp}</div>
             <div style={{ textTransform: "capitalize" }}>{context}</div>
           </div>
+
+          {/* Decorative barcode visual */}
+          <ArtifactBarcode artifactCode={artifactCode} />
         </div>
 
         {/* UTC Timer Display (Bottom of Card) */}
@@ -203,26 +207,54 @@ export default function Result({
           style={{
             position: "relative",
             zIndex: 1,
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            fontSize: typography.fontXXSmall,
-            color: windowExpiring ? colors.statusHold : colors.textMuted,
-            borderTop: `1px solid ${colors.borderTertiary}`,
-            paddingTop: spacing.gapXSmall,
-            transition: `color ${transitions.fast}`,
           }}
         >
-          <div style={{ letterSpacing: typography.letterSpacingXSmall }}>
-            {windowExpiring ? "WINDOW CLOSING" : "LOCKED TO MOMENT"}
-          </div>
+          {/* Timer label + countdown */}
           <div
             style={{
-              fontWeight: typography.fontWeightNormal,
-              letterSpacing: typography.letterSpacingSmall,
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              fontSize: typography.fontXXSmall,
+              color: windowExpiring ? colors.accent : colors.textMuted,
+              borderTop: `1px solid ${colors.borderTertiary}`,
+              paddingTop: spacing.gapXSmall,
+              marginBottom: spacing.gapXXXSmall,
+              transition: `color ${transitions.fast}`,
             }}
           >
-            00:{String(timeRemaining).padStart(2, '0')}
+            <div style={{ letterSpacing: typography.letterSpacingXSmall }}>
+              {windowExpiring ? "WINDOW CLOSING" : "LOCKED TO MOMENT"}
+            </div>
+            <div
+              style={{
+                fontWeight: typography.fontWeightNormal,
+                letterSpacing: typography.letterSpacingSmall,
+              }}
+            >
+              00:{String(timeRemaining).padStart(2, '0')}
+            </div>
+          </div>
+
+          {/* Progress bar — shrinks to zero as the minute elapses */}
+          <div
+            style={{
+              width: "100%",
+              height: "2px",
+              backgroundColor: colors.borderTertiary,
+              borderRadius: "1px",
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                height: "100%",
+                width: `${(timeRemaining / 60) * 100}%`,
+                backgroundColor: windowExpiring ? colors.accent : colors.textMuted,
+                borderRadius: "1px",
+                transition: `width 1s linear, background-color ${transitions.fast}`,
+              }}
+            />
           </div>
         </div>
       </div>
