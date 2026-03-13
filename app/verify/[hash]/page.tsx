@@ -1,6 +1,7 @@
 import { getArtifactByHash, Artifact } from '@/lib/supabase';
 import { resolveVerifyState } from '@/lib/verify';
-import { colors, typography, spacing } from '@/lib/design-system';
+import { colors, typography, spacing, effects } from '@/lib/design-system';
+import ArtifactBarcode from '@/components/ArtifactBarcode';
 import type { Metadata } from 'next';
 
 interface VerifyPageProps {
@@ -27,10 +28,10 @@ export async function generateMetadata({ params }: VerifyPageProps): Promise<Met
 
     return {
       title: `${artifact.status} — Ci Moment Artifact ${artifact.artifact_code}`,
-      description: `Decision artifact: ${artifact.status}. Locked to a unique moment. Context: ${artifact.context}.`,
+      description: `Decision artifact: ${artifact.status}. Stop overthinking — this moment is locked. Context: ${artifact.context}.`,
       openGraph: {
         title: `${artifact.status} — Ci Moment`,
-        description: `Decision artifact locked to your unique moment.`,
+        description: `Your decision clarity, locked as a digital artifact.`,
         images: [
           {
             url: ogImageUrl,
@@ -43,7 +44,7 @@ export async function generateMetadata({ params }: VerifyPageProps): Promise<Met
       twitter: {
         card: 'summary_large_image',
         title: `${artifact.status} — Ci Moment`,
-        description: 'Decision artifact locked to your unique moment.',
+        description: 'Stop overthinking. Decision clarity locked to a digital artifact.',
         images: [ogImageUrl],
       },
     };
@@ -61,11 +62,9 @@ export async function generateMetadata({ params }: VerifyPageProps): Promise<Met
  * artifact's seal state.
  *
  * States:
- * - Sealed: full artifact details are shown.
+ * - Sealed: full artifact details shown as a "digital physical object" card.
  * - Pending-payment (?sealed=true): auto-refreshes while the webhook processes.
- * - Unsealed (no payment yet): shows a clear "Pending" message so the artifact
- *   can be confirmed as persisted without completing payment. This is the
- *   expected state in Gumroad mode before a purchase is made.
+ * - Unsealed (no payment yet): shows a clear "Pending" message.
  * - Not found: generic not-found message.
  *
  * The page is a server component — it does not include client side logic.
@@ -84,40 +83,141 @@ export default async function VerifyPage({ params, searchParams }: VerifyPagePro
 
   const state = resolveVerifyState(artifact, justPaid);
 
-  // Artifact exists and is sealed — show full verification
+  // Artifact exists and is sealed — show full verification as digital artifact card
   if (state === 'sealed') {
     const lockedAt = new Date(artifact!.locked_at_utc)
       .toISOString()
       .replace('T', ' ')
       .replace('Z', ' UTC');
 
+    const statusColor =
+      artifact!.status === 'PROCEED'
+        ? colors.statusProceed
+        : artifact!.status === 'HOLD'
+          ? colors.statusHold
+          : colors.statusNotNow;
+
     return (
       <div
         style={{
           backgroundColor: colors.background,
-          color: '#ffffff',
+          color: colors.textPrimary,
           fontFamily: typography.fontMonospace,
           minHeight: '100vh',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+          padding: spacing.gapBase,
         }}
       >
-        <div style={{ display: 'flex', flexDirection: 'column', gap: spacing.gapXSmall }}>
-          <div>Issued: YES</div>
-          <div>Artifact: {artifact!.artifact_code}</div>
-          <div>Status: {artifact!.status}</div>
-          <div>Locked at: {lockedAt}</div>
+        {/* Digital artifact card — wallet proportions */}
+        <div
+          style={{
+            maxWidth: effects.walletCardMaxWidth,
+            width: '90%',
+            aspectRatio: effects.walletCardAspectRatio,
+            backgroundColor: colors.background,
+            border: `1px solid ${colors.borderPrimary}`,
+            borderRadius: '12px',
+            boxShadow: effects.paperShadow,
+            padding: '2rem',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            position: 'relative',
+            overflow: 'hidden',
+            WebkitMaskImage: effects.paperTextureMask,
+            maskImage: effects.paperTextureMask,
+            WebkitMaskSize: effects.paperTextureMaskSize,
+            maskSize: effects.paperTextureMaskSize,
+          }}
+        >
+          {/* Holographic overlay */}
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: effects.holographicGradient(colors),
+              backgroundSize: '200% 200%',
+              backgroundPosition: '50% 50%',
+              opacity: 0.06,
+              pointerEvents: 'none',
+            }}
+          />
+
+          {/* Card content */}
+          <div style={{ position: 'relative', zIndex: 1 }}>
+            {/* Header label */}
+            <div
+              style={{
+                fontSize: typography.fontXXXSmall,
+                color: colors.textMuted,
+                letterSpacing: typography.letterSpacingXWide,
+                marginBottom: spacing.gapSmall,
+                textTransform: 'uppercase',
+              }}
+            >
+              CI MOMENT • SEALED ARTIFACT
+            </div>
+
+            {/* Status */}
+            <div
+              style={{
+                fontSize: typography.fontLarge,
+                fontWeight: typography.fontWeightLight,
+                letterSpacing: typography.letterSpacingMedium,
+                color: statusColor,
+                marginBottom: spacing.gapMedium,
+                textTransform: 'uppercase',
+              }}
+            >
+              {artifact!.status}
+            </div>
+
+            {/* Info block */}
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: spacing.gapXXSmall,
+                fontSize: typography.fontXXSmall,
+                color: colors.textQuinary,
+              }}
+            >
+              <div>ID: {artifact!.artifact_code}</div>
+              <div>{lockedAt}</div>
+              <div style={{ textTransform: 'capitalize' }}>{artifact!.context}</div>
+            </div>
+
+            <ArtifactBarcode artifactCode={artifact!.artifact_code} height={24} opacity={0.4} />
+          </div>
+
+          {/* Footer */}
+          <div
+            style={{
+              position: 'relative',
+              zIndex: 1,
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              fontSize: typography.fontXXSmall,
+              color: colors.textMuted,
+              borderTop: `1px solid ${colors.borderTertiary}`,
+              paddingTop: spacing.gapXSmall,
+            }}
+          >
+            <div style={{ letterSpacing: typography.letterSpacingXSmall }}>ISSUED: VERIFIED</div>
+            <div style={{ letterSpacing: typography.letterSpacingXSmall }}>cimoment.com</div>
+          </div>
         </div>
       </div>
     );
   }
 
   // Artifact exists but not yet sealed — user was redirected back after payment
-  // (?sealed=true). For webhook-based providers the webhook may still be
-  // processing and the page will auto-refresh until the artifact is sealed. In
-  // Gumroad canonical mode no webhook runs, so this state will not
-  // auto-resolve; the page refreshes but the artifact stays unsealed.
   if (state === 'pending-payment') {
     return (
       <div
@@ -146,7 +246,6 @@ export default async function VerifyPage({ params, searchParams }: VerifyPagePro
   }
 
   // Artifact exists but payment has not been received yet.
-  // In Gumroad mode this is the normal state before a purchase is completed.
   if (state === 'unsealed') {
     return (
       <div
