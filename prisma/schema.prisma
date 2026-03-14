@@ -1,0 +1,39 @@
+// Ci Moment — Prisma Schema
+// Datasource: Supabase PostgreSQL (or any PostgreSQL-compatible DB)
+// Run `npx prisma generate` after changes to regenerate the client.
+// Run `npx prisma migrate dev` to apply schema changes to your database.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// MomentArtifact stores every Ci Moment decision.
+// Each artifact is immutable after creation; only `sealed`, `sealedAt`,
+// and `ownerId`/`source` metadata may be updated post-creation.
+model MomentArtifact {
+  id           String    @id @default(cuid())
+  artifactCode String    @unique
+  context      String    // "career" | "love" | "timing"
+  contextId    Int       // 1 | 2 | 3 (canonical engine IDs)
+  minute       Int       // floor(Date.now() / 60000) at creation time
+  status       String    // "PROCEED" | "HOLD" | "NOT NOW"
+  verifyHash   String    // first 16 hex chars of sha256(artifactCode-minute-status)
+  sealed       Boolean   @default(false)
+  sealedAt     DateTime?
+  ownerId      String?   // optional user/session ID
+  source       String?   // e.g. "web", "api"
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([artifactCode])
+  @@index([createdAt])
+  @@index([sealed])
+  @@index([context])
+  @@index([status])
+  @@map("moment_artifacts")
+}

@@ -79,6 +79,87 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 No environment variables are required for the default Gumroad mode.
 
+## 🔧 Backend Setup (Moment API)
+
+The `/api/moment/*` endpoints use **Prisma** + PostgreSQL (Supabase) for full artifact persistence.
+
+### 1. Set environment variables
+
+Copy `.env.example` to `.env.local` and fill in:
+
+```bash
+cp .env.example .env.local
+```
+
+Required for the moment API:
+
+```env
+DATABASE_URL=postgresql://user:password@host:5432/dbname
+```
+
+For Supabase, use the **Transaction** connection string from:  
+Dashboard → Settings → Database → Connection string → Transaction mode
+
+### 2. Generate Prisma client
+
+```bash
+npx prisma generate
+```
+
+### 3. Apply database migration
+
+```bash
+npx prisma migrate dev --name init
+```
+
+Or push schema directly (no migration history):
+
+```bash
+npx prisma db push
+```
+
+### 4. Start dev server
+
+```bash
+npm run dev
+```
+
+### 5. Test endpoints locally
+
+```bash
+# Health check
+curl http://localhost:3000/api/health
+
+# Compute status (no DB write)
+curl "http://localhost:3000/api/moment/status?context=career"
+
+# Create artifact (writes to DB)
+curl -X POST http://localhost:3000/api/moment/create \
+  -H "Content-Type: application/json" \
+  -d '{"context":"career","source":"web"}'
+
+# Verify artifact
+curl "http://localhost:3000/api/moment/verify?artifactCode=ci-4a-92f8b"
+
+# Seal artifact
+curl -X POST http://localhost:3000/api/moment/seal \
+  -H "Content-Type: application/json" \
+  -d '{"artifactCode":"ci-4a-92f8b"}'
+
+# List artifacts (admin)
+curl "http://localhost:3000/api/moment/list?context=career&limit=10&page=1"
+```
+
+### 6. Deploy to Vercel
+
+Add environment variables in the Vercel Dashboard and deploy:
+
+```bash
+vercel --prod
+```
+
+Vercel automatically runs `npm run build` which includes `prisma generate`.
+
 ## 📦 Project Structure
 
 ```
