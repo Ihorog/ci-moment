@@ -1,6 +1,6 @@
 import { getArtifactByHash, Artifact } from '@/lib/supabase';
 import { resolveVerifyState } from '@/lib/verify';
-import { colors, typography, spacing, effects } from '@/lib/design-system';
+import { colors, typography, spacing, effects, styles } from '@/lib/design-system';
 import ArtifactBarcode from '@/components/ArtifactBarcode';
 import type { Metadata } from 'next';
 
@@ -92,10 +92,10 @@ export default async function VerifyPage({ params, searchParams }: VerifyPagePro
 
     const statusColor =
       artifact!.status === 'PROCEED'
-        ? colors.statusProceed
+        ? '#2a7a2a'
         : artifact!.status === 'HOLD'
-          ? colors.statusHold
-          : colors.statusNotNow;
+          ? '#7a6a1a'
+          : '#555';
 
     return (
       <div
@@ -110,16 +110,17 @@ export default async function VerifyPage({ params, searchParams }: VerifyPagePro
           padding: spacing.gapBase,
         }}
       >
-        {/* Digital artifact card — wallet proportions */}
+        {/* Sealed receipt card — thermal-paper aesthetic */}
         <div
           style={{
             maxWidth: effects.walletCardMaxWidth,
             width: '90%',
             aspectRatio: effects.walletCardAspectRatio,
-            backgroundColor: colors.background,
-            border: `1px solid ${colors.borderPrimary}`,
-            borderRadius: '12px',
-            boxShadow: effects.paperShadow,
+            backgroundColor: colors.paper,
+            color: colors.ink,
+            fontFamily: styles.receipt.fontFamily,
+            borderRadius: styles.receipt.borderRadius,
+            boxShadow: styles.receipt.boxShadow,
             padding: '2rem',
             display: 'flex',
             flexDirection: 'column',
@@ -143,7 +144,7 @@ export default async function VerifyPage({ params, searchParams }: VerifyPagePro
               background: effects.holographicGradient(colors),
               backgroundSize: '200% 200%',
               backgroundPosition: '50% 50%',
-              opacity: 0.06,
+              opacity: 0.05,
               pointerEvents: 'none',
             }}
           />
@@ -154,10 +155,11 @@ export default async function VerifyPage({ params, searchParams }: VerifyPagePro
             <div
               style={{
                 fontSize: typography.fontXXXSmall,
-                color: colors.textMuted,
+                color: colors.ink,
                 letterSpacing: typography.letterSpacingXWide,
                 marginBottom: spacing.gapSmall,
                 textTransform: 'uppercase',
+                opacity: 0.5,
               }}
             >
               CI MOMENT • SEALED ARTIFACT
@@ -184,7 +186,8 @@ export default async function VerifyPage({ params, searchParams }: VerifyPagePro
                 flexDirection: 'column',
                 gap: spacing.gapXXSmall,
                 fontSize: typography.fontXXSmall,
-                color: colors.textQuinary,
+                color: colors.ink,
+                opacity: 0.7,
               }}
             >
               <div>ID: {artifact!.artifact_code}</div>
@@ -192,7 +195,7 @@ export default async function VerifyPage({ params, searchParams }: VerifyPagePro
               <div style={{ textTransform: 'capitalize' }}>{artifact!.context}</div>
             </div>
 
-            <ArtifactBarcode artifactCode={artifact!.artifact_code} height={24} opacity={0.4} />
+            <ArtifactBarcode artifactCode={artifact!.artifact_code} height={24} opacity={0.5} />
           </div>
 
           {/* Footer */}
@@ -204,8 +207,9 @@ export default async function VerifyPage({ params, searchParams }: VerifyPagePro
               justifyContent: 'space-between',
               alignItems: 'center',
               fontSize: typography.fontXXSmall,
-              color: colors.textMuted,
-              borderTop: `1px solid ${colors.borderTertiary}`,
+              color: colors.ink,
+              opacity: 0.5,
+              borderTop: `1px solid ${colors.ink}`,
               paddingTop: spacing.gapXSmall,
             }}
           >

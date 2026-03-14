@@ -93,6 +93,9 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@200;300&display=swap"
           rel="stylesheet"
         />
+        {/* Gumroad overlay checkout — enables in-page payment without full redirect */}
+        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+        <script src="https://gumroad.com/js/gumroad-embed.js" crossOrigin="anonymous"></script>
       </head>
       <body
         style={{

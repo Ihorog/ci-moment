@@ -47,6 +47,10 @@ export const colors = {
 
   // Accent — used for FOMO timer urgency at <10 s
   accent: "#e85d3d",
+
+  // Receipt / physical object aesthetic
+  paper: "#f5f0e8",   // off-white old thermal paper
+  ink: "#1a1a1a",     // deep grey/black simulating printer ink
 };
 
 // Typography
@@ -137,4 +141,16 @@ export const effects = {
   // Wallet card dimensions (Apple Wallet proportions: 85.6mm x 53.98mm ≈ 1.586:1)
   walletCardAspectRatio: "1.586",
   walletCardMaxWidth: "400px",
+};
+
+// Composite style presets for physical-object simulation
+export const styles = {
+  // Thermal-paper receipt: minimal border radius, natural shadow, monospace ink
+  receipt: {
+    boxShadow:
+      "0 1px 4px rgba(0,0,0,0.15), 0 4px 16px rgba(0,0,0,0.10), inset 0 0 0 1px rgba(0,0,0,0.06)",
+    borderRadius: "3px",
+    fontFamily:
+      "'JetBrains Mono', 'Courier New', 'Courier', monospace",
+  },
 };
