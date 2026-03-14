@@ -5,18 +5,17 @@ function getHeader(req: Request, name: string) {
   return req.headers.get(name) || req.headers.get(name.toLowerCase());
 }
 
-async function readBody(req: Request): Promise<Record<string, any>> {
+// Explicit types for parsed body and passthrough
+async function readBody(req: Request): Promise<Record<string, string>> {
   const ct = req.headers.get('content-type') || '';
   const raw = await req.text();
-
   // Gumroad commonly posts x-www-form-urlencoded
   if (ct.includes('application/x-www-form-urlencoded')) {
     const params = new URLSearchParams(raw);
-    const out: Record<string, any> = {};
+    const out: Record<string, string> = {};
     for (const [k, v] of params.entries()) out[k] = v;
     return out;
   }
-
   // JSON fallback
   try {
     return raw ? JSON.parse(raw) : {};
@@ -25,7 +24,17 @@ async function readBody(req: Request): Promise<Record<string, any>> {
   }
 }
 
-function parsePassthrough(passthrough: any): any {
+type PassthroughType = {
+  verify_hash?: string;
+  verifyHash?: string;
+  sale_id?: string;
+  order_id?: string;
+  transaction_id?: string;
+  payment_id?: string;
+  [key: string]: unknown;
+};
+
+function parsePassthrough(passthrough: unknown): PassthroughType | null {
   if (!passthrough) return null;
   if (typeof passthrough === 'string') {
     try {
@@ -34,7 +43,7 @@ function parsePassthrough(passthrough: any): any {
       return { raw: passthrough };
     }
   }
-  if (typeof passthrough === 'object') return passthrough;
+  if (typeof passthrough === 'object') return passthrough as PassthroughType;
   return null;
 }
 
