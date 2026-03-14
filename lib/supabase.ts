@@ -140,6 +140,33 @@ export async function sealArtifactById(
 }
 
 /**
+ * Mark an artifact as sealed using its verification hash. This variant is used
+ * by the Gumroad webhook handler which carries the verify_hash through the
+ * payment provider passthrough field. Returns the updated artifact or throws on
+ * failure.
+ */
+export async function sealArtifactByHash(
+  hash: string,
+  paymentId: string
+): Promise<Artifact> {
+  validateSupabaseConfig();
+  const { data: updated, error } = await supabase
+    .from('artifacts')
+    .update({
+      is_sealed: true,
+      sealed_at_utc: new Date().toISOString(),
+      payment_id: paymentId,
+    })
+    .eq('verify_hash', hash)
+    .select()
+    .single();
+  if (error) {
+    throw new Error(error.message);
+  }
+  return updated as unknown as Artifact;
+}
+
+/**
  * Retrieve an artifact by its verification hash. Returns null when not found.
  * This function does not require the artifact to be sealed, leaving the
  * responsibility for UI handling to the caller.

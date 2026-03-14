@@ -84,7 +84,10 @@ export async function POST(request: Request) {
   }
 
   // idempotency should be handled inside updatePaymentFixation
-  await updatePaymentFixation(String(verifyHash), String(paymentId), 'gumroad');
+  await updatePaymentFixation(
+    { verifyHash: String(verifyHash), provider: 'gumroad' },
+    { paymentId: String(paymentId) }
+  );
 
   return NextResponse.json({ ok: true });
 }
