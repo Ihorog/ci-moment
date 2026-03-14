@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { sealByVerifyHash } from '@/lib/paymentFixation';
+import { updatePaymentFixation } from '@/lib/paymentFixation';
 
 function getHeader(req: Request, name: string) {
   return req.headers.get(name) || req.headers.get(name.toLowerCase());
@@ -74,8 +74,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'invalid_payload' }, { status: 400 });
   }
 
-  // idempotency should be handled inside sealByVerifyHash
-  await sealByVerifyHash(String(verifyHash), String(paymentId), 'gumroad');
+  // idempotency should be handled inside updatePaymentFixation
+  await updatePaymentFixation(String(verifyHash), String(paymentId), 'gumroad');
 
   return NextResponse.json({ ok: true });
 }
