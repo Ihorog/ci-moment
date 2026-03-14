@@ -61,12 +61,12 @@ export async function createSealCheckout(
  * Stub: always returns `paid: false` until Stripe is connected.
  * Replace this body with real Stripe event/session verification logic.
  *
- * @param eventOrSession The raw Stripe event or checkout session object.
+ * @param _eventOrSession The raw Stripe event or checkout session object.
  */
 export async function confirmSealPayment(
-  eventOrSession: unknown
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _eventOrSession: unknown
 ): Promise<SealPaymentConfirmation> {
-  void eventOrSession; // suppress unused-variable warning in stub
 
   // TODO: replace with real Stripe event verification
   // const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
