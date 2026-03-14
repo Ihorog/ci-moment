@@ -1,6 +1,6 @@
 "use client";
 
-import { memo } from "react";
+import { memo, useState } from "react";
 import { colors, typography, spacing, transitions, layout } from "@/lib/design-system";
 import { GUMROAD_URL, isPaymentsEnabled } from "@/lib/payments";
 
@@ -15,31 +15,29 @@ interface SealButtonProps {
 }
 
 const SealButton = memo(function SealButton({ context }: SealButtonProps) {
-  if (!context || !isPaymentsEnabled()) return null;
+  const [hovered, setHovered] = useState(false);
 
-  const handleSeal = () => {
-    window.location.href = GUMROAD_URL;
-  };
+  if (!context || !isPaymentsEnabled()) return null;
 
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: spacing.gapXSmall }}>
-      <button
-        onClick={handleSeal}
-        onMouseEnter={(e) => {
-          (e.currentTarget as HTMLButtonElement).style.borderColor = colors.hoverBorderPrimary;
-          (e.currentTarget as HTMLButtonElement).style.color = colors.textSecondary;
-        }}
-        onMouseLeave={(e) => {
-          (e.currentTarget as HTMLButtonElement).style.borderColor = colors.borderPrimary;
-          (e.currentTarget as HTMLButtonElement).style.color = colors.textTertiary;
-        }}
+      {/*
+        Gumroad overlay checkout: clicking opens an in-page overlay instead of
+        redirecting. The embed script (loaded in layout.tsx) intercepts this
+        anchor and renders the payment modal inline.
+      */}
+      <a
+        href={GUMROAD_URL}
+        data-gumroad-overlay-checkout="true"
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
         style={{
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           background: "transparent",
-          border: `1px solid ${colors.borderPrimary}`,
-          color: colors.textTertiary,
+          border: `1px solid ${hovered ? colors.hoverBorderPrimary : colors.borderPrimary}`,
+          color: hovered ? colors.textSecondary : colors.textTertiary,
           padding: spacing.paddingSmall,
           cursor: "pointer",
           fontSize: typography.fontXSmall,
@@ -51,7 +49,7 @@ const SealButton = memo(function SealButton({ context }: SealButtonProps) {
         }}
       >
         Seal this moment \u2014 $5
-      </button>
+      </a>
 
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: spacing.gapXXXSmall }}>
         <div style={{ fontSize: typography.fontTiny, color: colors.textQuinary }}>
