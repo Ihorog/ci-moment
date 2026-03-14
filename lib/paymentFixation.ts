@@ -1,30 +1,35 @@
-// Function to seal payment using verifyHash
-import { createClient } from './supabase';
+import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+const SUPABASE_URL = 'your_supabase_url';
+const SUPABASE_SERVICE_ROLE_KEY = 'your_service_role_key';
+const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
-export async function sealByVerifyHash(verifyHash: string, paymentId: string, provider: string) {
-    const { data, error } = await supabase
-        .from('artifacts')
+async function updatePaymentFixation(paymentId, newData) {
+    // Check the current status of the payment
+    const { data: payment, error: fetchError } = await supabase
+        .from('payments')
         .select('*')
-        .eq('verify_hash', verifyHash)
+        .eq('id', paymentId)
         .single();
 
-    if (error || !data) {
-        throw new Error('Invalid verify hash');
+    if (fetchError) {
+        throw new Error(fetchError.message);
     }
 
-    // implement locking mechanism if needed here
+    // If the status is LOCKED, do not proceed with the update
+    if (payment.status === 'LOCKED') {
+        return;
+    }
+
+    // Perform the update  
     const { error: updateError } = await supabase
-        .from('artifacts')
-        .update({ status: 'LOCKED', payment_provider: provider, payment_id: paymentId })
-        .match({ verify_hash: verifyHash });
+        .from('payments')
+        .update({ ...newData, locked_at: new Date() })
+        .eq('id', paymentId);
 
     if (updateError) {
-        throw new Error('Failed to lock artifact: ' + updateError.message);
+        throw new Error(updateError.message);
     }
-
-    return 'Artifact sealed successfully';
 }
+
+export { updatePaymentFixation };
