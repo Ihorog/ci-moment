@@ -4,28 +4,28 @@ const SUPABASE_URL = 'your_supabase_url';
 const SUPABASE_SERVICE_ROLE_KEY = 'your_service_role_key';
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
-async function updatePaymentFixation(paymentId, newData) {
-    // Check the current status of the payment
-    const { data: payment, error: fetchError } = await supabase
-        .from('payments')
+async function updatePaymentFixation(paymentId: string, newData: Record<string, unknown>) {
+    // Check the current sealing/locking state of the artifact associated with this payment
+    const { data: artifact, error: fetchError } = await supabase
+        .from('artifacts')
         .select('*')
-        .eq('id', paymentId)
+        .eq('payment_id', paymentId)
         .single();
 
     if (fetchError) {
         throw new Error(fetchError.message);
     }
 
-    // If the status is LOCKED, do not proceed with the update
-    if (payment.status === 'LOCKED') {
+    // If the artifact is already sealed, do not proceed with the update
+    if (artifact && artifact.is_sealed) {
         return;
     }
 
-    // Perform the update  
+    // Perform the update and lock the artifact
     const { error: updateError } = await supabase
-        .from('payments')
-        .update({ ...newData, locked_at: new Date() })
-        .eq('id', paymentId);
+        .from('artifacts')
+        .update({ ...newData, locked_at_utc: new Date().toISOString() })
+        .eq('payment_id', paymentId);
 
     if (updateError) {
         throw new Error(updateError.message);
