@@ -53,11 +53,11 @@ export function generateArtifactCode(): string {
  */
 export function getStatus(
   context: Context
-): { status: Status; minute: number; artifactCode: string } {
+): { status: Status; minute: number; artifactCode: string; contextId: number } {
   const minute = Math.floor(Date.now() / 60000);
   const contextId = CONTEXT_IDS[context];
   const index = (minute + contextId) % STATUSES.length;
   const status = STATUSES[index];
   const artifactCode = generateArtifactCode();
-  return { status, minute, artifactCode };
+  return { status, minute, artifactCode, contextId };
 }
