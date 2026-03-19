@@ -21,7 +21,6 @@ function getServerSupabase() {
   });
 }
 
-// Idempotent: if already LOCKED -> no-op success
 export async function sealByVerifyHash(
   verifyHash: string,
   paymentId: string,
