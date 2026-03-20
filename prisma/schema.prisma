@@ -23,6 +23,7 @@ model MomentArtifact {
   minute       Int       // floor(Date.now() / 60000) at creation time
   status       String    // "PROCEED" | "HOLD" | "NOT NOW"
   verifyHash   String    // first 16 hex chars of sha256(artifactCode-minute-status)
+  manuscript   String?   // 8-symbol compact string, e.g. "∧×Y~∨○Y↺"
   sealed       Boolean   @default(false)
   sealedAt     DateTime?
   ownerId      String?   // optional user/session ID

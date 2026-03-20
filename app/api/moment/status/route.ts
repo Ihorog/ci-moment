@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getStatus } from '@/lib/engine';
 import { generateVerifyHash } from '@/lib/engine.server';
+import { generateManuscript } from '@/lib/manuscript';
 import { statusQuerySchema } from '@/lib/validations';
 
 export const dynamic = 'force-dynamic';
@@ -32,6 +33,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   const { context } = parsed.data;
   const { status, minute, artifactCode, contextId } = getStatus(context);
   const verifyHash = generateVerifyHash(artifactCode, minute, status);
+  const manuscript = generateManuscript(minute, context, status);
 
   return NextResponse.json({
     ok: true,
@@ -42,6 +44,12 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       status,
       artifactCode,
       verifyHash,
+      manuscript: manuscript.compact,
+      symbolMap: {
+        outer: manuscript.outer,
+        inner: manuscript.inner,
+        text: manuscript.text,
+      },
     },
   });
 }
