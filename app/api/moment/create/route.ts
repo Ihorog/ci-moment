@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getStatus } from '@/lib/engine';
 import { generateVerifyHash } from '@/lib/engine.server';
+import { generateManuscript } from '@/lib/manuscript';
 import { createMomentSchema } from '@/lib/validations';
 import prisma from '@/lib/db';
 
@@ -45,6 +46,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const { context, ownerId, source } = parsed.data;
   const { status, minute, artifactCode, contextId } = getStatus(context);
   const verifyHash = generateVerifyHash(artifactCode, minute, status);
+  const manuscript = generateManuscript(minute, context, status);
 
   try {
     // Protect against the (astronomically unlikely) collision on artifactCode.
@@ -73,6 +75,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         minute,
         status,
         verifyHash: hash,
+        manuscript: manuscript.compact,
         sealed: false,
         ownerId: ownerId ?? null,
         source: source ?? null,
@@ -88,6 +91,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         minute: artifact.minute,
         status: artifact.status,
         verifyHash: artifact.verifyHash,
+        manuscript: artifact.manuscript,
+        symbolMap: {
+          outer: manuscript.outer,
+          inner: manuscript.inner,
+          text: manuscript.text,
+        },
         sealed: artifact.sealed,
         createdAt: artifact.createdAt.toISOString(),
       },
