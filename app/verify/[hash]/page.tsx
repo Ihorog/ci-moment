@@ -2,6 +2,7 @@ import { getArtifactByHash, Artifact } from '@/lib/supabase';
 import { resolveVerifyState } from '@/lib/verify';
 import { colors, typography, spacing, effects, styles } from '@/lib/design-system';
 import ArtifactBarcode from '@/components/ArtifactBarcode';
+import AutoSeal from '@/components/AutoSeal';
 import type { Metadata } from 'next';
 
 interface VerifyPageProps {
@@ -61,13 +62,14 @@ export async function generateMetadata({ params }: VerifyPageProps): Promise<Met
  * verification hash from Supabase and displays its details based on the
  * artifact's seal state.
  *
+ * Includes AutoSeal client component that automatically calls /api/fixate
+ * when ?sealed=true query parameter is present.
+ *
  * States:
  * - Sealed: full artifact details shown as a "digital physical object" card.
- * - Pending-payment (?sealed=true): auto-refreshes while the webhook processes.
+ * - Pending-payment (?sealed=true): auto-seals via /api/fixate, then refreshes.
  * - Unsealed (no payment yet): shows a clear "Pending" message.
  * - Not found: generic not-found message.
- *
- * The page is a server component — it does not include client side logic.
  */
 export default async function VerifyPage({ params, searchParams }: VerifyPageProps) {
   const { hash } = params;
@@ -222,30 +224,32 @@ export default async function VerifyPage({ params, searchParams }: VerifyPagePro
   }
 
   // Artifact exists but not yet sealed — user was redirected back after payment
+  // AutoSeal client component will handle calling /api/fixate
   if (state === 'pending-payment') {
     return (
-      <div
-        style={{
-          backgroundColor: colors.background,
-          color: '#ffffff',
-          fontFamily: typography.fontMonospace,
-          minHeight: '100vh',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: spacing.gapBase,
-        }}
-      >
-        {/* Auto-refresh for webhook-based providers that seal artifacts after redirect */}
-        <meta httpEquiv="refresh" content="3" />
-        <div style={{ color: colors.textTertiary, fontSize: typography.fontBase }}>
-          Sealing your moment…
+      <>
+        <AutoSeal hash={hash} shouldSeal={!artifact?.is_sealed} />
+        <div
+          style={{
+            backgroundColor: colors.background,
+            color: '#ffffff',
+            fontFamily: typography.fontMonospace,
+            minHeight: '100vh',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: spacing.gapBase,
+          }}
+        >
+          <div style={{ color: colors.textTertiary, fontSize: typography.fontBase }}>
+            Sealing your moment…
+          </div>
+          <div style={{ color: colors.textQuaternary, fontSize: typography.fontXSmall }}>
+            Payment received. Checking for confirmation…
+          </div>
         </div>
-        <div style={{ color: colors.textQuaternary, fontSize: typography.fontXSmall }}>
-          Payment received. Checking for confirmation…
-        </div>
-      </div>
+      </>
     );
   }
 

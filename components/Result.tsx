@@ -13,6 +13,7 @@ interface ResultProps {
   timestamp: string;
   context: ContextType;
   minute: number;
+  verifyHash?: string;
 }
 
 export default function Result({
@@ -21,6 +22,7 @@ export default function Result({
   timestamp,
   context,
   minute,
+  verifyHash,
 }: ResultProps) {
   const [opacity, setOpacity] = useState(0);
   const [showSeal, setShowSeal] = useState(false);
@@ -279,9 +281,10 @@ export default function Result({
             transition: `opacity ${transitions.slow}`,
           }}
         >
-          {showSeal && (
+          {showSeal && verifyHash && (
             <SealButton
               context={context}
+              verifyHash={verifyHash}
               status={status}
               artifactCode={artifactCode}
               minute={minute}

@@ -6,6 +6,7 @@ import { GUMROAD_URL, isPaymentsEnabled } from "@/lib/payments";
 
 interface SealButtonProps {
   context: string | null;
+  verifyHash: string;
   /** @deprecated no longer used — kept for call-site compatibility */
   status?: string;
   /** @deprecated no longer used — kept for call-site compatibility */
@@ -14,10 +15,14 @@ interface SealButtonProps {
   minute?: number;
 }
 
-const SealButton = memo(function SealButton({ context }: SealButtonProps) {
+const SealButton = memo(function SealButton({ context, verifyHash }: SealButtonProps) {
   const [hovered, setHovered] = useState(false);
 
   if (!context || !isPaymentsEnabled()) return null;
+
+  // Build redirect URL that includes sealed=true parameter
+  const redirectUrl = `${process.env.NEXT_PUBLIC_URL}/verify/${verifyHash}?sealed=true`;
+  const gumroadUrl = `${GUMROAD_URL}?wanted=true&redirect=${encodeURIComponent(redirectUrl)}`;
 
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: spacing.gapXSmall }}>
@@ -27,7 +32,7 @@ const SealButton = memo(function SealButton({ context }: SealButtonProps) {
         anchor and renders the payment modal inline.
       */}
       <a
-        href={GUMROAD_URL}
+        href={gumroadUrl}
         data-gumroad-overlay-checkout="true"
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
