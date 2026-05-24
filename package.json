@@ -32,8 +32,8 @@
     "check-db": "node scripts/check-database.js"
   },
   "dependencies": {
-    "@prisma/client": "^7.8.0",
-    "@supabase/supabase-js": "^2.39.0",
+    "@prisma/client": "^6.19.2",
+    "@supabase/supabase-js": "^2.105.1",
     "next": "^14.2.0",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
