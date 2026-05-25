@@ -1,0 +1,39 @@
+Proprietary Software License
+
+Copyright (c) 2026 Ihorog. All rights reserved.
+
+This software and associated documentation files (the "Software") are proprietary 
+and confidential. The source code is made available for reference and learning 
+purposes only.
+
+TERMS AND CONDITIONS:
+
+1. VIEWING AND REFERENCE
+   The source code may be viewed and studied for educational and reference purposes.
+
+2. RESTRICTIONS
+   You may NOT:
+   - Use this Software in production environments
+   - Copy, modify, merge, publish, or distribute the Software
+   - Sublicense or sell copies of the Software
+   - Use the Software for commercial purposes
+   - Create derivative works based on the Software
+   
+   Without explicit written permission from the copyright holder.
+
+3. NO WARRANTY
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+   SOFTWARE.
+
+4. PERMISSIONS
+   For inquiries about production use or licensing, please contact the repository
+   owner through GitHub issues or the contact information provided in the repository.
+
+5. THIRD-PARTY LICENSES
+   This Software uses third-party libraries that are subject to their own licenses.
+   See package.json for a list of dependencies and their respective licenses.

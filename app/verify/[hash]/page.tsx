@@ -1,19 +1,81 @@
-import { getArtifactByHash } from '@/lib/supabase';
+import { getArtifactByHash, Artifact } from '@/lib/supabase';
+import { resolveVerifyState } from '@/lib/verify';
+import { colors, typography, spacing, effects, styles } from '@/lib/design-system';
+import ArtifactBarcode from '@/components/ArtifactBarcode';
+import AutoSeal from '@/components/AutoSeal';
+import type { Metadata } from 'next';
 
 interface VerifyPageProps {
   params: { hash: string };
+  searchParams: { sealed?: string };
+}
+
+/**
+ * Generate dynamic metadata for artifact verification pages.
+ * This enables custom OG images for each artifact when shared on social media.
+ */
+export async function generateMetadata({ params }: VerifyPageProps): Promise<Metadata> {
+  const { hash } = params;
+
+  let artifact: Artifact | null = null;
+  try {
+    artifact = await getArtifactByHash(hash);
+  } catch (error) {
+    console.error('Error fetching artifact for metadata:', error);
+  }
+
+  if (artifact) {
+    const ogImageUrl = `/api/og?status=${encodeURIComponent(artifact.status)}&code=${encodeURIComponent(artifact.artifact_code)}&context=${encodeURIComponent(artifact.context)}`;
+
+    return {
+      title: `${artifact.status} — Ci Moment Artifact ${artifact.artifact_code}`,
+      description: `Decision artifact: ${artifact.status}. Stop overthinking — this moment is locked. Context: ${artifact.context}.`,
+      openGraph: {
+        title: `${artifact.status} — Ci Moment`,
+        description: `Your decision clarity, locked as a digital artifact.`,
+        images: [
+          {
+            url: ogImageUrl,
+            width: 1200,
+            height: 630,
+            alt: `Ci Moment Artifact: ${artifact.status}`,
+          },
+        ],
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: `${artifact.status} — Ci Moment`,
+        description: 'Stop overthinking. Decision clarity locked to a digital artifact.',
+        images: [ogImageUrl],
+      },
+    };
+  }
+
+  return {
+    title: 'Artifact Verification — Ci Moment',
+    description: 'Verify your Ci Moment decision artifact.',
+  };
 }
 
 /**
  * Verification page for Ci Moment artifacts. It retrieves the artifact by
- * verification hash from Supabase and displays its details if the artifact
- * exists and has been sealed. Otherwise a not found message is shown.
+ * verification hash from Supabase and displays its details based on the
+ * artifact's seal state.
  *
- * The page is a server component — it does not include client side logic.
+ * Includes AutoSeal client component that automatically calls /api/fixate
+ * when ?sealed=true query parameter is present.
+ *
+ * States:
+ * - Sealed: full artifact details shown as a "digital physical object" card.
+ * - Pending-payment (?sealed=true): auto-seals via /api/fixate, then refreshes.
+ * - Unsealed (no payment yet): shows a clear "Pending" message.
+ * - Not found: generic not-found message.
  */
-export default async function VerifyPage({ params }: VerifyPageProps) {
+export default async function VerifyPage({ params, searchParams }: VerifyPageProps) {
   const { hash } = params;
-  let artifact = null;
+  const justPaid = searchParams.sealed === 'true';
+
+  let artifact: Artifact | null = null;
   try {
     artifact = await getArtifactByHash(hash);
   } catch (error) {
@@ -21,57 +83,216 @@ export default async function VerifyPage({ params }: VerifyPageProps) {
     console.error('Error fetching artifact:', error);
   }
 
-  const notFound =
-    !artifact || typeof artifact.is_sealed === 'undefined' || !artifact.is_sealed;
+  const state = resolveVerifyState(artifact, justPaid);
 
-  if (notFound) {
+  // Artifact exists and is sealed — show full verification as digital artifact card
+  if (state === 'sealed') {
+    const lockedAt = new Date(artifact!.locked_at_utc)
+      .toISOString()
+      .replace('T', ' ')
+      .replace('Z', ' UTC');
+
+    const statusColor =
+      artifact!.status === 'PROCEED'
+        ? '#2a7a2a'
+        : artifact!.status === 'HOLD'
+          ? '#7a6a1a'
+          : '#555';
+
     return (
       <div
         style={{
-          backgroundColor: '#0a0a0a',
-          color: '#ffffff',
-          fontFamily: 'monospace',
+          backgroundColor: colors.background,
+          color: colors.textPrimary,
+          fontFamily: typography.fontMonospace,
           minHeight: '100vh',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+          padding: spacing.gapBase,
         }}
       >
-        Artifact not found
+        {/* Sealed receipt card — thermal-paper aesthetic */}
+        <div
+          style={{
+            maxWidth: effects.walletCardMaxWidth,
+            width: '90%',
+            aspectRatio: effects.walletCardAspectRatio,
+            backgroundColor: colors.paper,
+            color: colors.ink,
+            fontFamily: styles.receipt.fontFamily,
+            borderRadius: styles.receipt.borderRadius,
+            boxShadow: styles.receipt.boxShadow,
+            padding: '2rem',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            position: 'relative',
+            overflow: 'hidden',
+            WebkitMaskImage: effects.paperTextureMask,
+            maskImage: effects.paperTextureMask,
+            WebkitMaskSize: effects.paperTextureMaskSize,
+            maskSize: effects.paperTextureMaskSize,
+          }}
+        >
+          {/* Holographic overlay */}
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: effects.holographicGradient(colors),
+              backgroundSize: '200% 200%',
+              backgroundPosition: '50% 50%',
+              opacity: 0.05,
+              pointerEvents: 'none',
+            }}
+          />
+
+          {/* Card content */}
+          <div style={{ position: 'relative', zIndex: 1 }}>
+            {/* Header label */}
+            <div
+              style={{
+                fontSize: typography.fontXXXSmall,
+                color: colors.ink,
+                letterSpacing: typography.letterSpacingXWide,
+                marginBottom: spacing.gapSmall,
+                textTransform: 'uppercase',
+                opacity: 0.5,
+              }}
+            >
+              CI MOMENT • SEALED ARTIFACT
+            </div>
+
+            {/* Status */}
+            <div
+              style={{
+                fontSize: typography.fontLarge,
+                fontWeight: typography.fontWeightLight,
+                letterSpacing: typography.letterSpacingMedium,
+                color: statusColor,
+                marginBottom: spacing.gapMedium,
+                textTransform: 'uppercase',
+              }}
+            >
+              {artifact!.status}
+            </div>
+
+            {/* Info block */}
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: spacing.gapXXSmall,
+                fontSize: typography.fontXXSmall,
+                color: colors.ink,
+                opacity: 0.7,
+              }}
+            >
+              <div>ID: {artifact!.artifact_code}</div>
+              <div>{lockedAt}</div>
+              <div style={{ textTransform: 'capitalize' }}>{artifact!.context}</div>
+            </div>
+
+            <ArtifactBarcode artifactCode={artifact!.artifact_code} height={24} opacity={0.5} />
+          </div>
+
+          {/* Footer */}
+          <div
+            style={{
+              position: 'relative',
+              zIndex: 1,
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              fontSize: typography.fontXXSmall,
+              color: colors.ink,
+              opacity: 0.5,
+              borderTop: `1px solid ${colors.ink}`,
+              paddingTop: spacing.gapXSmall,
+            }}
+          >
+            <div style={{ letterSpacing: typography.letterSpacingXSmall }}>ISSUED: VERIFIED</div>
+            <div style={{ letterSpacing: typography.letterSpacingXSmall }}>cimoment.com</div>
+          </div>
+        </div>
       </div>
     );
   }
 
-  if (!artifact) {
-    return <div>Artifact not found</div>;
+  // Artifact exists but not yet sealed — user was redirected back after payment
+  // AutoSeal client component will handle calling /api/fixate
+  if (state === 'pending-payment') {
+    return (
+      <>
+        <AutoSeal hash={hash} shouldSeal={!artifact?.is_sealed} />
+        <div
+          style={{
+            backgroundColor: colors.background,
+            color: '#ffffff',
+            fontFamily: typography.fontMonospace,
+            minHeight: '100vh',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: spacing.gapBase,
+          }}
+        >
+          <div style={{ color: colors.textTertiary, fontSize: typography.fontBase }}>
+            Sealing your moment…
+          </div>
+          <div style={{ color: colors.textQuaternary, fontSize: typography.fontXSmall }}>
+            Payment received. Checking for confirmation…
+          </div>
+        </div>
+      </>
+    );
   }
 
-  // Format the locked_at timestamp into a human readable UTC string without
-  // milliseconds. If the string already ends with 'Z' the replacement below
-  // appends ' UTC' for clarity.
-  const lockedAt = new Date(artifact.locked_at_utc)
-    .toISOString()
-    .replace('T', ' ')
-    .replace('Z', ' UTC');
+  // Artifact exists but payment has not been received yet.
+  if (state === 'unsealed') {
+    return (
+      <div
+        style={{
+          backgroundColor: colors.background,
+          color: colors.textPrimary,
+          fontFamily: typography.fontMonospace,
+          minHeight: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: spacing.gapBase,
+        }}
+      >
+        <div style={{ color: colors.textTertiary, fontSize: typography.fontBase }}>
+          Artifact: {artifact!.artifact_code}
+        </div>
+        <div style={{ color: colors.textQuaternary, fontSize: typography.fontXSmall }}>
+          Status: PENDING — payment not yet confirmed.
+        </div>
+      </div>
+    );
+  }
 
+  // No artifact record found for this hash
   return (
     <div
       style={{
-        backgroundColor: '#0a0a0a',
+        backgroundColor: colors.background,
         color: '#ffffff',
-        fontFamily: 'monospace',
+        fontFamily: typography.fontMonospace,
         minHeight: '100vh',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
       }}
     >
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-        <div>Issued: YES</div>
-        <div>Artifact: {artifact.artifact_code}</div>
-        <div>Status: {artifact.status}</div>
-        <div>Locked at: {lockedAt}</div>
-      </div>
+      Artifact not found
     </div>
   );
 }
