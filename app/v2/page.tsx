@@ -2,22 +2,33 @@
 
 import { FormEvent, useMemo, useState } from 'react';
 import LegendArtifactCard from '@/components/LegendArtifactCard';
-import { getArtifactData } from '@/lib/legend-engine';
+import { getGiftInvitationData, getPersonalArtifactData } from '@/lib/legend-engine';
 
 export default function V2Page() {
-  const [senderName, setSenderName] = useState('');
-  const [receiverName, setReceiverName] = useState('');
-  const [context, setContext] = useState('free evening');
+  const [mode, setMode] = useState<'personal' | 'gift'>('personal');
+  const [subjectName, setSubjectName] = useState('');
+  const [context, setContext] = useState('personal moment');
   const [submitted, setSubmitted] = useState(false);
 
   const artifact = useMemo(() => {
-    if (!submitted || !senderName.trim() || !receiverName.trim()) return null;
-    return getArtifactData(senderName, receiverName, context || 'moment');
-  }, [submitted, senderName, receiverName, context]);
+    if (!submitted || !subjectName.trim()) return null;
+
+    if (mode === 'gift') {
+      return getGiftInvitationData(subjectName, context || 'gift access');
+    }
+
+    return getPersonalArtifactData(subjectName, context || 'personal moment');
+  }, [submitted, mode, subjectName, context]);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setSubmitted(true);
+  }
+
+  function resetForMode(nextMode: 'personal' | 'gift') {
+    setMode(nextMode);
+    setSubmitted(false);
+    setContext(nextMode === 'gift' ? 'gift access' : 'personal moment');
   }
 
   return (
@@ -35,15 +46,24 @@ export default function V2Page() {
       <div style={{ width: 'min(960px, 100%)', display: 'grid', gap: '2rem' }}>
         <section style={{ display: 'grid', gap: '0.8rem', textAlign: 'center' }}>
           <div style={{ fontSize: '0.72rem', letterSpacing: '0.34em', textTransform: 'uppercase', color: '#777' }}>
-            Legend ci / artifact prototype
+            Legend ci / personal artifact machine
           </div>
           <h1 style={{ margin: 0, fontSize: 'clamp(2rem, 7vw, 4.25rem)', lineHeight: 0.95, letterSpacing: '-0.04em' }}>
-            Claim the Pass
+            Claim Your Moment
           </h1>
-          <p style={{ margin: '0 auto', maxWidth: 620, color: '#a8a096', lineHeight: 1.6 }}>
-            Generate a deterministic visual artifact. The cipher can be used later to reconstruct the same Legend ci fragment.
+          <p style={{ margin: '0 auto', maxWidth: 660, color: '#a8a096', lineHeight: 1.6 }}>
+            Generate a personal deterministic artifact. Gift mode gives another person access to create their own moment.
           </p>
         </section>
+
+        <div style={{ margin: '0 auto', display: 'flex', gap: '0.5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+          <button type="button" onClick={() => resetForMode('personal')} style={mode === 'personal' ? activeTabStyle : tabStyle}>
+            Personal Moment
+          </button>
+          <button type="button" onClick={() => resetForMode('gift')} style={mode === 'gift' ? activeTabStyle : tabStyle}>
+            Gift Access
+          </button>
+        </div>
 
         <form
           onSubmit={handleSubmit}
@@ -57,22 +77,42 @@ export default function V2Page() {
             background: 'rgba(255,255,255,0.025)',
           }}
         >
-          <label style={{ display: 'grid', gap: '0.35rem', fontSize: '0.72rem', letterSpacing: '0.14em', textTransform: 'uppercase' }}>
-            Authorized by
-            <input value={senderName} onChange={(event) => setSenderName(event.target.value)} placeholder="Your name or alias" required style={inputStyle} />
+          <label style={labelStyle}>
+            {mode === 'gift' ? 'Your name or alias' : 'Your name or alias'}
+            <input
+              value={subjectName}
+              onChange={(event) => {
+                setSubjectName(event.target.value);
+                setSubmitted(false);
+              }}
+              placeholder={mode === 'gift' ? 'Gift sender name or alias' : 'Personal holder name or alias'}
+              required
+              style={inputStyle}
+            />
           </label>
 
-          <label style={{ display: 'grid', gap: '0.35rem', fontSize: '0.72rem', letterSpacing: '0.14em', textTransform: 'uppercase' }}>
-            Issued to
-            <input value={receiverName} onChange={(event) => setReceiverName(event.target.value)} placeholder="Receiver name or alias" required style={inputStyle} />
+          <label style={labelStyle}>
+            {mode === 'gift' ? 'Gift note / access context' : 'Moment context'}
+            <input
+              value={context}
+              onChange={(event) => {
+                setContext(event.target.value);
+                setSubmitted(false);
+              }}
+              placeholder={mode === 'gift' ? 'gift access / invitation' : 'decision / evening / transition'}
+              style={inputStyle}
+            />
           </label>
 
-          <label style={{ display: 'grid', gap: '0.35rem', fontSize: '0.72rem', letterSpacing: '0.14em', textTransform: 'uppercase' }}>
-            Context
-            <input value={context} onChange={(event) => setContext(event.target.value)} placeholder="free evening / decision / gift" style={inputStyle} />
-          </label>
+          <button type="submit" style={buttonStyle}>
+            {mode === 'gift' ? 'Generate Gift Access Preview' : 'Generate Personal Artifact'}
+          </button>
 
-          <button type="submit" style={buttonStyle}>Generate Artifact Preview</button>
+          <p style={{ margin: 0, color: '#777', fontSize: '0.72rem', lineHeight: 1.5 }}>
+            {mode === 'gift'
+              ? 'Gift Access is an invitation. The recipient creates their own personal moment after opening the access link.'
+              : 'Personal Moment is the main product: one person, one moment, one artifact.'}
+          </p>
         </form>
 
         {artifact && (
@@ -94,6 +134,14 @@ export default function V2Page() {
   );
 }
 
+const labelStyle = {
+  display: 'grid',
+  gap: '0.35rem',
+  fontSize: '0.72rem',
+  letterSpacing: '0.14em',
+  textTransform: 'uppercase' as const,
+};
+
 const inputStyle = {
   width: '100%',
   boxSizing: 'border-box' as const,
@@ -114,4 +162,20 @@ const buttonStyle = {
   letterSpacing: '0.14em',
   textTransform: 'uppercase' as const,
   cursor: 'pointer',
+};
+
+const tabStyle = {
+  minHeight: 40,
+  border: '1px solid #333',
+  background: 'transparent',
+  color: '#888',
+  font: 'inherit',
+  padding: '0 1rem',
+  cursor: 'pointer',
+};
+
+const activeTabStyle = {
+  ...tabStyle,
+  border: '1px solid #d8c79f',
+  color: '#f4f1ea',
 };
