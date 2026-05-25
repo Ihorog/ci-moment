@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 // Assumed existence based on prompt instructions
 import { getStatus } from "@/lib/engine";
 
@@ -8,6 +9,7 @@ import Landing from "@/components/Landing";
 import Threshold from "@/components/Threshold";
 import Manifest from "@/components/Manifest";
 import Result from "@/components/Result";
+import { colors, typography, spacing, transitions, animations } from "@/lib/design-system";
 
 export type ScreenState = "landing" | "threshold" | "manifest" | "result";
 export type ContextType = "career" | "love" | "timing" | null;
@@ -23,8 +25,20 @@ export default function Page() {
   const [screen, setScreen] = useState<ScreenState>("landing");
   const [context, setContext] = useState<ContextType>(null);
   const [result, setResult] = useState<ResultData | null>(null);
+  const [cancelled, setCancelled] = useState(false);
+
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    if (searchParams.get("cancelled") === "true") {
+      setCancelled(true);
+      const timer = setTimeout(() => setCancelled(false), animations.cancelledMessageDuration);
+      return () => clearTimeout(timer);
+    }
+  }, [searchParams]);
 
   const handleContextSelect = useCallback((selectedContext: ContextType) => {
+    setCancelled(false);
     setContext(selectedContext);
     setScreen("threshold");
   }, []);
@@ -83,8 +97,23 @@ export default function Page() {
           artifactCode={result.artifactCode}
           timestamp={result.timestamp}
           context={context}
-          lockedMinute={result.minute}
+          minute={result.minute}
         />
+      )}
+
+      {cancelled && (
+        <div
+          style={{
+            position: "absolute",
+            bottom: spacing.gapLarge,
+            fontSize: typography.fontXXSmall,
+            color: colors.textQuaternary,
+            letterSpacing: typography.letterSpacingXSmall,
+            transition: `opacity ${transitions.medium}`,
+          }}
+        >
+          Payment cancelled. Your moment is still here.
+        </div>
       )}
     </main>
   );

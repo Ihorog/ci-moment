@@ -39,7 +39,7 @@ export interface Artifact {
   is_sealed: boolean;
   sealed_at_utc: string | null;
   verify_hash: string;
-  stripe_session_id: string | null;
+  payment_id: string | null;
 }
 
 export interface ArtifactInput {
@@ -52,9 +52,39 @@ export interface ArtifactInput {
 }
 
 /**
+ * Returns true when both Supabase environment variables are set to real
+ * (non-placeholder) values. Use this before calling any Supabase function
+ * to decide whether DB persistence should be attempted.
+ */
+export function isSupabaseConfigured(): boolean {
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_KEY;
+  return (
+    !!url && url !== 'https://placeholder.supabase.co' &&
+    !!key && key !== 'placeholder_key'
+  );
+}
+
+/**
+ * Validates that Supabase environment variables are configured.
+ * Throws an error if not configured properly.
+ */
+function validateSupabaseConfig() {
+  const actualUrl = process.env.SUPABASE_URL;
+  const actualKey = process.env.SUPABASE_SERVICE_KEY;
+  
+  if (!actualUrl || actualUrl === 'https://placeholder.supabase.co' || 
+      !actualKey || actualKey === 'placeholder_key') {
+    throw new Error(
+      'Supabase environment variables SUPABASE_URL and SUPABASE_SERVICE_KEY must be set'
+    );
+  }
+}
+
+/**
  * Insert a new artifact into the `artifacts` table. When creating an
  * artifact it is not yet sealed, so `is_sealed` is set to false and
- * `sealed_at_utc` and `stripe_session_id` are null. Returns the inserted
+ * `sealed_at_utc` and `payment_id` are null. Returns the inserted
  * artifact on success or throws on failure.
  */
 export async function createArtifact(
@@ -63,7 +93,7 @@ export async function createArtifact(
   const supabase = getSupabaseClient();
   const { data: inserted, error } = await supabase
     .from('artifacts')
-    .insert([{ ...data, is_sealed: false, sealed_at_utc: null, stripe_session_id: null }])
+    .insert([{ ...data, is_sealed: false, sealed_at_utc: null, payment_id: null }])
     .select()
     .single();
   if (error) {
@@ -75,12 +105,12 @@ export async function createArtifact(
 /**
  * Mark an artifact as sealed after a successful payment. Updates the row
  * identified by its artifact code, setting the `is_sealed` flag to true,
- * recording the current UTC time and the Stripe session ID. Returns the
+ * recording the current UTC time and the payment transaction ID. Returns the
  * updated artifact or throws on failure.
  */
 export async function sealArtifact(
   artifactCode: string,
-  stripeSessionId: string
+  paymentId: string
 ): Promise<Artifact> {
   const supabase = getSupabaseClient();
   const { data: updated, error } = await supabase
@@ -88,9 +118,63 @@ export async function sealArtifact(
     .update({
       is_sealed: true,
       sealed_at_utc: new Date().toISOString(),
-      stripe_session_id: stripeSessionId,
+      payment_id: paymentId,
     })
     .eq('artifact_code', artifactCode)
+    .select()
+    .single();
+  if (error) {
+    throw new Error(error.message);
+  }
+  return updated as unknown as Artifact;
+}
+
+/**
+ * Mark an artifact as sealed using its primary key UUID. This variant is used
+ * by the payment webhook handler which receives the artifact ID embedded in
+ * the Fondy order ID. Behaviour is identical to `sealArtifact` but matches on
+ * the `id` column rather than `artifact_code`.
+ */
+export async function sealArtifactById(
+  artifactId: string,
+  paymentId: string
+): Promise<Artifact> {
+  validateSupabaseConfig();
+  const { data: updated, error } = await supabase
+    .from('artifacts')
+    .update({
+      is_sealed: true,
+      sealed_at_utc: new Date().toISOString(),
+      payment_id: paymentId,
+    })
+    .eq('id', artifactId)
+    .select()
+    .single();
+  if (error) {
+    throw new Error(error.message);
+  }
+  return updated as unknown as Artifact;
+}
+
+/**
+ * Mark an artifact as sealed using its verification hash. This variant is used
+ * by the Gumroad webhook handler which carries the verify_hash through the
+ * payment provider passthrough field. Returns the updated artifact or throws on
+ * failure.
+ */
+export async function sealArtifactByHash(
+  hash: string,
+  paymentId: string
+): Promise<Artifact> {
+  validateSupabaseConfig();
+  const { data: updated, error } = await supabase
+    .from('artifacts')
+    .update({
+      is_sealed: true,
+      sealed_at_utc: new Date().toISOString(),
+      payment_id: paymentId,
+    })
+    .eq('verify_hash', hash)
     .select()
     .single();
   if (error) {
@@ -112,7 +196,7 @@ export async function getArtifactByHash(
     .from('artifacts')
     .select('*')
     .eq('verify_hash', hash)
-    .limit(1);
+    .maybeSingle();
   if (error) {
     throw new Error(error.message);
   }

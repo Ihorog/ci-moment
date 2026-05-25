@@ -1,0 +1,197 @@
+ci_const_resonance_init:
+  meta:
+    version: "1.0.0"
+    status: active
+    canonical: true
+    required: true
+    language: uk-UA
+    type: system_constant
+    scope: global
+    module_role: orchestration_kernel
+
+  definition:
+    title: "Циклічна ініціація резонансного цифрового актуалізованого авторизованого процесу саморозширення"
+    summary: >-
+      Канонічна системна константа Cimeika, яка визначає умови запуску,
+      фіксації, розширення та повторної ініціації нового стану лише через
+      авторизований, актуальний, резонансний і ресурсно підтверджений сигнал.
+
+  core:
+    formula: "CI = (S × A × R × V × P) → F → E → C"
+    variables:
+      S: signal
+      A: authorization
+      R: resonance
+      V: validity
+      P: power
+      F: fixation
+      E: expansion
+      C: cycle
+
+    launch_condition: "S=1 AND A=1 AND R=1 AND V=1 AND P=1"
+    deny_condition: "any(S,A,R,V,P)=0"
+    state_transition: "STATE(n+1) = STATE(n) + VERIFIED_EXPANSION"
+    verified_expansion: "AUTHORIZED × ACTUAL × RESONANT × POWERED"
+
+  principles:
+    binary_gate: true
+    mode: recursive_authorized
+    expansion_rule: verified_only
+    growth_rule: "EXPANSION != GROWTH"
+    relevance_rule: "EXPANSION = VERIFIED RELEVANT EXTENSION"
+    fact_before_expansion: true
+    duplicate_noise_block: true
+    outdated_context_block: true
+    unauthorized_growth_block: true
+
+  phases:
+    - key: detect
+      title: Виявлення сигналу
+      purpose: Виявити появу події, наміру або зміни.
+      checks:
+        - what_appeared
+        - where_appeared
+        - when_appeared
+        - why_now
+
+    - key: authorize
+      title: Авторизація
+      purpose: Перевірити право на запуск зміни.
+      checks:
+        - initiator
+        - access_level
+        - source_type
+        - permission_to_change_state
+
+    - key: actualize
+      title: Актуалізація
+      purpose: Підтягнути поточний реальний стан.
+      checks:
+        - time
+        - context
+        - system_state
+        - dependencies
+        - tension
+        - blockers
+
+    - key: resonance_check
+      title: Перевірка резонансу
+      purpose: Перевірити узгодженість із полем системи.
+      checks:
+        - alignment_with_ci_core
+        - architectural_relevance
+        - conflict_absence
+        - meaningful_continuation
+
+    - key: power_check
+      title: Перевірка ресурсу
+      purpose: Перевірити наявність достатнього ресурсу для переходу.
+      checks:
+        - energy
+        - data_sufficiency
+        - technical_support
+        - module_availability
+
+    - key: fix
+      title: Фіксація
+      purpose: Зафіксувати факт як вісь.
+      writes:
+        - timestamp
+        - origin
+        - initiator
+        - authority
+        - state_before
+        - state_after
+        - weight
+        - direction
+        - reason
+
+    - key: expand
+      title: Розширення
+      purpose: Створити перевірене продовження.
+      outputs:
+        - new_node
+        - new_link
+        - new_artifact
+        - new_module
+        - new_scenario
+        - new_route
+
+    - key: recycle
+      title: Рекурсивне повернення в цикл
+      purpose: Перетворити результат на новий актуальний стан.
+      outputs:
+        - current_state_as_new_base
+        - next_cycle_ready
+
+  required_cycle_fields:
+    - origin
+    - authority
+    - state_now
+    - resonance_score
+    - power_score
+    - fix_point
+    - expansion_vector
+    - next_trigger
+
+  states:
+    inactive: "цикл не активований"
+    detected: "сигнал виявлено"
+    authorized: "право підтверджено"
+    actualized: "стан підтягнуто"
+    resonant: "узгоджено з полем системи"
+    powered: "ресурс підтверджено"
+    fixed: "факт зафіксовано"
+    expanded: "розширення виконано"
+    recycled: "новий цикл підготовлено"
+    blocked: "запуск заблоковано"
+    denied: "доступ або умова відхилені"
+
+  levels:
+    semantic:
+      purpose:
+        - determine_meaning
+        - detect_sense_shift
+        - validate_resonant_structure
+    administrative:
+      purpose:
+        - authorize_fixation
+        - authorize_architecture_impact
+        - authorize_scaling
+
+  integrations:
+    applies_to:
+      - Ci
+      - Ci_Moment
+      - ci_gitapi
+      - ci_memory
+      - Kazkar
+      - Podija
+      - Nastrij
+      - Malya
+      - Calendar
+      - Gallery
+      - CIT_agent
+
+  security:
+    rules:
+      - no_noise_duplication
+      - no_unauthorized_growth
+      - no_pseudo_expansion
+      - no_false_actuality
+
+  implementation_minimum:
+    checklist:
+      - signal_exists
+      - authorization_exists
+      - actuality_exists
+      - resonance_exists
+      - power_exists
+      - fixation_exists
+      - expansion_exists
+      - next_cycle_exists
+
+  final_statement: >-
+    Лише авторизований, актуальний, резонансний сигнал, підтверджений
+    ресурсом, може бути зафіксований як факт і стати основою наступного
+    циклу саморозширення.

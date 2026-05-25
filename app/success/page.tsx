@@ -1,0 +1,136 @@
+"use client";
+
+import { useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
+import { colors, typography, spacing, transitions } from "@/lib/design-system";
+
+function SuccessContent() {
+  const searchParams = useSearchParams();
+  const context = searchParams.get("context");
+  const status = searchParams.get("status");
+  const [verifyHash, setVerifyHash] = useState<string | null>(null);
+
+  useEffect(() => {
+    try {
+      const hash = sessionStorage.getItem('ci_verify_hash');
+      if (hash) {
+        setVerifyHash(hash);
+        // Consume once so a page refresh no longer shows the verify link
+        sessionStorage.removeItem('ci_verify_hash');
+      }
+    } catch {
+      // sessionStorage unavailable (e.g. private browsing)
+    }
+  }, []);
+
+  return (
+    <main
+      style={{
+        width: "100%",
+        minHeight: "100dvh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          textAlign: "center",
+          gap: spacing.gapMedium,
+        }}
+      >
+        <h1
+          style={{
+            fontSize: typography.fontLarge,
+            fontWeight: typography.fontWeightLight,
+            letterSpacing: typography.letterSpacingBase,
+            color: colors.statusProceed,
+            margin: 0,
+          }}
+        >
+          Moment sealed.
+        </h1>
+
+        <p
+          style={{
+            fontSize: typography.fontXSmall,
+            color: colors.textQuaternary,
+            letterSpacing: typography.letterSpacingXSmall,
+            margin: 0,
+          }}
+        >
+          Your decision checkpoint is locked.
+        </p>
+
+        {context && status && (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: spacing.gapXXSmall,
+              fontSize: typography.fontXXXSmall,
+              color: colors.textQuinary,
+              marginTop: spacing.gapXSmall,
+            }}
+          >
+            <div style={{ textTransform: "capitalize" }}>{context}</div>
+            <div style={{ textTransform: "uppercase", letterSpacing: typography.letterSpacingMedium }}>
+              {status}
+            </div>
+          </div>
+        )}
+
+        {verifyHash && (
+          <a
+            href={`/verify/${verifyHash}`}
+            style={{
+              marginTop: spacing.gapSmall,
+              background: "transparent",
+              border: `1px solid ${colors.borderSecondary}`,
+              color: colors.textTertiary,
+              padding: spacing.paddingSmall,
+              cursor: "pointer",
+              fontSize: typography.fontXXXSmall,
+              fontFamily: "inherit",
+              textDecoration: "none",
+              transition: `all ${transitions.fast}`,
+              letterSpacing: typography.letterSpacingXSmall,
+            }}
+          >
+            View sealed artifact
+          </a>
+        )}
+
+        <a
+          href="/"
+          style={{
+            marginTop: spacing.gapLarge,
+            background: "transparent",
+            border: `1px solid ${colors.borderTertiary}`,
+            color: colors.textMuted,
+            padding: spacing.paddingSmall,
+            cursor: "pointer",
+            fontSize: typography.fontXXXSmall,
+            fontFamily: "inherit",
+            textDecoration: "none",
+            transition: `all ${transitions.fast}`,
+            letterSpacing: typography.letterSpacingXSmall,
+          }}
+        >
+          Back to Ci Moment
+        </a>
+      </div>
+    </main>
+  );
+}
+
+export default function SuccessPage() {
+  return (
+    <Suspense>
+      <SuccessContent />
+    </Suspense>
+  );
+}

@@ -1,0 +1,59 @@
+{
+  "version": "0.1.0",
+  "state": {
+    "abilities_enabled": [],
+    "last_action_at": "2026-03-12T01:49:19.029Z"
+  },
+  "actions": [
+    {
+      "id": "adsa.health_selfcheck",
+      "intent": "Verify system invariants and report status",
+      "triggers": {
+        "manual": true
+      },
+      "policy": {
+        "can_open_issue": false,
+        "can_push_code": false
+      },
+      "steps": [
+        "check_env",
+        "check_manifest",
+        "report"
+      ],
+      "effects": [
+        "audit_log"
+      ]
+    },
+    {
+      "id": "adsa.manifest_consistency",
+      "intent": "Validate manifest schema and invariants",
+      "triggers": {
+        "manual": true
+      },
+      "policy": {
+        "can_open_issue": false,
+        "can_push_code": false
+      },
+      "steps": [
+        "validate_schema",
+        "check_invariants",
+        "report"
+      ],
+      "effects": [
+        "audit_log"
+      ]
+    }
+  ],
+  "oplog": [
+    {
+      "action_id": "adsa.manifest_consistency",
+      "timestamp": "2026-03-12T01:49:18.905Z",
+      "ok": true
+    },
+    {
+      "action_id": "adsa.health_selfcheck",
+      "timestamp": "2026-03-12T01:49:19.029Z",
+      "ok": false
+    }
+  ]
+}
