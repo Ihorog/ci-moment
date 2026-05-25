@@ -1,16 +1,33 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 /**
- * Initialize a Supabase client using the service role key. This client is
- * intended for server‑side use only. It bypasses Row Level Security and must
- * never be exposed to the client. Environment variables must be defined in
- * `.env` for the URL and service key.
+ * Supabase is part of the restored MVP payment/verification path.
+ * The client must be lazy: Next.js imports this module during `next build`,
+ * where production secrets may not be present locally. Missing environment
+ * variables should fail only when a Supabase-backed runtime action is called.
  */
-const supabaseUrl = process.env.SUPABASE_URL || 'https://placeholder.supabase.co';
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY || 'placeholder_key';
+let cachedSupabase: SupabaseClient | null = null;
 
-// Create client - will validate at runtime when actually used
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
+export function isSupabaseConfigured(): boolean {
+  return Boolean(process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_KEY);
+}
+
+function getSupabaseClient(): SupabaseClient {
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY;
+
+  if (!supabaseUrl || !supabaseServiceKey) {
+    throw new Error(
+      'Supabase environment variables SUPABASE_URL and SUPABASE_SERVICE_KEY must be set'
+    );
+  }
+
+  if (!cachedSupabase) {
+    cachedSupabase = createClient(supabaseUrl, supabaseServiceKey);
+  }
+
+  return cachedSupabase;
+}
 
 export interface Artifact {
   id: string;
@@ -73,7 +90,7 @@ function validateSupabaseConfig() {
 export async function createArtifact(
   data: ArtifactInput
 ): Promise<Artifact> {
-  validateSupabaseConfig();
+  const supabase = getSupabaseClient();
   const { data: inserted, error } = await supabase
     .from('artifacts')
     .insert([{ ...data, is_sealed: false, sealed_at_utc: null, payment_id: null }])
@@ -95,7 +112,7 @@ export async function sealArtifact(
   artifactCode: string,
   paymentId: string
 ): Promise<Artifact> {
-  validateSupabaseConfig();
+  const supabase = getSupabaseClient();
   const { data: updated, error } = await supabase
     .from('artifacts')
     .update({
@@ -174,7 +191,7 @@ export async function sealArtifactByHash(
 export async function getArtifactByHash(
   hash: string
 ): Promise<Artifact | null> {
-  validateSupabaseConfig();
+  const supabase = getSupabaseClient();
   const { data, error } = await supabase
     .from('artifacts')
     .select('*')
@@ -183,5 +200,8 @@ export async function getArtifactByHash(
   if (error) {
     throw new Error(error.message);
   }
-  return data ? (data as unknown as Artifact) : null;
+  if (Array.isArray(data) && data.length > 0) {
+    return data[0] as unknown as Artifact;
+  }
+  return null;
 }
