@@ -94,9 +94,13 @@ export default function V2Page() {
             />
           </label>
 
-          <ChoiceGroup title="1. Name the weight" value={burden} options={BURDENS} onChange={setBurden} />
-          <ChoiceGroup title="2. Choose the release" value={release} options={RELEASES} onChange={setRelease} />
-          <ChoiceGroup title="3. Hand it to the field" value={field} options={FIELDS} onChange={setField} />
+          {mode === 'personal' && (
+            <>
+              <ChoiceGroup title="1. Name the weight" value={burden} options={BURDENS} onChange={(val) => { setBurden(val); setSubmitted(false); }} />
+              <ChoiceGroup title="2. Choose the release" value={release} options={RELEASES} onChange={(val) => { setRelease(val); setSubmitted(false); }} />
+              <ChoiceGroup title="3. Hand it to the field" value={field} options={FIELDS} onChange={(val) => { setField(val); setSubmitted(false); }} />
+            </>
+          )}
 
           <button type="submit" style={buttonStyle}>
             {mode === 'gift' ? 'Preview Gift Access — $5' : 'Seal the Answer — $5'}
