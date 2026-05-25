@@ -25,8 +25,8 @@ export type ArtifactData = {
   };
 };
 
-function normalize(value: string): string {
-  return value.trim().replace(/\s+/g, ' ').toLowerCase();
+function normalize(value: string | undefined | null): string {
+  return (value || '').trim().replace(/\s+/g, ' ').toLowerCase();
 }
 
 /**
