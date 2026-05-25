@@ -1,5 +1,7 @@
 import { LEGEND_ATLAS } from './legend-atlas';
 
+export type ArtifactMode = 'personal' | 'gift-invite';
+
 export type ArtifactCipher = {
   element: number;
   celestial: number;
@@ -9,9 +11,11 @@ export type ArtifactCipher = {
 };
 
 export type ArtifactData = {
-  senderName: string;
-  receiverName: string;
+  mode: ArtifactMode;
+  subjectName: string;
   context: string;
+  issuedBy: string;
+  note?: string;
   cipher: ArtifactCipher;
   legend: {
     element: string;
@@ -46,11 +50,11 @@ export function hashToNumber(input: string, seed = 0): number {
 }
 
 export function generateArtifactCipher(
-  senderName: string,
-  receiverName: string,
-  context = 'moment'
+  subjectName: string,
+  context = 'personal moment',
+  seed = 'ci-moment-v2'
 ): ArtifactCipher {
-  const base = `${normalize(senderName)}:${normalize(receiverName)}:${normalize(context)}`;
+  const base = `${normalize(subjectName)}:${normalize(context)}:${normalize(seed)}`;
   const hash = hashToNumber(base);
 
   const element = hash % LEGEND_ATLAS.elements.length;
@@ -105,18 +109,60 @@ export function parseCipherCode(code: string): ArtifactCipher | null {
   return { element, celestial, logic, serial, code: `EL-${element}:CL-${celestial}:LG-${logic}:${serial}` };
 }
 
+export function getPersonalArtifactData(
+  subjectName: string,
+  context = 'personal moment'
+): ArtifactData {
+  const cipher = generateArtifactCipher(subjectName, context, 'personal');
+  const legend = getLegendByCipher(cipher);
+
+  return {
+    mode: 'personal',
+    subjectName: subjectName.trim(),
+    context: context.trim(),
+    issuedBy: 'Self-claimed moment',
+    cipher,
+    legend,
+  };
+}
+
+export function getGiftInvitationData(
+  purchaserName: string,
+  note = 'gift pass'
+): ArtifactData {
+  const cipher = generateArtifactCipher(purchaserName, note, 'gift-invite');
+  const legend = getLegendByCipher(cipher);
+
+  return {
+    mode: 'gift-invite',
+    subjectName: 'Recipient creates their own moment',
+    context: note.trim(),
+    issuedBy: purchaserName.trim() || 'Gift sender',
+    note: 'Gift mode is an invitation to a new personal generation, not a generated decision for another person.',
+    cipher,
+    legend,
+  };
+}
+
+/**
+ * Backward-compatible helper kept for earlier prototypes.
+ * Prefer getPersonalArtifactData for the main V2 product.
+ */
 export function getArtifactData(
   senderName: string,
   receiverName: string,
   context = 'moment'
 ): ArtifactData {
-  const cipher = generateArtifactCipher(senderName, receiverName, context);
+  const subject = receiverName?.trim() || senderName;
+  const issuedBy = senderName?.trim() || 'Self-claimed moment';
+  const cipher = generateArtifactCipher(subject, context, issuedBy);
   const legend = getLegendByCipher(cipher);
 
   return {
-    senderName: senderName.trim(),
-    receiverName: receiverName.trim(),
+    mode: 'personal',
+    subjectName: subject.trim(),
     context: context.trim(),
+    issuedBy,
     cipher,
     legend,
   };
