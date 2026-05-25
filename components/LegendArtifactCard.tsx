@@ -81,7 +81,7 @@ export default function LegendArtifactCard({ artifact }: LegendArtifactCardProps
               Authorized by
             </div>
             <div style={{ marginTop: '0.35rem', fontSize: 'clamp(1rem, 3vw, 1.55rem)' }}>
-              {artifact.senderName || 'Unnamed Sender'}
+              {artifact.issuedBy || 'Unnamed Sender'}
             </div>
           </div>
 
