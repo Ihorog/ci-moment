@@ -74,7 +74,7 @@ export default function LegendArtifactCard({ artifact }: LegendArtifactCardProps
               Issued to
             </div>
             <div style={{ marginTop: '0.35rem', fontSize: 'clamp(1.25rem, 4vw, 2.25rem)', borderBottom: '1px solid #171717', paddingBottom: '0.35rem' }}>
-              {artifact.receiverName || 'Unnamed Receiver'}
+              {artifact.subjectName || 'Unnamed Receiver'}
             </div>
 
             <div style={{ marginTop: '1.35rem', fontSize: '0.72rem', letterSpacing: '0.18em', textTransform: 'uppercase', opacity: 0.72 }}>
