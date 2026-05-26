@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==========================================
+// CORE ENGINE: КОНСТИТУЦІЯ (Static Framework)
+// ==========================================
+
+model StateSpec {
+  code           String @id
+  legacy_module  String
+  neutral_group  String
+  past_label     String
+  present_label  String
+  future_label   String
+}
+
+model Address4116 {
+  address_id            String @id
+  state_present         String
+  state_future          String
+  active_phase_key      String
+  node_code             String
+  node_level_title_uk   String
+}
+
+// ==========================================
+// CI MOMENT: АКТ ЕМІСІЇ (Decision Asset)
+// ==========================================
+
+model MomentArtifact {
+  id           String    @id @default(cuid())
+  artifactCode String    @unique
+  verifyHash   String    
+  
+  elIndex      Int       
+  clIndex      Int       
+  lgIndex      Int       
+  
+  sealed       Boolean   @default(false)
+  sealedAt     DateTime?
+  status       String    @default("PENDING") 
+  
+  denomValue   String    @default("100% RESOLVE")
+  source       String?   
+  createdAt    DateTime  @default(now())
+  
+  @@index([artifactCode])
+  @@index([sealed])
+}
