@@ -28,7 +28,7 @@ export async function POST(req: Request) {
     if (error) throw error;
 
     return NextResponse.json({ success: true, artifact: data });
-  } catch (err) {
+  } catch (_err) {
     return NextResponse.json({ error: 'Seal failed' }, { status: 500 });
   }
 }
