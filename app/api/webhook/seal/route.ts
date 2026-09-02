@@ -10,17 +10,17 @@ export async function POST(req: Request) {
   try {
     const formData = await req.formData();
     const artifactCode = formData.get('custom_fields[artifactCode]') as string;
-    
+
     if (!artifactCode) {
       return NextResponse.json({ error: 'Artifact code missing' }, { status: 400 });
     }
 
     const { data, error } = await supabase
       .from('MomentArtifact')
-      .update({ 
-        sealed: true, 
+      .update({
+        sealed: true,
         sealedAt: new Date().toISOString(),
-        status: 'AUTHORIZED' 
+        status: 'AUTHORIZED'
       })
       .eq('artifactCode', artifactCode)
       .select();
@@ -28,7 +28,7 @@ export async function POST(req: Request) {
     if (error) throw error;
 
     return NextResponse.json({ success: true, artifact: data });
-  } catch (_err) {
+  } catch {
     return NextResponse.json({ error: 'Seal failed' }, { status: 500 });
   }
 }
