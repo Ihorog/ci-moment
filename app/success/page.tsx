@@ -1,6 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 import { Suspense, useEffect, useState } from "react";
 import { colors, typography, spacing, transitions } from "@/lib/design-system";
 
@@ -84,7 +85,7 @@ function SuccessContent() {
         )}
 
         {verifyHash && (
-          <a
+          <Link
             href={`/verify/${verifyHash}`}
             style={{
               marginTop: spacing.gapSmall,
@@ -101,10 +102,10 @@ function SuccessContent() {
             }}
           >
             View sealed artifact
-          </a>
+          </Link>
         )}
 
-        <a
+        <Link
           href="/"
           style={{
             marginTop: spacing.gapLarge,
@@ -121,7 +122,7 @@ function SuccessContent() {
           }}
         >
           Back to Ci Moment
-        </a>
+        </Link>
       </div>
     </main>
   );
