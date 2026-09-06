@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { colors, typography, spacing, transitions, layout } from "@/lib/design-system";
 
 export default function NotFound() {
@@ -40,7 +41,7 @@ export default function NotFound() {
         This moment doesn&apos;t exist.
       </div>
 
-      <a
+      <Link
         href="/"
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
@@ -61,7 +62,7 @@ export default function NotFound() {
         }}
       >
         Return
-      </a>
+      </Link>
     </div>
   );
 }

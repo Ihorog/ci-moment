@@ -5,8 +5,8 @@ import ArtifactBarcode from '@/components/ArtifactBarcode';
 import type { Metadata } from 'next';
 
 interface VerifyPageProps {
-  params: { hash: string };
-  searchParams: { sealed?: string };
+  params: Promise<{ hash: string }>;
+  searchParams: Promise<{ sealed?: string }>;
 }
 
 /**
@@ -14,7 +14,7 @@ interface VerifyPageProps {
  * This enables custom OG images for each artifact when shared on social media.
  */
 export async function generateMetadata({ params }: VerifyPageProps): Promise<Metadata> {
-  const { hash } = params;
+  const { hash } = await params;
 
   let artifact: Artifact | null = null;
   try {
@@ -70,8 +70,9 @@ export async function generateMetadata({ params }: VerifyPageProps): Promise<Met
  * The page is a server component — it does not include client side logic.
  */
 export default async function VerifyPage({ params, searchParams }: VerifyPageProps) {
-  const { hash } = params;
-  const justPaid = searchParams.sealed === 'true';
+  const { hash } = await params;
+  const { sealed } = await searchParams;
+  const justPaid = sealed === 'true';
 
   let artifact: Artifact | null = null;
   try {

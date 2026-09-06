@@ -30,9 +30,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Apply non-breaking dependency fixes
-        run: npm audit fix
-
       - name: Dependency vulnerability gate
         run: npm audit --audit-level=high
 
@@ -47,11 +44,3 @@ jobs:
 
       - name: Build
         run: npm run build
-
-      - name: Capture repaired lockfile
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: repaired-package-lock
-          path: package-lock.json
-          if-no-files-found: error
