@@ -3,11 +3,11 @@ import {
   bindPaddleTransaction,
   validatePtxnSyntax,
   CI_PADDLE_CONTRACT,
-} from '../lib/payments/paddlePaymentLink.mts';
+} from '../lib/payments/paddlePaymentLink.mjs';
 import {
   createAbortFlag,
   openCheckout,
-} from '../app/checkout/paddle/paymentLinkRuntime.mts';
+} from '../app/checkout/paddle/paymentLinkRuntime.mjs';
 
 function baseInput(over = {}) {
   return {
