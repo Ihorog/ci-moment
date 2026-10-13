@@ -28,7 +28,9 @@
     "lint": "next lint",
     "type-check": "tsc --noEmit",
     "test": "jest --config jest.config.js",
-    "check-db": "node scripts/check-database.js"
+    "check-db": "node scripts/check-database.js",
+    "test:paddle-payment-link": "node tests/paddle-default-payment-link.test.mjs",
+    "lint:next": "next lint"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.0",

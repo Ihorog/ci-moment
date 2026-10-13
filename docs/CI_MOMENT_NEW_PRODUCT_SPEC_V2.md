@@ -824,3 +824,21 @@ Result → Seal → Artifact → Verify → Repeat → Referral.
 ```
 
 This is the active development truth for Ci Moment v2.
+
+---
+
+## Paddle merchant-of-record (authorized gated path)
+
+Paddle is an **authorized, launch-gated** live merchant-of-record option for Seal.
+
+Rules (non-negotiable):
+- USD **17** · quantity **1** · one configured live price
+- `custom_data.ci_local_order_id` required and must match `ci_orders.local_order_id`
+- Fail-closed server resolution of `_ptxn` via authenticated Paddle API
+- Browser receives only: client token, environment, provider txn id, local order id
+- **Webhook is authoritative** for fulfillment; client `checkout.completed` only redirects to `/payment/success`
+- Public launch gate must be open; signed webhook secret + persistence required
+- Does not replace or weaken existing launch gates
+- Does not invert formula to traffic → sale
+
+Branch reference: `codex/paddle-default-payment-link`
